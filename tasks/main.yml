@@ -28,5 +28,5 @@
     group: root
     mode: 0755
     backup: yes
-
+  notify: restart nftables service
 # }}}

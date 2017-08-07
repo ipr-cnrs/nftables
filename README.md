@@ -19,6 +19,8 @@ A role to manage Nftables rules and packages.
 * **nft_pkg_state** : State of new `nftables` package(s) [default : `installed`].
 * **nft_main_conf_path** : Main configuration file loaded by systemd unit [default : `/etc/nftables.conf`].
 * **nft_main_conf_content** : Template used to generate the previous main configuration file [default : `etc/nftables.conf.j2`].
+* **nft_service_manage** : If `nftables` service should be managed with this role [default : `true`].
+* **nft_service_name** : `nftables` service name [default : `nftables`].
 
 ### OS Specific Variables
 
@@ -41,6 +43,7 @@ Please see default value by Operating System file in [vars][vars directory] dire
 This role will :
 * Install `nftables` on the system.
 * Generate a default configuration file loaded by systemd unit.
+* Restart `nftables` service.
 
 ## Development
 

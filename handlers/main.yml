@@ -1,0 +1,5 @@
+---
+# handlers file for nftables
+- name: restart nftables service
+  service: name={{ nft_service_name }} state=restarted
+  when: nft_service_manage

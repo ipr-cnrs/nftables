@@ -8,3 +8,7 @@ nft_pkg_state: 'installed'
 # conf
 nft_main_conf_path: '/etc/nftables.conf'
 nft_main_conf_content: 'etc/nftables.conf.j2'
+
+# service
+nft_service_manage: true
+nft_service_name: 'nftables'
