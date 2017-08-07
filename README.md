@@ -14,6 +14,8 @@
 
 A role to manage Nftables rules and packages.
 
+Highly inspired by [Mike Gleason firewall role][mikegleasonjr firewall github] (3 levels of rules definition and template), thanks !
+
 ## Role Variables
 
 * **nft_pkg_manage** : If `nftables` package(s) should be managed with this role [default : `true`].
@@ -138,3 +140,4 @@ Jérémy Gardais
 [nftables github]: https://github.com/ipr-cnrs/nftables
 [wtfpl website]: http://www.wtfpl.net/about/
 [ipr website]: https://ipr.univ-rennes1.fr/
+[mikegleasonjr firewall github]: https://github.com/mikegleasonjr/ansible-role-firewall
