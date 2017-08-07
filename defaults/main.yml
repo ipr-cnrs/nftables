@@ -1,0 +1,6 @@
+---
+# defaults file for nftables
+
+# packages
+ nft_pkg_manage: true
+ nft_pkg_state: 'installed'

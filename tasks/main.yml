@@ -1,0 +1,18 @@
+---
+# tasks file for nftables
+
+- name: Load specific OS vars for nft
+  include_vars: "{{ item }}"
+  with_first_found:
+    - "{{ ansible_distribution|lower }}-{{ ansible_distribution_version }}.yml"
+    - "{{ ansible_distribution|lower }}.yml"
+    - "{{ ansible_os_family|lower }}.yml"
+
+- name: Manage packages
+  package:
+    name: '{{ item }}'
+    state: '{{ nft_pkg_state }}'
+  with_items:
+    - '{{ nft_pkg_list }}'
+  when: nft_pkg_manage
+
