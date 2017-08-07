@@ -1,14 +1,31 @@
 #!/usr/sbin/nft -f
 # {{ ansible_managed }}
 
+{% set globalmerged = nft_global_default_rules.copy() %}
+{% set _ = globalmerged.update(nft_global_group_rules) %}
+{% set _ = globalmerged.update(nft_global_host_rules) %}
+
 # clean
 flush ruleset
 
 table inet firewall {
+	chain global {
+{% for group, rules in globalmerged|dictsort  %}
+		# {{ group }}
+{% if not rules %}
+		# (none)
+{% endif %}
+{% for rule in rules %}
+		{{ rule }}
+{% endfor %}
+{% endfor %}
+	}
 	chain input {
 		type filter hook input priority 0;
+		jump global
 	}
 	chain output {
 		type filter hook output priority 0;
+		jump global
 	}
 }
