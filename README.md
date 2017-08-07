@@ -123,6 +123,24 @@ table inet firewall {
     - role: ipr-cnrs.nftables
 ```
 
+* Use default rules with allow ICMP and count dropped input packets :
+
+`group_vars/all` :
+
+``` yaml
+nft_global_group_rules:
+  002 icmp:
+    - ip protocol icmp accept
+```
+
+`group_vars/first_group` :
+
+``` yaml
+nft_input_group_rules:
+  999 count policy packet:
+    - counter
+```
+
 ## Configuration
 
 This role will :
