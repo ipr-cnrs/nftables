@@ -27,6 +27,9 @@ Highly inspired by [Mike Gleason firewall role][mikegleasonjr firewall github] (
 * **nft_global_default_rules** : Set default rules for `global` chain. Other chains will jump to `global` before apply their specific rules.
 * **nft_global_group_rules** : You can add `global` rules or override those defined by **nft_global_default_rules** for a group.
 * **nft_global_host_rules:** : Hosts can also add or override `global` rules.
+* **nft_input_default_rules** : Set default rules for `input` chain.
+* **nft_input_group_rules** : You can add `input` rules or override those defined by **nft_input_default_rules** for a group.
+* **nft_input_host_rules:** : Hosts can also add or override `input` rules.
 * **nft_service_manage** : If `nftables` service should be managed with this role [default : `true`].
 * **nft_service_name** : `nftables` service name [default : `nftables`].
 
@@ -53,6 +56,14 @@ nft_global_default_rules:
     - ct state invalid drop
 nft_global_group_rules: {}
 nft_global_host_rules: {}
+
+nft_input_default_rules:
+  000 policy:
+    - type filter hook input priority 0; policy drop;
+  001 global:
+    - jump global
+nft_input_group_rules: {}
+nft_input_host_rules: {}
 ```
 
 Those default will generate the following configuration :
@@ -71,7 +82,7 @@ table inet firewall {
 		ct state invalid drop
 	}
 	chain input {
-		type filter hook input priority 0;
+		type filter hook input priority 0; policy drop;
 		jump global
 	}
 	chain output {
@@ -91,7 +102,7 @@ table inet firewall {
 	}
 
 	chain input {
-		type filter hook input priority 0; policy accept;
+		type filter hook input priority 0; policy drop;
 		jump global
 	}
 

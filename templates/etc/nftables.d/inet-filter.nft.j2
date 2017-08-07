@@ -1,6 +1,17 @@
 # {{ ansible_managed }}
 
+{% set inputmerged = nft_input_default_rules.copy() %}
+{% set _ = inputmerged.update(nft_input_group_rules) %}
+{% set _ = inputmerged.update(nft_input_host_rules) %}
+
 chain input {
-	type filter hook input priority 0; policy drop;
-	jump global
+{% for group, rules in inputmerged|dictsort  %}
+	# {{ group }}
+{% if not rules %}
+	# (none)
+{% endif %}
+{% for rule in rules %}
+	{{ rule }}
+{% endfor %}
+{% endfor %}
 }
