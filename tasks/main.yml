@@ -29,4 +29,14 @@
     mode: 0755
     backup: yes
   notify: restart nftables service
+
+- name: generate input rules file
+  template:
+    src: "{{ nft_input_conf_content }}"
+    dest: "{{ nft_input_conf_path }}"
+    owner: root
+    group: root
+    mode: 0755
+    backup: yes
+  notify: restart nftables service
 # }}}
