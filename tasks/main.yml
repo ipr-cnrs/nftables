@@ -8,6 +8,7 @@
     - "{{ ansible_distribution|lower }}.yml"
     - "{{ ansible_os_family|lower }}.yml"
 
+# package {{{
 - name: Manage packages
   package:
     name: '{{ item }}'
@@ -16,3 +17,16 @@
     - '{{ nft_pkg_list }}'
   when: nft_pkg_manage
 
+# }}}
+
+# conf {{{
+- name: generate main conf file
+  template:
+    src: "{{ nft_main_conf_content }}"
+    dest: "{{ nft_main_conf_path }}"
+    owner: root
+    group: root
+    mode: 0755
+    backup: yes
+
+# }}}

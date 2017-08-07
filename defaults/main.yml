@@ -2,5 +2,9 @@
 # defaults file for nftables
 
 # packages
- nft_pkg_manage: true
- nft_pkg_state: 'installed'
+nft_pkg_manage: true
+nft_pkg_state: 'installed'
+
+# conf
+nft_main_conf_path: '/etc/nftables.conf'
+nft_main_conf_content: 'etc/nftables.conf.j2'
