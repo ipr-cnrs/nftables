@@ -8,8 +8,8 @@ nft_pkg_state: 'installed'
 # conf
 nft_main_conf_path: '/etc/nftables.conf'
 nft_main_conf_content: 'etc/nftables.conf.j2'
-nft_input_conf_path: '/etc/nftables.d/inet-filter.nft'
-nft_input_conf_content: 'etc/nftables.d/inet-filter.nft.j2'
+nft_input_conf_path: '/etc/nftables.d/inet-input.nft'
+nft_input_conf_content: 'etc/nftables.d/inet-input.nft.j2'
 nft_define_conf_path: '/etc/nftables.d/defines.nft'
 nft_define_conf_content: 'etc/nftables.d/defines.nft.j2'
 

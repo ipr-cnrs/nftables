@@ -1,5 +1,4 @@
 # {{ ansible_managed }}
-
 {% set inputmerged = nft_input_default_rules.copy() %}
 {% set _ = inputmerged.update(nft_input_group_rules) %}
 {% set _ = inputmerged.update(nft_input_host_rules) %}

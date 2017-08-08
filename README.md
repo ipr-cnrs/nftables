@@ -22,8 +22,8 @@ Highly inspired by [Mike Gleason firewall role][mikegleasonjr firewall github] (
 * **nft_pkg_state** : State of new `nftables` package(s) [default : `installed`].
 * **nft_main_conf_path** : Main configuration file loaded by systemd unit [default : `/etc/nftables.conf`].
 * **nft_main_conf_content** : Template used to generate the previous main configuration file [default : `etc/nftables.conf.j2`].
-* **nft_input_conf_path** : Input configuration file include in main configuration file [default : `/etc/nftables.d/inet-filter.nft`].
-* **nft_input_conf_content** : Template used to generate the previous input configuration file [default : `etc/nftables.d/inet-filter.nft.j2`].
+* **nft_input_conf_path** : Input configuration file include in main configuration file [default : `/etc/nftables.d/inet-input.nft`].
+* **nft_input_conf_content** : Template used to generate the previous input configuration file [default : `etc/nftables.d/inet-input.nft.j2`].
 * **nft_global_default_rules** : Set default rules for `global` chain. Other chains will jump to `global` before apply their specific rules.
 * **nft_global_group_rules** : You can add `global` rules or override those defined by **nft_global_default_rules** for a group.
 * **nft_global_host_rules:** : Hosts can also add or override `global` rules.
