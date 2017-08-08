@@ -22,6 +22,7 @@ nft_global_default_rules:
     - ct state invalid drop
 nft_global_group_rules: {}
 nft_global_host_rules: {}
+
 nft_input_default_rules:
   000 policy:
     - type filter hook input priority 0; policy drop;
@@ -29,6 +30,8 @@ nft_input_default_rules:
     - jump global
   010 drop unwanted:
     - ip daddr @blackhole counter drop
+  022 ssh:
+    - tcp dport ssh ct state new counter accept
 nft_input_group_rules: {}
 nft_input_host_rules: {}
 
@@ -40,6 +43,7 @@ nft_define_default:
     value: '{ 255.255.255.255, 224.0.0.1, 224.0.0.251 }'
 nft_define_group: {}
 nft_define_host: {}
+
 nft_set_default:
   blackhole:
     - type ipv4_addr;
