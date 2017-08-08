@@ -10,6 +10,8 @@ nft_main_conf_path: '/etc/nftables.conf'
 nft_main_conf_content: 'etc/nftables.conf.j2'
 nft_input_conf_path: '/etc/nftables.d/inet-input.nft'
 nft_input_conf_content: 'etc/nftables.d/inet-input.nft.j2'
+nft_output_conf_path: '/etc/nftables.d/inet-output.nft'
+nft_output_conf_content: 'etc/nftables.d/inet-output.nft.j2'
 nft_define_conf_path: '/etc/nftables.d/defines.nft'
 nft_define_conf_content: 'etc/nftables.d/defines.nft.j2'
 nft_set_conf_path: '/etc/nftables.d/inet-sets.nft'
@@ -34,6 +36,14 @@ nft_input_default_rules:
     - tcp dport ssh ct state new counter accept
 nft_input_group_rules: {}
 nft_input_host_rules: {}
+
+nft_output_default_rules:
+  000 policy:
+    - type filter hook output priority 0; policy accept;
+  005 global:
+    - jump global
+nft_output_group_rules: {}
+nft_output_host_rules: {}
 
 # define nft vars
 nft_define_default:

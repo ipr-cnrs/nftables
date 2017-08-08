@@ -24,6 +24,8 @@ Highly inspired by [Mike Gleason firewall role][mikegleasonjr firewall github] (
 * **nft_main_conf_content** : Template used to generate the previous main configuration file [default : `etc/nftables.conf.j2`].
 * **nft_input_conf_path** : Input configuration file include in main configuration file [default : `/etc/nftables.d/inet-input.nft`].
 * **nft_input_conf_content** : Template used to generate the previous input configuration file [default : `etc/nftables.d/inet-input.nft.j2`].
+* **nft_output_conf_content** : Template used to generate the previous output configuration file [default : `etc/nftables.d/inet-output.nft.j2`].
+* **nft_output_conf_path** : Output configuration file include in main configuration file [default : `/etc/nftables.d/inet-output.nft`].
 * **nft_define_conf_path** : Vars definition file include in main configuration file [default : `/etc/nftables.d/defines.nft`].
 * **nft_define_conf_content** : Template used to generate the previous vars definition file [default : `etc/nftables.d/defines.nft.j2`].
 * **nft_sets_conf_path** : Sets and maps definition file include in main configuration file [default : `/etc/nftables.d/inet-sets.nft`].
@@ -34,6 +36,9 @@ Highly inspired by [Mike Gleason firewall role][mikegleasonjr firewall github] (
 * **nft_input_default_rules** : Set default rules for `input` chain.
 * **nft_input_group_rules** : You can add `input` rules or override those defined by **nft_input_default_rules** for a group.
 * **nft_input_host_rules:** : Hosts can also add or override `input` rules.
+* **nft_output_default_rules** : Set default rules for `output` chain.
+* **nft_output_group_rules** : You can add `output` rules or override those defined by **nft_output_default_rules** for a group.
+* **nft_output_host_rules:** : Hosts can also add or override `output` rules.
 * **nft_define_default** : Set default vars available in all rules.
 * **nft_define_group** : You can add vars or override those defined by **nft_define_default** for groups.
 * **nft_define_host** : You can add or override existant vars.
@@ -76,6 +81,14 @@ nft_input_default_rules:
 nft_input_group_rules: {}
 nft_input_host_rules: {}
 
+nft_output_default_rules:
+  000 policy:
+    - type filter hook output priority 0; policy accept;
+  005 global:
+    - jump global
+nft_output_group_rules: {}
+nft_output_host_rules: {}
+
 # define nft vars
 nft_define_default:
   broadcast and multicast:
@@ -110,10 +123,7 @@ table inet firewall {
 	}
 	include "/etc/nftables.d/inet-sets.nft"
 	include "/etc/nftables.d/inet-input.nft"
-	chain output {
-		type filter hook output priority 0;
-		jump global
-	}
+	include "/etc/nftables.d/inet-output.nft"
 }
 ```
 
@@ -178,7 +188,7 @@ nft_input_group_rules:
 This role will :
 * Install `nftables` on the system.
 * Generate a default configuration file which include all following files and loaded by systemd unit.
-* Generate input rules file include called by the main configuration file.
+* Generate input and output rules files include called by the main configuration file.
 * Generate vars in a file and sets and maps in another file.
 * Restart `nftables` service.
 

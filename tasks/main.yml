@@ -40,6 +40,16 @@
     backup: yes
   notify: restart nftables service
 
+- name: generate output rules file
+  template:
+    src: "{{ nft_output_conf_content }}"
+    dest: "{{ nft_output_conf_path }}"
+    owner: root
+    group: root
+    mode: 0755
+    backup: yes
+  notify: restart nftables service
+
 - name: generate vars definition file
   template:
     src: "{{ nft_define_conf_content }}"

@@ -23,8 +23,5 @@ table inet firewall {
 	}
 	include "{{ nft_set_conf_path }}"
 	include "{{ nft_input_conf_path }}"
-	chain output {
-		type filter hook output priority 0;
-		jump global
-	}
+	include "{{ nft_output_conf_path }}"
 }
