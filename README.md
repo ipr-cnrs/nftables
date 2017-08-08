@@ -69,6 +69,8 @@ nft_input_default_rules:
     - type filter hook input priority 0; policy drop;
   005 global:
     - jump global
+  010 drop unwanted:
+    - ip daddr @blackhole counter drop
 nft_input_group_rules: {}
 nft_input_host_rules: {}
 
@@ -130,6 +132,7 @@ table inet firewall {
 	chain input {
 		type filter hook input priority 0; policy drop;
 		jump global
+		ip daddr @blackhole counter packets 3 bytes 204 drop
 	}
 
 	chain output {

@@ -27,6 +27,8 @@ nft_input_default_rules:
     - type filter hook input priority 0; policy drop;
   005 global:
     - jump global
+  010 drop unwanted:
+    - ip daddr @blackhole counter drop
 nft_input_group_rules: {}
 nft_input_host_rules: {}
 
