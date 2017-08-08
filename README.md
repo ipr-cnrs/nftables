@@ -24,6 +24,10 @@ Highly inspired by [Mike Gleason firewall role][mikegleasonjr firewall github] (
 * **nft_main_conf_content** : Template used to generate the previous main configuration file [default : `etc/nftables.conf.j2`].
 * **nft_input_conf_path** : Input configuration file include in main configuration file [default : `/etc/nftables.d/inet-input.nft`].
 * **nft_input_conf_content** : Template used to generate the previous input configuration file [default : `etc/nftables.d/inet-input.nft.j2`].
+* **nft_define_conf_path** : Vars definition file include in main configuration file [default : `/etc/nftables.d/defines.nft`].
+* **nft_define_conf_content** : Template used to generate the previous vars definition file [default : `etc/nftables.d/defines.nft.j2`].
+* **nft_sets_conf_path** : Sets and maps definition file include in main configuration file [default : `/etc/nftables.d/inet-sets.nft`].
+* **nft_sets_conf_content** : Template used to generate the previous sets and maps definition file [default : `etc/nftables.d/inet-sets.nft.j2`].
 * **nft_global_default_rules** : Set default rules for `global` chain. Other chains will jump to `global` before apply their specific rules.
 * **nft_global_group_rules** : You can add `global` rules or override those defined by **nft_global_default_rules** for a group.
 * **nft_global_host_rules:** : Hosts can also add or override `global` rules.
@@ -63,10 +67,25 @@ nft_global_host_rules: {}
 nft_input_default_rules:
   000 policy:
     - type filter hook input priority 0; policy drop;
-  001 global:
+  005 global:
     - jump global
 nft_input_group_rules: {}
 nft_input_host_rules: {}
+
+# define nft vars
+nft_define_default:
+  broadcast and multicast:
+    desc: 'broadcast and multicast'
+    name: badcast_addr
+    value: '{ 255.255.255.255, 224.0.0.1, 224.0.0.251 }'
+nft_define_group: {}
+nft_define_host: {}
+nft_set_default:
+  blackhole:
+    - type ipv4_addr;
+    - elements = $badcast_addr
+nft_set_group: {}
+nft_set_host: {}
 ```
 
 Those default will generate the following configuration :
@@ -74,9 +93,10 @@ Those default will generate the following configuration :
 #!/usr/sbin/nft -f
 # Ansible managed
 
-
 # clean
 flush ruleset
+
+include "/etc/nftables.d/defines.nft"
 
 table inet firewall {
 	chain global {
@@ -84,10 +104,8 @@ table inet firewall {
 		ct state established,related accept
 		ct state invalid drop
 	}
-	chain input {
-		type filter hook input priority 0; policy drop;
-		jump global
-	}
+	include "/etc/nftables.d/inet-sets.nft"
+	include "/etc/nftables.d/inet-input.nft"
 	chain output {
 		type filter hook output priority 0;
 		jump global
@@ -99,6 +117,11 @@ And you get the same result by displaying the ruleset on the host : `$ nft lis
 
 ```
 table inet firewall {
+	set blackhole {
+		type ipv4_addr
+		elements = { 255.255.255.255, 224.0.0.1, 224.0.0.251 }
+	}
+
 	chain global {
 		ct state established,related accept
 		ct state invalid drop
@@ -148,8 +171,9 @@ nft_input_group_rules:
 
 This role will :
 * Install `nftables` on the system.
-* Generate a default configuration file loaded by systemd unit.
+* Generate a default configuration file which include all following files and loaded by systemd unit.
 * Generate input rules file include called by the main configuration file.
+* Generate vars in a file and sets and maps in another file.
 * Restart `nftables` service.
 
 ## Development

@@ -49,4 +49,14 @@
     mode: 0755
     backup: yes
   notify: restart nftables service
+
+- name: generate sets and maps file
+  template:
+    src: "{{ nft_set_conf_content }}"
+    dest: "{{ nft_set_conf_path }}"
+    owner: root
+    group: root
+    mode: 0755
+    backup: yes
+  notify: restart nftables service
 # }}}

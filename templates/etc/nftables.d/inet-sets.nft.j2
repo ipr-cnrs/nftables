@@ -1,0 +1,15 @@
+# {{ ansible_managed }}
+{% set setmerged = nft_set_default.copy() %}
+{% set _ = setmerged.update(nft_set_group) %}
+{% set _ = setmerged.update(nft_set_host) %}
+
+{% for set, rules in setmerged|dictsort  %}
+{% if rules %}
+set {{ set }} {
+{% for rule in rules %}
+	{{ rule }}
+{% endfor %}
+}
+{% endif %}
+
+{% endfor %}
