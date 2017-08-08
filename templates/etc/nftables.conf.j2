@@ -1,12 +1,13 @@
 #!/usr/sbin/nft -f
 # {{ ansible_managed }}
-
 {% set globalmerged = nft_global_default_rules.copy() %}
 {% set _ = globalmerged.update(nft_global_group_rules) %}
 {% set _ = globalmerged.update(nft_global_host_rules) %}
 
 # clean
 flush ruleset
+
+include "/etc/nftables.d/defines.nft"
 
 table inet firewall {
 	chain global {

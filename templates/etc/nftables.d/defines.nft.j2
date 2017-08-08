@@ -1,0 +1,15 @@
+# {{ ansible_managed }}
+{% set definemerged = nft_define_default.copy() %}
+{% set _ = definemerged.update(nft_define_group) %}
+{% set _ = definemerged.update(nft_define_host) %}
+
+
+{% for definition in definemerged.values() %}
+{% if definition.desc is defined %}
+# {{ definition.desc }}
+{% else %}
+# {{ definition.name }}
+{% endif %}
+define {{ definition.name }} = {{ definition.value }}
+
+{% endfor %}

@@ -14,7 +14,7 @@
 
 A role to manage Nftables rules and packages.
 
-Highly inspired by [Mike Gleason firewall role][mikegleasonjr firewall github] (3 levels of rules definition and template), thanks !
+Highly inspired by [Mike Gleason firewall role][mikegleasonjr firewall github] (3 levels of rules definition and template), thanks ! I hope i haven't complexify his philosophy… ^^
 
 ## Role Variables
 
@@ -30,6 +30,9 @@ Highly inspired by [Mike Gleason firewall role][mikegleasonjr firewall github] (
 * **nft_input_default_rules** : Set default rules for `input` chain.
 * **nft_input_group_rules** : You can add `input` rules or override those defined by **nft_input_default_rules** for a group.
 * **nft_input_host_rules:** : Hosts can also add or override `input` rules.
+* **nft_define_default** : Set default vars available in all rules.
+* **nft_define_group** : You can add vars or override those defined by **nft_define_default** for groups.
+* **nft_define_host** : You can add or override existant vars.
 * **nft_service_manage** : If `nftables` service should be managed with this role [default : `true`].
 * **nft_service_name** : `nftables` service name [default : `nftables`].
 
