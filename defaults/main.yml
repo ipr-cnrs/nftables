@@ -39,9 +39,11 @@ nft_input_host_rules: {}
 
 nft_output_default_rules:
   000 policy:
-    - type filter hook output priority 0; policy accept;
+    - type filter hook output priority 0; policy drop;
   005 global:
     - jump global
+  050 domain:
+    - udp dport domain ct state new counter accept
 nft_output_group_rules: {}
 nft_output_host_rules: {}
 
