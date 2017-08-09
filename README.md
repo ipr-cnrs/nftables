@@ -76,7 +76,9 @@ nft_input_default_rules:
     - jump global
   010 drop unwanted:
     - ip daddr @blackhole counter drop
-  022 ssh:
+  040 dhcp:
+    - udp sport bootps udp dport bootpc limit rate 6/minute accept
+  220 ssh:
     - tcp dport ssh ct state new counter accept
 nft_input_group_rules: {}
 nft_input_host_rules: {}
@@ -86,8 +88,10 @@ nft_output_default_rules:
     - type filter hook output priority 0; policy drop;
   005 global:
     - jump global
+  040 dhcp:
+    - udp sport bootpc udp dport bootps limit rate 6/minute accept
   050 domain:
-    - udp dport domain ct state new counter accept
+    - udp dport domain ct state new accept
 nft_output_group_rules: {}
 nft_output_host_rules: {}
 
@@ -147,13 +151,15 @@ table inet firewall {
 		type filter hook input priority 0; policy drop;
 		jump global
 		ip daddr @blackhole counter packets 3 bytes 204 drop
+		udp sport bootps udp dport bootpc limit rate 6/minute accept
 		tcp dport ssh ct state new counter packets 0 bytes 0 accept
 	}
 
 	chain output {
 		type filter hook output priority 0; policy drop;
 		jump global
-		udp dport domain ct state new counter packets 0 bytes 0 accept
+		udp sport bootpc udp dport bootps limit rate 6/minute accept
+		udp dport domain ct state new packets 0 bytes 0 accept
 	}
 }
 ```
