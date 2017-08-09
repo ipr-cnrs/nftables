@@ -79,8 +79,6 @@ nft_input_default_rules:
     - ip daddr @blackhole counter drop
   015 localhost:
     - iif lo accept
-  040 dhcp:
-    - udp sport bootps udp dport bootpc limit rate 6/minute accept
   220 ssh:
     - tcp dport ssh ct state new counter accept
 nft_input_group_rules: {}

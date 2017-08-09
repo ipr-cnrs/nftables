@@ -8,6 +8,7 @@
 ### Default Rules
 * Use more sets and vars definitions to avoid multiple rules.
 * Allow outgoing icmp.
+* Remove DHCP incoming packets. The connection is started by the host, don't need incoming rule.
 
 ## v1.0
 
