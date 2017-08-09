@@ -9,7 +9,7 @@ flush ruleset
 
 include "/etc/nftables.d/defines.nft"
 
-table ip firewall {
+table inet firewall {
 	chain global {
 {% for group, rules in globalmerged|dictsort  %}
 		# {{ group }}

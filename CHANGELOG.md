@@ -3,6 +3,7 @@
 
 ### Features
 * Manage nftables service at startup.
+* Rollback to inet family to manage both ipv4 and ipv6.
 
 ### Default Rules
 * Use more sets and vars definitions to avoid multiple rules.

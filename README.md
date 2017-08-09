@@ -140,7 +140,7 @@ flush ruleset
 
 include "/etc/nftables.d/defines.nft"
 
-table ip firewall {
+table inet firewall {
 	chain global {
 		# 000 state management
 		ct state established,related accept
@@ -155,7 +155,7 @@ table ip firewall {
 And you can get all rules and definitons by displaying the ruleset on the host : `$ nft list ruleset` :
 
 ```
-table ip firewall {
+table inet firewall {
 	set blackhole {
 		type ipv4_addr
 		elements = { 255.255.255.255, 224.0.0.1, 224.0.0.251}
