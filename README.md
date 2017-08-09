@@ -93,6 +93,8 @@ nft_output_default_rules:
     - jump global
   015 localhost:
     - oif lo accept
+  050 icmp:
+    - ip protocol icmp accept
   200 output udp accepted:
     - udp dport @output_udp_accept ct state new accept
   210 output tcp accepted:
@@ -190,6 +192,7 @@ table inet firewall {
 		type filter hook output priority 0; policy drop;
 		jump global
 		oif "lo" accept
+		ip protocol icmp accept
 		udp dport @output_udp_accept ct state new accept
 		tcp dport @output_tcp_accept ct state new accept
 	}
@@ -206,20 +209,14 @@ table inet firewall {
     - role: ipr-cnrs.nftables
 ```
 
-* Use default rules with allow ICMP and count dropped input packets :
-
-`group_vars/all` :
-
-``` yaml
-nft_global_group_rules:
-  002 icmp:
-    - ip protocol icmp accept
-```
+* Use default rules with allow incoming ICMP and count dropped input packets :
 
 `group_vars/first_group` :
 
 ``` yaml
 nft_input_group_rules:
+  020 icmp:
+    - ip protocol icmp icmp type echo-request ip length <= 84 counter limit rate 1/minute accept
   999 count policy packet:
     - counter
 ```

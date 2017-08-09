@@ -48,6 +48,8 @@ nft_output_default_rules:
     - jump global
   015 localhost:
     - oif lo accept
+  050 icmp:
+    - ip protocol icmp accept
   200 output udp accepted:
     - udp dport @output_udp_accept ct state new accept
   210 output tcp accepted:

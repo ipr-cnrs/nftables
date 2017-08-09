@@ -7,6 +7,7 @@
 
 ### Default Rules
 * Use more sets and vars definitions to avoid multiple rules.
+* Allow outgoing icmp.
 
 ## v1.0
 
