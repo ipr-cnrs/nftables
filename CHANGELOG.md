@@ -4,9 +4,10 @@
 ### Features
 * Manage nftables service at startup.
 * Rollback to inet family to manage both ipv4 and ipv6.
+* To allow multiple ports/range ports, it's possible to redifine vars or add a rule in a dict.
 
 ### Default Rules
-* Use more sets and vars definitions to avoid multiple rules.
+* Use more sets and vars definitions for input/output to avoid multiple rules.
 * Allow outgoing icmp.
 * Remove DHCP incoming packets. The connection is started by the host, don't need incoming rule.
 

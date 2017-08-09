@@ -34,8 +34,10 @@ nft_input_default_rules:
     - ip daddr @blackhole counter drop
   015 localhost:
     - iif lo accept
-  220 ssh:
-    - tcp dport ssh ct state new counter accept
+  200 input udp accepted:
+    - udp dport @input_udp_accept ct state new accept
+  210 input tcp accepted:
+    - tcp dport @input_tcp_accept ct state new accept
 nft_input_group_rules: {}
 nft_input_host_rules: {}
 
@@ -61,6 +63,12 @@ nft_define_default:
     desc: 'broadcast and multicast'
     name: badcast_addr
     value: '{ 255.255.255.255, 224.0.0.1, 224.0.0.251 }'
+  input tcp accepted:
+    name: input_tcp_accept
+    value: '{ ssh }'
+  input udp accepted:
+    name: input_udp_accept
+    value: 'none'
   output tcp accepted:
     name: output_tcp_accept
     value: '{ http, https }'
@@ -75,6 +83,11 @@ nft_set_default:
   blackhole:
     - type ipv4_addr;
     - elements = $badcast_addr
+  input_tcp_accept:
+    - type inet_service; flags interval;
+    - elements = $input_tcp_accept
+  input_udp_accept:
+    - type inet_service; flags interval;
   output_tcp_accept:
     - type inet_service; flags interval;
     - elements = $output_tcp_accept
