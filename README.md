@@ -22,14 +22,14 @@ Highly inspired by [Mike Gleason firewall role][mikegleasonjr firewall github] (
 * **nft_pkg_state** : State of new `nftables` package(s) [default : `installed`].
 * **nft_main_conf_path** : Main configuration file loaded by systemd unit [default : `/etc/nftables.conf`].
 * **nft_main_conf_content** : Template used to generate the previous main configuration file [default : `etc/nftables.conf.j2`].
-* **nft_input_conf_path** : Input configuration file include in main configuration file [default : `/etc/nftables.d/inet-input.nft`].
-* **nft_input_conf_content** : Template used to generate the previous input configuration file [default : `etc/nftables.d/inet-input.nft.j2`].
-* **nft_output_conf_content** : Template used to generate the previous output configuration file [default : `etc/nftables.d/inet-output.nft.j2`].
-* **nft_output_conf_path** : Output configuration file include in main configuration file [default : `/etc/nftables.d/inet-output.nft`].
+* **nft_input_conf_path** : Input configuration file include in main configuration file [default : `/etc/nftables.d/filter-input.nft`].
+* **nft_input_conf_content** : Template used to generate the previous input configuration file [default : `etc/nftables.d/filter-input.nft.j2`].
+* **nft_output_conf_content** : Template used to generate the previous output configuration file [default : `etc/nftables.d/filter-output.nft.j2`].
+* **nft_output_conf_path** : Output configuration file include in main configuration file [default : `/etc/nftables.d/filter-output.nft`].
 * **nft_define_conf_path** : Vars definition file include in main configuration file [default : `/etc/nftables.d/defines.nft`].
 * **nft_define_conf_content** : Template used to generate the previous vars definition file [default : `etc/nftables.d/defines.nft.j2`].
-* **nft_sets_conf_path** : Sets and maps definition file include in main configuration file [default : `/etc/nftables.d/inet-sets.nft`].
-* **nft_sets_conf_content** : Template used to generate the previous sets and maps definition file [default : `etc/nftables.d/inet-sets.nft.j2`].
+* **nft_sets_conf_path** : Sets and maps definition file include in main configuration file [default : `/etc/nftables.d/sets.nft`].
+* **nft_sets_conf_content** : Template used to generate the previous sets and maps definition file [default : `etc/nftables.d/sets.nft.j2`].
 * **nft_global_default_rules** : Set default rules for `global` chain. Other chains will jump to `global` before apply their specific rules.
 * **nft_global_group_rules** : You can add `global` rules or override those defined by **nft_global_default_rules** for a group.
 * **nft_global_host_rules:** : Hosts can also add or override `global` rules.
@@ -125,22 +125,22 @@ flush ruleset
 
 include "/etc/nftables.d/defines.nft"
 
-table inet firewall {
+table ip firewall {
 	chain global {
 		# 000 state management
 		ct state established,related accept
 		ct state invalid drop
 	}
-	include "/etc/nftables.d/inet-sets.nft"
-	include "/etc/nftables.d/inet-input.nft"
-	include "/etc/nftables.d/inet-output.nft"
+	include "/etc/nftables.d/sets.nft"
+	include "/etc/nftables.d/filter-input.nft"
+	include "/etc/nftables.d/filter-output.nft"
 }
 ```
 
 And you get the same result by displaying the ruleset on the host : `$ nft list ruleset` :
 
 ```
-table inet firewall {
+table ip firewall {
 	set blackhole {
 		type ipv4_addr
 		elements = { 255.255.255.255, 224.0.0.1, 224.0.0.251 }
