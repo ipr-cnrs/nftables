@@ -5,7 +5,7 @@
 nft_pkg_manage: true
 nft_pkg_state: 'installed'
 
-# conf
+# files
 nft_main_conf_path: '/etc/nftables.conf'
 nft_main_conf_content: 'etc/nftables.conf.j2'
 nft_input_conf_path: '/etc/nftables.d/filter-input.nft'
@@ -74,3 +74,4 @@ nft_set_host: {}
 # service
 nft_service_manage: true
 nft_service_name: 'nftables'
+nft_service_enabled: true

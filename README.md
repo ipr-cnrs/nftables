@@ -44,6 +44,7 @@ Highly inspired by [Mike Gleason firewall role][mikegleasonjr firewall github] (
 * **nft_define_host** : You can add or override existant vars.
 * **nft_service_manage** : If `nftables` service should be managed with this role [default : `true`].
 * **nft_service_name** : `nftables` service name [default : `nftables`].
+* **nft_service_enabled** : Set `nftables` service available at startup [default : `true`].
 
 ### OS Specific Variables
 
@@ -202,6 +203,7 @@ nft_input_group_rules:
 
 This role will :
 * Install `nftables` on the system.
+* Enable `nftables` service by default at startup.
 * Generate a default configuration file which include all following files and loaded by systemd unit.
 * Generate input and output rules files include called by the main configuration file.
 * Generate vars in a file and sets and maps in another file.

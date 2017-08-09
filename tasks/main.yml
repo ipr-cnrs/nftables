@@ -70,3 +70,12 @@
     backup: yes
   notify: restart nftables service
 # }}}
+
+# service {{{
+- name: SERVICE manage '{{ nft_service_name }}'
+  service:
+    name: '{{ nft_service_name }}'
+    state: started
+    enabled: '{{ nft_service_enabled }}'
+  when: nft_service_manage
+# }}}

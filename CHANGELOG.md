@@ -1,4 +1,9 @@
 
+## v1.x
+
+### Features
+* Manage nftables service at startup.
+
 ## v1.0
 
 ### Features
