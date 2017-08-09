@@ -64,7 +64,7 @@ Each type of rules dictionaries will be merged and rules will be applied in the 
 ``` yml
 # rules
 nft_global_default_rules:
-  000 state management:
+  005 state management:
     - ct state established,related accept
     - ct state invalid drop
 nft_global_group_rules: {}
@@ -93,10 +93,10 @@ nft_output_default_rules:
     - jump global
   015 localhost:
     - oif lo accept
-  040 dhcp:
-    - udp sport bootpc udp dport bootps limit rate 6/minute accept
-  050 domain:
-    - udp dport domain ct state new accept
+  200 output udp accepted:
+    - udp dport @output_udp_accept ct state new accept
+  210 output tcp accepted:
+    - tcp dport @output_tcp_accept ct state new accept
 nft_output_group_rules: {}
 nft_output_host_rules: {}
 
@@ -106,12 +106,26 @@ nft_define_default:
     desc: 'broadcast and multicast'
     name: badcast_addr
     value: '{ 255.255.255.255, 224.0.0.1, 224.0.0.251 }'
+  output udp accepted:
+    name: output_udp_accept
+    value: '{  domain, bootps, ntp }'
+  output tcp accepted:
+    name: output_tcp_accept
+    value: '{ http, https }'
 nft_define_group: {}
 nft_define_host: {}
+
+# sets and maps
 nft_set_default:
   blackhole:
     - type ipv4_addr;
     - elements = $badcast_addr
+  output_udp_accept:
+    - type inet_service; flags interval;
+    - elements = $output_udp_accept
+  output_tcp_accept:
+    - type inet_service; flags interval;
+    - elements = $output_tcp_accept
 nft_set_group: {}
 nft_set_host: {}
 ```
@@ -138,13 +152,25 @@ table ip firewall {
 }
 ```
 
-And you get the same result by displaying the ruleset on the host : `$ nft list ruleset` :
+And you can get all rules and definitons by displaying the ruleset on the host : `$ nft list ruleset` :
 
 ```
 table ip firewall {
 	set blackhole {
 		type ipv4_addr
-		elements = { 255.255.255.255, 224.0.0.1, 224.0.0.251 }
+		elements = { 255.255.255.255, 224.0.0.1, 224.0.0.251}
+	}
+
+	set output_tcp_accept {
+		type inet_service
+		flags interval
+		elements = { http, https}
+	}
+
+	set output_udp_accept {
+		type inet_service
+		flags interval
+		elements = { domain, bootps, ntp}
 	}
 
 	chain global {
@@ -155,9 +181,8 @@ table ip firewall {
 	chain input {
 		type filter hook input priority 0; policy drop;
 		jump global
-		ip daddr @blackhole counter packets 3 bytes 204 drop
+		ip daddr @blackhole counter packets 0 bytes 0 drop
 		iif "lo" accept
-		udp sport bootps udp dport bootpc limit rate 6/minute accept
 		tcp dport ssh ct state new counter packets 0 bytes 0 accept
 	}
 
@@ -165,8 +190,8 @@ table ip firewall {
 		type filter hook output priority 0; policy drop;
 		jump global
 		oif "lo" accept
-		udp sport bootpc udp dport bootps limit rate 6/minute accept
-		udp dport domain ct state new packets 0 bytes 0 accept
+		udp dport @output_udp_accept ct state new accept
+		tcp dport @output_tcp_accept ct state new accept
 	}
 }
 ```

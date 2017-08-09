@@ -19,7 +19,7 @@ nft_set_conf_content: 'etc/nftables.d/sets.nft.j2'
 
 # rules
 nft_global_default_rules:
-  000 state management:
+  005 state management:
     - ct state established,related accept
     - ct state invalid drop
 nft_global_group_rules: {}
@@ -48,10 +48,10 @@ nft_output_default_rules:
     - jump global
   015 localhost:
     - oif lo accept
-  040 dhcp:
-    - udp sport bootpc udp dport bootps limit rate 6/minute accept
-  050 domain:
-    - udp dport domain ct state new accept
+  200 output udp accepted:
+    - udp dport @output_udp_accept ct state new accept
+  210 output tcp accepted:
+    - tcp dport @output_tcp_accept ct state new accept
 nft_output_group_rules: {}
 nft_output_host_rules: {}
 
@@ -61,13 +61,26 @@ nft_define_default:
     desc: 'broadcast and multicast'
     name: badcast_addr
     value: '{ 255.255.255.255, 224.0.0.1, 224.0.0.251 }'
+  output tcp accepted:
+    name: output_tcp_accept
+    value: '{ http, https }'
+  output udp accepted:
+    name: output_udp_accept
+    value: '{ bootps, domain, ntp }'
 nft_define_group: {}
 nft_define_host: {}
 
+# sets and maps
 nft_set_default:
   blackhole:
     - type ipv4_addr;
     - elements = $badcast_addr
+  output_tcp_accept:
+    - type inet_service; flags interval;
+    - elements = $output_tcp_accept
+  output_udp_accept:
+    - type inet_service; flags interval;
+    - elements = $output_udp_accept
 nft_set_group: {}
 nft_set_host: {}
 

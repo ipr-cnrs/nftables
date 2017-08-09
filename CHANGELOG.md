@@ -4,6 +4,9 @@
 ### Features
 * Manage nftables service at startup.
 
+### Default Rules
+* Use more sets and vars definitions to avoid multiple rules.
+
 ## v1.0
 
 ### Features
