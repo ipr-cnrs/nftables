@@ -116,7 +116,7 @@ nft_define_default:
     value: 'none'
   output tcp accepted:
     name: output_tcp_accept
-    value: '{ http, https }'
+    value: '{ http, https, hkp }'
   output udp accepted:
     name: output_udp_accept
     value: '{ bootps, domain, ntp }'
@@ -177,7 +177,7 @@ table inet firewall {
 	set output_tcp_accept {
 		type inet_service
 		flags interval
-		elements = { http, https}
+		elements = { http, https, hkp}
 	}
 
 	set output_udp_accept {

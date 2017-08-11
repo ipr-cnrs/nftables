@@ -10,6 +10,7 @@
 * Use more sets and vars definitions for input/output to avoid multiple rules.
 * Allow outgoing icmp.
 * Remove DHCP incoming packets. The connection is started by the host, don't need incoming rule.
+* Allow outgoing OpenPGP HTTP requests.
 
 ## v1.0
 

@@ -71,7 +71,7 @@ nft_define_default:
     value: 'none'
   output tcp accepted:
     name: output_tcp_accept
-    value: '{ http, https }'
+    value: '{ http, https, hkp }'
   output udp accepted:
     name: output_udp_accept
     value: '{ bootps, domain, ntp }'
