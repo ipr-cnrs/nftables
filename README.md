@@ -20,15 +20,16 @@ Highly inspired by [Mike Gleason firewall role][mikegleasonjr firewall github] (
 
 * **nft_pkg_manage** : If `nftables` package(s) should be managed with this role [default : `true`].
 * **nft_pkg_state** : State of new `nftables` package(s) [default : `installed`].
+* **nft_conf_dir_path** : Directory to store the differents Nftables configuration files [default : `/etc/nftables.d`].
 * **nft_main_conf_path** : Main configuration file loaded by systemd unit [default : `/etc/nftables.conf`].
 * **nft_main_conf_content** : Template used to generate the previous main configuration file [default : `etc/nftables.conf.j2`].
-* **nft_input_conf_path** : Input configuration file include in main configuration file [default : `/etc/nftables.d/filter-input.nft`].
+* **nft_input_conf_path** : Input configuration file include in main configuration file [default : `{{ nft_conf_dir_path }}filter-input.nft`].
 * **nft_input_conf_content** : Template used to generate the previous input configuration file [default : `etc/nftables.d/filter-input.nft.j2`].
+* **nft_output_conf_path** : Output configuration file include in main configuration file [default : `{{ nft_conf_dir_path }}filter-output.nft`].
 * **nft_output_conf_content** : Template used to generate the previous output configuration file [default : `etc/nftables.d/filter-output.nft.j2`].
-* **nft_output_conf_path** : Output configuration file include in main configuration file [default : `/etc/nftables.d/filter-output.nft`].
-* **nft_define_conf_path** : Vars definition file include in main configuration file [default : `/etc/nftables.d/defines.nft`].
+* **nft_define_conf_path** : Vars definition file include in main configuration file [default : `{{ nft_conf_dir_path }}defines.nft`].
 * **nft_define_conf_content** : Template used to generate the previous vars definition file [default : `etc/nftables.d/defines.nft.j2`].
-* **nft_sets_conf_path** : Sets and maps definition file include in main configuration file [default : `/etc/nftables.d/sets.nft`].
+* **nft_sets_conf_path** : Sets and maps definition file include in main configuration file [default : `{{ nft_conf_dir_path }}sets.nft`].
 * **nft_sets_conf_content** : Template used to generate the previous sets and maps definition file [default : `etc/nftables.d/sets.nft.j2`].
 * **nft_global_default_rules** : Set default rules for `global` chain. Other chains will jump to `global` before apply their specific rules.
 * **nft_global_group_rules** : You can add `global` rules or override those defined by **nft_global_default_rules** for a group.

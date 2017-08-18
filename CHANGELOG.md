@@ -1,4 +1,9 @@
 
+## v1.2
+
+### Fixes
+* Ensure to create the the directory to store the differents configuration files (/etc/nftables.d).
+
 ## v1.1
 
 ### Features
