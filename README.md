@@ -7,8 +7,8 @@
 3. [Example Playbook](#example-playbook)
 4. [Configuration](#configuration)
 5. [Development](#development)
-5. [License](#license)
-6. [Author Information](#author-information)
+6. [License](#license)
+7. [Author Information](#author-information)
 
 ## Overview
 
@@ -20,6 +20,9 @@ Highly inspired by [Mike Gleason firewall role][mikegleasonjr firewall github] (
 
 * **nft_pkg_manage** : If `nftables` package(s) should be managed with this role [default : `true`].
 * **nft_pkg_state** : State of new `nftables` package(s) [default : `installed`].
+* **nft_old_pkg_list** : The list of useless packages to remove (such as Iptables,…) [default : `iptables`].
+* **nft_old_pkg_state** : State of old package(s) [default : `absent`].
+* **nft_old_pkg_manage** : If old package(s) should be managed with this role [default : `true`].
 * **nft_conf_dir_path** : Directory to store the differents Nftables configuration files [default : `/etc/nftables.d`].
 * **nft_main_conf_path** : Main configuration file loaded by systemd unit [default : `/etc/nftables.conf`].
 * **nft_main_conf_content** : Template used to generate the previous main configuration file [default : `etc/nftables.conf.j2`].

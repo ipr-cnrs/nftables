@@ -9,7 +9,7 @@
     - "{{ ansible_os_family|lower }}.yml"
 
 # package {{{
-- name: Manage packages
+- name: INSTALL Manage nftables packages
   package:
     name: '{{ item }}'
     state: '{{ nft_pkg_state }}'
@@ -17,6 +17,13 @@
     - '{{ nft_pkg_list }}'
   when: nft_pkg_manage
 
+- name: INSTALL Remove iptables packages
+  apt:
+    name: '{{ item }}'
+    state: '{{ nft_old_pkg_state }}'
+  with_items:
+    - '{{ nft_old_pkg_list }}'
+  when: nft_old_pkg_manage
 # }}}
 
 # conf {{{

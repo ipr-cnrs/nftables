@@ -4,6 +4,9 @@
 # packages
 nft_pkg_manage: true
 nft_pkg_state: 'installed'
+nft_old_pkg_list: 'iptables'
+nft_old_pkg_state: 'absent'
+nft_old_pkg_manage: true
 
 # files
 nft_conf_dir_path: '/etc/nftables.d'

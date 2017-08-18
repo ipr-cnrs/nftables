@@ -1,6 +1,9 @@
 
 ## v1.2
 
+### Features
+* Ensure to remove old packages (iptables,…).
+
 ### Fixes
 * Ensure to create the the directory to store the differents configuration files (/etc/nftables.d).
 
