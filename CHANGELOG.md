@@ -1,4 +1,9 @@
 
+## v1.2.1
+
+### Features
+* Allow icmpv6 outgoing traffic.
+
 ## v1.2
 
 ### Features
