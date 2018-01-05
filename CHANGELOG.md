@@ -1,4 +1,9 @@
 
+## v1.2.2
+
+### Fix
+* Set's name can't exceed 15 characters !
+
 ## v1.2.1
 
 ### Features

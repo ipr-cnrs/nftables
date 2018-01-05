@@ -85,9 +85,9 @@ nft_input_default_rules:
   015 localhost:
     - iif lo accept
   200 input udp accepted:
-    - udp dport @input_udp_accept ct state new accept
+    - udp dport @in_udp_accept ct state new accept
   210 input tcp accepted:
-    - tcp dport @input_tcp_accept ct state new accept
+    - tcp dport @in_tcp_accept ct state new accept
 nft_input_group_rules: {}
 nft_input_host_rules: {}
 
@@ -101,9 +101,9 @@ nft_output_default_rules:
   050 icmp:
     - ip protocol icmp accept
   200 output udp accepted:
-    - udp dport @output_udp_accept ct state new accept
+    - udp dport @out_udp_accept ct state new accept
   210 output tcp accepted:
-    - tcp dport @output_tcp_accept ct state new accept
+    - tcp dport @out_tcp_accept ct state new accept
 nft_output_group_rules: {}
 nft_output_host_rules: {}
 
@@ -114,16 +114,16 @@ nft_define_default:
     name: badcast_addr
     value: '{ 255.255.255.255, 224.0.0.1, 224.0.0.251 }'
   input tcp accepted:
-    name: input_tcp_accept
+    name: in_tcp_accept
     value: '{ ssh }'
   input udp accepted:
-    name: input_udp_accept
+    name: in_udp_accept
     value: 'none'
   output tcp accepted:
-    name: output_tcp_accept
+    name: out_tcp_accept
     value: '{ http, https, hkp }'
   output udp accepted:
-    name: output_udp_accept
+    name: out_udp_accept
     value: '{ bootps, domain, ntp }'
 nft_define_group: {}
 nft_define_host: {}
@@ -133,17 +133,17 @@ nft_set_default:
   blackhole:
     - type ipv4_addr;
     - elements = $badcast_addr
-  input_tcp_accept:
+  in_tcp_accept:
     - type inet_service; flags interval;
-    - elements = $input_tcp_accept
-  input_udp_accept:
+    - elements = $in_tcp_accept
+  in_udp_accept:
     - type inet_service; flags interval;
-  output_tcp_accept:
+  out_tcp_accept:
     - type inet_service; flags interval;
-    - elements = $output_tcp_accept
-  output_udp_accept:
+    - elements = $out_tcp_accept
+  out_udp_accept:
     - type inet_service; flags interval;
-    - elements = $output_udp_accept
+    - elements = $out_udp_accept
 nft_set_group: {}
 nft_set_host: {}
 ```
@@ -179,13 +179,13 @@ table inet firewall {
 		elements = { 255.255.255.255, 224.0.0.1, 224.0.0.251}
 	}
 
-	set output_tcp_accept {
+	set out_tcp_accept {
 		type inet_service
 		flags interval
 		elements = { http, https, hkp}
 	}
 
-	set output_udp_accept {
+	set out_udp_accept {
 		type inet_service
 		flags interval
 		elements = { domain, bootps, ntp}
@@ -201,8 +201,8 @@ table inet firewall {
 		jump global
 		ip daddr @blackhole counter packets 0 bytes 0 drop
 		iif "lo" accept
-		udp dport @input_udp_accept ct state new accept
-		tcp dport @input_tcp_accept ct state new accept
+		udp dport @in_udp_accept ct state new accept
+		tcp dport @in_tcp_accept ct state new accept
 	}
 
 	chain output {
@@ -210,8 +210,8 @@ table inet firewall {
 		jump global
 		oif "lo" accept
 		ip protocol icmp accept
-		udp dport @output_udp_accept ct state new accept
-		tcp dport @output_tcp_accept ct state new accept
+		udp dport @out_udp_accept ct state new accept
+		tcp dport @out_tcp_accept ct state new accept
 	}
 }
 ```
