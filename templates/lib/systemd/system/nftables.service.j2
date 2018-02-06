@@ -1,0 +1,18 @@
+# {{ ansible_managed }}
+[Unit]
+Description={{ nft_service_name }}
+Documentation=man:nft(8) http://wiki.nftables.org
+Before=fail2ban.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+StandardInput=null
+ProtectSystem=full
+ProtectHome=true
+ExecStart=/usr/sbin/nft -f {{ nft_main_conf_path }}
+ExecReload=/usr/sbin/nft -f {{ nft_main_conf_path }}
+ExecStop=/usr/sbin/nft flush ruleset
+
+[Install]
+WantedBy=multi-user.target

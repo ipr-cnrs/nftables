@@ -41,7 +41,7 @@
     group: root
     mode: 0755
     backup: yes
-  notify: restart nftables service
+  notify: ['restart nftables service']
 
 - name: CONFIG generate input rules file
   template:
@@ -51,7 +51,7 @@
     group: root
     mode: 0755
     backup: yes
-  notify: restart nftables service
+  notify: ['restart nftables service']
 
 - name: CONFIG generate output rules file
   template:
@@ -61,7 +61,7 @@
     group: root
     mode: 0755
     backup: yes
-  notify: restart nftables service
+  notify: ['restart nftables service']
 
 - name: CONFIG generate vars definition file
   template:
@@ -71,7 +71,7 @@
     group: root
     mode: 0755
     backup: yes
-  notify: restart nftables service
+  notify: ['restart nftables service']
 
 - name: CONFIG generate sets and maps file
   template:
@@ -81,10 +81,26 @@
     group: root
     mode: 0755
     backup: yes
-  notify: restart nftables service
+  notify: ['restart nftables service']
 # }}}
 
 # service {{{
+
+- name: install Debian systemd service unit
+  template:
+    src: '{{ nft_service_unit_content }}'
+    dest: '{{ nft_service_unit_path }}'
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
+  register: nftables__register_systemd_service
+  when: nft_service_manage
+  notify: ['restart nftables service']
+
+- name: Reload systemd daemons
+  command: systemctl daemon-reload
+  notify: ['restart nftables service']
+
 - name: SERVICE manage '{{ nft_service_name }}'
   service:
     name: '{{ nft_service_name }}'

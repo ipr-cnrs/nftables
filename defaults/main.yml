@@ -106,3 +106,5 @@ nft_set_host: {}
 nft_service_manage: true
 nft_service_name: 'nftables'
 nft_service_enabled: true
+nft_service_unit_path: '/lib/systemd/system/nftables.service'
+nft_service_unit_content: 'lib/systemd/system/nftables.service.j2'
