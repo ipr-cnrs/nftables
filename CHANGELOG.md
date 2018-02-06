@@ -1,4 +1,7 @@
 
+## v1.2.3
+* Rename firewall table to filter table (most use on Debian).
+
 ## v1.2.2
 
 ### Fix
