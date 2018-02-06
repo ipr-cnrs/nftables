@@ -1,4 +1,10 @@
 
+## v1.3.1
+
+### Fix
+
+* Reload systemd daemons only if unit file change.
+
 ## v1.3
 
 ### Features
