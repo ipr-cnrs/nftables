@@ -19,7 +19,7 @@ Highly inspired by [Mike Gleason firewall role][mikegleasonjr firewall github] (
 
 ## Role Variables
 
-* **nft_pkg_manage** : If `nftables` package(s) should be managed with this role [default : `true`].
+* **nft_enabled** : Enable or disable support for Nftables [default : `true`].
 * **nft_pkg_state** : State of new `nftables` package(s) [default : `installed`].
 * **nft_old_pkg_list** : The list of useless packages to remove (such as Iptables,…) [default : `iptables`].
 * **nft_old_pkg_state** : State of old package(s) [default : `absent`].

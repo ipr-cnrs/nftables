@@ -1,3 +1,7 @@
+## v1.X
+
+### Enhancements
+* Set a variable to enable/disable the support of Nftables.
 
 ## v1.3.1
 

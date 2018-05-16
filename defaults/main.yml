@@ -1,8 +1,22 @@
 ---
-# defaults file for nftables
+# .. vim: foldmarker=[[[,]]]:foldmethod=marker
+#
+# ipr-cnrs.nftables default variables [[[
+# =======================================
+
+# Packages and installation [[[
+# -----------------------------
+
+# .. envvar:: nft_enabled [[[
+#
+# Enable or disable support for Nftables on a given host. Disabling this
+# option does not remove existing installation and configuration.
+#
+nft_enabled: true
+
+                                                                   # ]]]
 
 # packages
-nft_pkg_manage: true
 nft_pkg_state: 'installed'
 nft_old_pkg_list: 'iptables'
 nft_old_pkg_state: 'absent'
@@ -21,6 +35,7 @@ nft_define_conf_content: 'etc/nftables.d/defines.nft.j2'
 nft_set_conf_path: '{{ nft_conf_dir_path }}/sets.nft'
 nft_set_conf_content: 'etc/nftables.d/sets.nft.j2'
 
+                                                                   # ]]]
 # rules
 nft_global_default_rules:
   005 state management:
