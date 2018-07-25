@@ -4,10 +4,12 @@
 * Set a variable to enable/disable the support of Nftables.
 * Move two task in systemd handler (try to fix #1).
 
+### Fix
+* Deprecation warning for state "installed".
+
 ## v1.3.1
 
 ### Fix
-
 * Reload systemd daemons only if unit file change.
 
 ## v1.3

@@ -17,7 +17,7 @@ nft_enabled: true
                                                                    # ]]]
 
 # packages
-nft_pkg_state: 'installed'
+nft_pkg_state: 'present'
 nft_old_pkg_list: 'iptables'
 nft_old_pkg_state: 'absent'
 nft_old_pkg_manage: true
