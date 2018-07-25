@@ -2,6 +2,7 @@
 
 ### Enhancements
 * Set a variable to enable/disable the support of Nftables.
+* Move two task in systemd handler (try to fix #1).
 
 ## v1.3.1
 

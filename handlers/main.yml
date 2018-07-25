@@ -1,5 +1,9 @@
 ---
 # handlers file for nftables
-- name: restart nftables service
-  service: name={{ nft_service_name }} state=restarted
-  when: nft_service_manage
+- name: Restart nftables service
+  systemd:
+    daemon_reload: '{{ nftables__register_systemd_service.changed | default(False) }}'
+    state: 'restarted'
+    name: '{{ nft_service_name }}'
+    enabled: '{{ nft_service_enabled }}'
+  when: ansible_service_mgr == 'systemd' and nft_service_manage

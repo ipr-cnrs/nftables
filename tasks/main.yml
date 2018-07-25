@@ -44,7 +44,7 @@
     group: root
     mode: 0755
     backup: yes
-  notify: ['restart nftables service']
+  notify: ['Restart nftables service']
   when: nft_enabled|bool
 
 - name: CONFIG generate input rules file
@@ -55,7 +55,7 @@
     group: root
     mode: 0755
     backup: yes
-  notify: ['restart nftables service']
+  notify: ['Restart nftables service']
   when: nft_enabled|bool
 
 - name: CONFIG generate output rules file
@@ -66,7 +66,7 @@
     group: root
     mode: 0755
     backup: yes
-  notify: ['restart nftables service']
+  notify: ['Restart nftables service']
   when: nft_enabled|bool
 
 - name: CONFIG generate vars definition file
@@ -77,7 +77,7 @@
     group: root
     mode: 0755
     backup: yes
-  notify: ['restart nftables service']
+  notify: ['Restart nftables service']
   when: nft_enabled|bool
 
 - name: CONFIG generate sets and maps file
@@ -88,7 +88,7 @@
     group: root
     mode: 0755
     backup: yes
-  notify: ['restart nftables service']
+  notify: ['Restart nftables service']
   when: nft_enabled|bool
 # }}}
 
@@ -104,19 +104,6 @@
   register: nftables__register_systemd_service
   when: (nft_enabled|bool and
          nft_service_manage|bool)
-  notify: ['restart nftables service']
+  notify: ['Restart nftables service']
 
-- name: Reload systemd daemons
-  command: systemctl daemon-reload
-  notify: ['restart nftables service']
-  when: (nft_service_manage|bool and
-         nftables__register_systemd_service|changed)
-
-- name: SERVICE manage '{{ nft_service_name }}'
-  service:
-    name: '{{ nft_service_name }}'
-    state: started
-    enabled: '{{ nft_service_enabled }}'
-  when: (nft_enabled|bool and
-         nft_service_manage|bool)
 # }}}
