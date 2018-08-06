@@ -1,3 +1,7 @@
+---
+
+dependencies: []
+
 galaxy_info:
   author: "Jérémy Gardais"
   description: "Manage Nftables rules and packages"
@@ -9,14 +13,6 @@ galaxy_info:
   - name: Debian
     versions:
     - stretch
-  #- name: opensuse
-  #  versions:
-  #  - all
-  #  - 12.1
-  #  - 12.2
-  #  - 12.3
-  #  - 13.1
-  #  - 13.2
   galaxy_tags:
     - system
     - nftables

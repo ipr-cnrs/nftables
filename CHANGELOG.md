@@ -1,3 +1,8 @@
+## v1.X
+
+### Fix
+* Set empty dependencies line to fix Galaxy warning.
+
 ## v1.4
 
 ### Enhancements
