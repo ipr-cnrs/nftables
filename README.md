@@ -36,17 +36,21 @@ Highly inspired by [Mike Gleason firewall role][mikegleasonjr firewall github] (
 * **nft_sets_conf_path** : Sets and maps definition file include in main configuration file [default : `{{ nft_conf_dir_path }}sets.nft`].
 * **nft_sets_conf_content** : Template used to generate the previous sets and maps definition file [default : `etc/nftables.d/sets.nft.j2`].
 * **nft_global_default_rules** : Set default rules for `global` chain. Other chains will jump to `global` before apply their specific rules.
-* **nft_global_group_rules** : You can add `global` rules or override those defined by **nft_global_default_rules** for a group.
-* **nft_global_host_rules:** : Hosts can also add or override `global` rules.
+* **nft_global_rules** : You can add `global` rules or override those defined by **nft_global_default_rules** for all hosts.
+* **nft_global_group_rules** : You can add `global` rules or override those defined by **nft_global_default_rules** and **nft_global_rules** for a group.
+* **nft_global_host_rules:** : Hosts can also add or override all previours rules.
 * **nft_input_default_rules** : Set default rules for `input` chain.
-* **nft_input_group_rules** : You can add `input` rules or override those defined by **nft_input_default_rules** for a group.
-* **nft_input_host_rules:** : Hosts can also add or override `input` rules.
+* **nft_input_rules** : You can add `input` rules or override those defined by **nft_input_default_rules** for all hosts.
+* **nft_input_group_rules** : You can add `input` rules or override those defined by **nft_input_default_rules** and **nft_input_rules** for a group.
+* **nft_input_host_rules:** : Hosts can also add or override all previous `input` rules.
 * **nft_output_default_rules** : Set default rules for `output` chain.
-* **nft_output_group_rules** : You can add `output` rules or override those defined by **nft_output_default_rules** for a group.
-* **nft_output_host_rules:** : Hosts can also add or override `output` rules.
+* **nft_output_rules** : You can add `output` rules or override those defined by **nft_output_default_rules** for all hosts.
+* **nft_output_group_rules** : You can add `output` rules or override those defined by **nft_output_default_rules** and **nft_output_rules** for a group.
+* **nft_output_host_rules:** : Hosts can also add or override all previous `output` rules.
 * **nft_define_default** : Set default vars available in all rules.
-* **nft_define_group** : You can add vars or override those defined by **nft_define_default** for groups.
-* **nft_define_host** : You can add or override existant vars.
+* **nft_define** : You can add vars or override those defined by **nft_define_default** for all hosts.
+* **nft_define_group** : You can add vars or override those defined by **nft_define_default** and **nft_define** for a group.
+* **nft_define_host** : You can add or override all previous vars.
 * **nft_service_manage** : If `nftables` service should be managed with this role [default : `true`].
 * **nft_service_name** : `nftables` service name [default : `nftables`].
 * **nft_service_enabled** : Set `nftables` service available at startup [default : `true`].
@@ -61,8 +65,9 @@ Please see default value by Operating System file in [vars][vars directory] dire
 
 Each type of rules dictionaries will be merged and rules will be applied in the alphabetical order of the keys (the reason to use 000 to 999 as prefix). So :
   * **nft_*_default_rules** : Define default rules for all nodes. You can define it in `group_vars/all`.
-  * **nft_*_group_rules** : Can add rules and override those defined by **nft_*_default_rules**. You can define it in `group_vars/webservers`.
-  * **nft_*_host_rules** : Can add rules and override those define by **nft_*_default_rules** and **nft_*_group_rules**. You can define it in `host_vars/www.local.domain`.
+  * **nft_*_rules** : Can add rules and override those defined by **nft_*_default_rules**. You can define it in `group_vars/all`.
+  * **nft_*_group_rules** : Can add rules and override those defined by **nft_*_default_rules** and **nft_*_rules**. You can define it in `group_vars/webservers`.
+  * **nft_*_host_rules** : Can add rules and override those define by **nft_*_default_rules**, **nft_*_group_rules** and **nft_*_rules**. You can define it in `host_vars/www.local.domain`.
 
 `defaults/main.yml`:
 
@@ -72,6 +77,7 @@ nft_global_default_rules:
   005 state management:
     - ct state established,related accept
     - ct state invalid drop
+nft_global_rules: {}
 nft_global_group_rules: {}
 nft_global_host_rules: {}
 
@@ -88,6 +94,7 @@ nft_input_default_rules:
     - udp dport @in_udp_accept ct state new accept
   210 input tcp accepted:
     - tcp dport @in_tcp_accept ct state new accept
+nft_input_rules: {}
 nft_input_group_rules: {}
 nft_input_host_rules: {}
 
@@ -104,6 +111,7 @@ nft_output_default_rules:
     - udp dport @out_udp_accept ct state new accept
   210 output tcp accepted:
     - tcp dport @out_tcp_accept ct state new accept
+nft_output_rules: {}
 nft_output_group_rules: {}
 nft_output_host_rules: {}
 
@@ -125,6 +133,7 @@ nft_define_default:
   output udp accepted:
     name: out_udp_accept
     value: '{ bootps, domain, ntp }'
+nft_define: {}
 nft_define_group: {}
 nft_define_host: {}
 
@@ -144,6 +153,7 @@ nft_set_default:
   out_udp_accept:
     - type inet_service; flags interval;
     - elements = $out_udp_accept
+nft_set: {}
 nft_set_group: {}
 nft_set_host: {}
 ```

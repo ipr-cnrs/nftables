@@ -2,7 +2,8 @@
 
 ### Enhancements
 * Set a variable to enable/disable the support of Nftables.
-* Move two task in systemd handler (try to fix #1).
+* Move two tasks in systemd handler (try to fix #1).
+* Add a additionnal level for all vars for all hosts (group_vars/all).
 
 ### Fix
 * Deprecation warning for state "installed".

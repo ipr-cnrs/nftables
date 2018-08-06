@@ -41,6 +41,7 @@ nft_global_default_rules:
   005 state management:
     - ct state established,related accept
     - ct state invalid drop
+nft_global_rules: {}
 nft_global_group_rules: {}
 nft_global_host_rules: {}
 
@@ -57,6 +58,7 @@ nft_input_default_rules:
     - udp dport @in_udp_accept ct state new accept
   210 input tcp accepted:
     - tcp dport @in_tcp_accept ct state new accept
+nft_input_rules: {}
 nft_input_group_rules: {}
 nft_input_host_rules: {}
 
@@ -74,6 +76,7 @@ nft_output_default_rules:
     - udp dport @out_udp_accept ct state new accept
   210 output tcp accepted:
     - tcp dport @out_tcp_accept ct state new accept
+nft_output_rules: {}
 nft_output_group_rules: {}
 nft_output_host_rules: {}
 
@@ -95,6 +98,7 @@ nft_define_default:
   output udp accepted:
     name: out_udp_accept
     value: '{ bootps, domain, ntp }'
+nft_define: {}
 nft_define_group: {}
 nft_define_host: {}
 
@@ -114,6 +118,7 @@ nft_set_default:
   out_udp_accept:
     - type inet_service; flags interval;
     - elements = $out_udp_accept
+nft_set: {}
 nft_set_group: {}
 nft_set_host: {}
 

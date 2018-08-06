@@ -1,5 +1,6 @@
 # {{ ansible_managed }}
 {% set setmerged = nft_set_default.copy() %}
+{% set _ = setmerged.update(nft_set) %}
 {% set _ = setmerged.update(nft_set_group) %}
 {% set _ = setmerged.update(nft_set_host) %}
 

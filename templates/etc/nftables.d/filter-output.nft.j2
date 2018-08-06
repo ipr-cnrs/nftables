@@ -1,5 +1,6 @@
 # {{ ansible_managed }}
 {% set outputmerged = nft_output_default_rules.copy() %}
+{% set _ = outputmerged.update(nft_output_rules) %}
 {% set _ = outputmerged.update(nft_output_group_rules) %}
 {% set _ = outputmerged.update(nft_output_host_rules) %}
 
