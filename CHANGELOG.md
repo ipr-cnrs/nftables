@@ -1,4 +1,4 @@
-## v1.X
+## v1.4
 
 ### Enhancements
 * Set a variable to enable/disable the support of Nftables.
@@ -7,6 +7,7 @@
 
 ### Fix
 * Deprecation warning for state "installed".
+* The role now might require Ansible 2.5 (available in Debian Stable backports).
 
 ## v1.3.1
 
