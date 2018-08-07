@@ -2,6 +2,7 @@
 
 ### Fix
 * Set empty dependencies line to fix Galaxy warning.
+* Add possibility to restart Fail2ban service.
 
 ## v1.4
 

@@ -2,7 +2,7 @@
 [Unit]
 Description={{ nft_service_name }}
 Documentation=man:nft(8) http://wiki.nftables.org
-Before=fail2ban.service
+;Before=fail2ban.service
 
 [Service]
 Type=oneshot
@@ -10,9 +10,15 @@ RemainAfterExit=yes
 StandardInput=null
 ProtectSystem=full
 ProtectHome=true
+{% if nft__fail2ban_service %}
+ExecStart=/usr/sbin/nft -f {{ nft_main_conf_path }} ; /bin/systemctl restart fail2ban.service
+ExecReload=/usr/sbin/nft -f {{ nft_main_conf_path }} ; /bin/systemctl restart fail2ban.service
+ExecStop=/bin/systemctl stop fail2ban.service ; /usr/sbin/nft flush ruleset
+{% else %}
 ExecStart=/usr/sbin/nft -f {{ nft_main_conf_path }}
 ExecReload=/usr/sbin/nft -f {{ nft_main_conf_path }}
 ExecStop=/usr/sbin/nft flush ruleset
+{% endif %}
 
 [Install]
 WantedBy=multi-user.target
