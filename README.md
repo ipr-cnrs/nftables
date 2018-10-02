@@ -205,6 +205,17 @@ table inet filter {
 		elements = { 255.255.255.255, 224.0.0.1, 224.0.0.251}
 	}
 
+	set in_tcp_accept {
+		type inet_service
+		flags interval
+		elements = { ssh}
+	}
+
+	set in_udp_accept {
+		type inet_service
+		flags interval
+	}
+
 	set out_tcp_accept {
 		type inet_service
 		flags interval
@@ -236,6 +247,7 @@ table inet filter {
 		jump global
 		oif "lo" accept
 		ip protocol icmp accept
+		ip6 nexthdr ipv6-icmp counter packets 0 bytes 0 accept
 		udp dport @out_udp_accept ct state new accept
 		tcp dport @out_tcp_accept ct state new accept
 	}
