@@ -133,3 +133,41 @@
   when: (nft_enabled|bool and
          nft_service_manage|bool)
   notify: ['Restart nftables service']
+
+# Enable the following 4 tasks when the service file was installed as a way
+# to detect the first nftable activation (which triggers the 10 min hold bug)
+
+# First ensure the unit is loaded in systemd
+- name: Reload the systemd configuration if nftables unit changed
+  systemd:
+    daemon_reload: yes
+  when: nftables__register_systemd_service.changed | default(False)
+
+# Start nftable service manually here after a 1 sec delay to allow
+# disconnecting properly before the firewall starts.
+# Note: `systemctl enable` is left to the 'Restart nftables service' handler
+- name: Restart nftables service
+  shell: "/bin/sleep 1; /bin/systemctl restart {{ nft_service_name }}"
+  when: ansible_service_mgr == 'systemd' and nft_service_manage
+    and nftables__register_systemd_service.changed | default(False)
+  async: 1000
+  poll: 0
+  register: nftables__register_systemd_service_start_async
+
+# Kill the ssh connection before nftable is restarted (ie during the delay)
+- name: Force ssh to establish a new connection (even with pipelining)
+  meta: reset_connection
+  # disabled because of https://github.com/ansible/ansible/issues/46275
+  # when: nftables__register_systemd_service_start_async.ansible_job_id is defined
+
+# Reestablish the ssh connection and check for the finished restart job.
+- name: Wait for nftables service to be restarted
+  async_status:
+    jid: "{{ nftables__register_systemd_service_start_async.ansible_job_id }}"
+  register: job_result
+  until: job_result.finished
+  retries: 60
+  delay: 2
+  when: nftables__register_systemd_service_start_async.ansible_job_id is defined
+
+#
