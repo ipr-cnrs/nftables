@@ -4,6 +4,7 @@
 * Set empty dependencies line to fix Galaxy warning.
 * Add possibility to restart Fail2ban service.
 * Use to_nice_json to manage packages list.
+* Fix E405 Remote package tasks should have a retry.
 
 ## v1.4.0
 
