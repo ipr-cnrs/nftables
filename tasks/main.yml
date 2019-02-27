@@ -14,7 +14,7 @@
     name: '{{ item }}'
     state: '{{ nft_pkg_state }}'
   with_items:
-    - '{{ nft_pkg_list }}'
+    - '{{ nft_pkg_list | to_nice_json }}'
   when: nft_enabled|bool
 
 - name: INSTALL Remove iptables packages
@@ -22,7 +22,7 @@
     name: '{{ item }}'
     state: '{{ nft_old_pkg_state }}'
   with_items:
-    - '{{ nft_old_pkg_list }}'
+    - '{{ nft_old_pkg_list | to_nice_json }}'
   when: (nft_enabled|bool and
          nft_old_pkg_manage|bool)
 

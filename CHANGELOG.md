@@ -1,10 +1,11 @@
-## v1.X
+## v1.4.1
 
 ### Fix
 * Set empty dependencies line to fix Galaxy warning.
 * Add possibility to restart Fail2ban service.
+* Use to_nice_json to manage packages list.
 
-## v1.4
+## v1.4.0
 
 ### Enhancements
 * Set a variable to enable/disable the support of Nftables.
@@ -20,7 +21,7 @@
 ### Fix
 * Reload systemd daemons only if unit file change.
 
-## v1.3
+## v1.3.0
 
 ### Features
 * Provide the systemd unit.
@@ -38,7 +39,7 @@
 ### Features
 * Allow icmpv6 outgoing traffic.
 
-## v1.2
+## v1.2.0
 
 ### Features
 * Ensure to remove old packages (iptables,…).
@@ -46,7 +47,7 @@
 ### Fixes
 * Ensure to create the the directory to store the differents configuration files (/etc/nftables.d).
 
-## v1.1
+## v1.1.0
 
 ### Features
 * Manage nftables service at startup.
@@ -59,7 +60,7 @@
 * Remove DHCP incoming packets. The connection is started by the host, don't need incoming rule.
 * Allow outgoing OpenPGP HTTP requests.
 
-## v1.0
+## v1.0.0
 
 ### Features
 * Install `nftables` package for Debian based distros.
