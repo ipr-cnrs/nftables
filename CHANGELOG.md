@@ -1,3 +1,8 @@
+## v1.X
+
+### Enhancements
+* Add a variable to disable "Protect" instructions in systemd unit.
+
 ## v1.4.1
 
 ### Fix

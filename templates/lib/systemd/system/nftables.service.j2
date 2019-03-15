@@ -8,8 +8,10 @@ Documentation=man:nft(8) http://wiki.nftables.org
 Type=oneshot
 RemainAfterExit=yes
 StandardInput=null
+{% if nft__service_protect %}
 ProtectSystem=full
 ProtectHome=true
+{% endif %}
 {% if nft__fail2ban_service %}
 ExecStart=/usr/sbin/nft -f {{ nft_main_conf_path }} ; /bin/systemctl restart fail2ban.service
 ExecReload=/usr/sbin/nft -f {{ nft_main_conf_path }} ; /bin/systemctl restart fail2ban.service

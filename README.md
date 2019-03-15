@@ -54,6 +54,7 @@ Highly inspired by [Mike Gleason firewall role][mikegleasonjr firewall github] (
 * **nft_service_manage** : If `nftables` service should be managed with this role [default : `true`].
 * **nft_service_name** : `nftables` service name [default : `nftables`].
 * **nft_service_enabled** : Set `nftables` service available at startup [default : `true`].
+* **nft__service_protect** : If systemd unit should protect system and home [default : `true`].
 * **nft__fail2ban_service** : If the Nftables service should also restart the Fail2ban service [default : `False`].
 
 ### OS Specific Variables
