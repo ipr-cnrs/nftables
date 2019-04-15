@@ -2,6 +2,7 @@
 
 ### Enhancements
 * Add a variable to disable "Protect" instructions in systemd unit.
+* Improve vars description/comments in default/main.yml.
 
 ## v1.4.1
 

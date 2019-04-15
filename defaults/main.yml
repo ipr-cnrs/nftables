@@ -36,51 +36,47 @@ nft_set_conf_path: '{{ nft_conf_dir_path }}/sets.nft'
 nft_set_conf_content: 'etc/nftables.d/sets.nft.j2'
 
                                                                    # ]]]
-# rules
+# Nftables global rules [[[
+# -------------------------
+
+# .. envvar:: nft_global_default_rules [[[
+#
+# List of global rules (applied on all tables) to configure for all hosts
+# inherited from this role.
 nft_global_default_rules:
   005 state management:
     - ct state established,related accept
     - ct state invalid drop
+                                                                   # ]]]
+# .. envvar:: nft_global_rules [[[
+#
+# List of global rules (applied on all tables) to configure for all hosts
+# in the Ansible inventory.
 nft_global_rules: {}
+                                                                   # ]]]
+# .. envvar:: nft_global_group_rules [[[
+#
+# List of global rules (applied on all tables) to configure for hosts in
+# specific Ansible inventory group.
 nft_global_group_rules: {}
+                                                                   # ]]]
+# .. envvar:: nft_global_host_rules [[[
+#
+# List of global rules (applied on all tables) to configure for specific hosts
+# in the Ansible inventory.
 nft_global_host_rules: {}
+                                                                   # ]]]
+                                                                   # ]]]
+# Nftables vars definition [[[
+# ----------------------------
 
-nft_input_default_rules:
-  000 policy:
-    - type filter hook input priority 0; policy drop;
-  005 global:
-    - jump global
-  010 drop unwanted:
-    - ip daddr @blackhole counter drop
-  015 localhost:
-    - iif lo accept
-  200 input udp accepted:
-    - udp dport @in_udp_accept ct state new accept
-  210 input tcp accepted:
-    - tcp dport @in_tcp_accept ct state new accept
-nft_input_rules: {}
-nft_input_group_rules: {}
-nft_input_host_rules: {}
+# These lists allow to define some vars that can be used in nftables rules.
+# See the official Nftables wiki page for more informations and examples :
+# https://wiki.nftables.org/wiki-nftables/index.php/Scripting#Defining_variables
 
-nft_output_default_rules:
-  000 policy:
-    - type filter hook output priority 0; policy drop;
-  005 global:
-    - jump global
-  015 localhost:
-    - oif lo accept
-  050 icmp:
-    - ip protocol icmp accept
-    - ip6 nexthdr icmpv6 counter accept
-  200 output udp accepted:
-    - udp dport @out_udp_accept ct state new accept
-  210 output tcp accepted:
-    - tcp dport @out_tcp_accept ct state new accept
-nft_output_rules: {}
-nft_output_group_rules: {}
-nft_output_host_rules: {}
-
-# define nft vars
+# .. envvar:: nft_define_default [[[
+#
+# List of vars definition to configure for all hosts inherited from this role.
 nft_define_default:
   broadcast and multicast:
     desc: 'broadcast and multicast'
@@ -98,11 +94,35 @@ nft_define_default:
   output udp accepted:
     name: out_udp_accept
     value: '{ bootps, domain, ntp }'
+                                                                   # ]]]
+# .. envvar:: nft_define [[[
+#
+# List of vars definition to configure for all hosts in the Ansible inventory.
 nft_define: {}
+                                                                   # ]]]
+# .. envvar:: nft_define_group [[[
+#
+# List of vars definition to configure for hosts in specific
+# Ansible inventory group.
 nft_define_group: {}
+                                                                   # ]]]
+# .. envvar:: nft_define_host [[[
+#
+# List of vars definition to configure for specific hosts
+# in the Ansible inventory.
 nft_define_host: {}
+                                                                   # ]]]
+                                                                   # ]]]
+# Nftables sets definition [[[
+# ----------------------------
 
-# sets and maps
+# These "set" lists allow to define sets that can be used in Nftables rules.
+# See the official Nftables wiki page for more informations and examples :
+# https://wiki.nftables.org/wiki-nftables/index.php/Sets
+
+# .. envvar:: nft_define_default [[[
+#
+# List of sets to configure for all hosts inherited from this role.
 nft_set_default:
   blackhole:
     - type ipv4_addr;
@@ -118,15 +138,159 @@ nft_set_default:
   out_udp_accept:
     - type inet_service; flags interval;
     - elements = $out_udp_accept
+                                                                   # ]]]
+# .. envvar:: nft_set [[[
+#
+# List of sets to configure for all hosts in the Ansible inventory.
 nft_set: {}
+                                                                   # ]]]
+# .. envvar:: nft_set_group [[[
+#
+# List of sets to configure for hosts in specific Ansible inventory group.
 nft_set_group: {}
+                                                                   # ]]]
+# .. envvar:: nft_set_host [[[
+#
+# List of sets to configure for specific hosts in the Ansible inventory.
 nft_set_host: {}
+                                                                   # ]]]
 
-# service
+                                                                   # ]]]
+# inet filter table rules [[[
+# ---------------------------
+
+# All these rules will be set up in an inet table in order to filter the
+# input and output traffic.
+
+# .. envvar:: nft_input_default_rules [[[
+#
+# List of input rules to configure for all hosts inherited from this role.
+nft_input_default_rules:
+  000 policy:
+    - type filter hook input priority 0; policy drop;
+  005 global:
+    - jump global
+  010 drop unwanted:
+    - ip daddr @blackhole counter drop
+  015 localhost:
+    - iif lo accept
+  200 input udp accepted:
+    - udp dport @in_udp_accept ct state new accept
+  210 input tcp accepted:
+    - tcp dport @in_tcp_accept ct state new accept
+                                                                   # ]]]
+# .. envvar:: nft_input_rules [[[
+#
+# List of input rules to configure for all hosts in the Ansible inventory.
+nft_input_rules: {}
+                                                                   # ]]]
+# .. envvar:: nft_input_group_rules [[[
+#
+# List of input rules to configure for hosts in specific Ansible inventory group.
+nft_input_group_rules: {}
+                                                                   # ]]]
+# .. envvar:: nft_input_host_rules [[[
+#
+# List of input rules to configure for specific hosts in the Ansible inventory.
+nft_input_host_rules: {}
+                                                                   # ]]]
+
+# .. envvar:: nft_output_default_rules [[[
+#
+# List of output rules to configure for all hosts inherited from this role.
+nft_output_default_rules:
+  000 policy:
+    - type filter hook output priority 0; policy drop;
+  005 global:
+    - jump global
+  015 localhost:
+    - oif lo accept
+  050 icmp:
+    - ip protocol icmp accept
+    - ip6 nexthdr icmpv6 counter accept
+  200 output udp accepted:
+    - udp dport @out_udp_accept ct state new accept
+  210 output tcp accepted:
+    - tcp dport @out_tcp_accept ct state new accept
+                                                                   # ]]]
+# .. envvar:: nft_output_rules [[[
+#
+# List of output rules to configure for all hosts in the Ansible inventory.
+nft_output_rules: {}
+                                                                   # ]]]
+# .. envvar:: nft_output_group_rules [[[
+#
+# List of output rules to configure for hosts in specific Ansible inventory group.
+nft_output_group_rules: {}
+                                                                   # ]]]
+# .. envvar:: nft_output_host_rules [[[
+#
+# List of output rules to configure for specific hosts in the Ansible inventory.
+nft_output_host_rules: {}
+                                                                   # ]]]
+                                                                   # ]]]
+# Service management [[[
+# ----------------------
+# .. envvar:: nft_service_manage [[[
+#
+# If the nftables service should be managed ? Possible options are :
+#
+# ``True``
+#   Default. The service is started.
+#
+# ``False``
+#   The service will not be touched.
 nft_service_manage: true
+                                                                   # ]]]
+# .. envvar:: nft_service_name [[[
+#
+# The service name to manage.
 nft_service_name: 'nftables'
+                                                                   # ]]]
+# .. envvar:: nft_service_enabled [[[
+#
+# If the nftables service should be enabled at startup ? Possible options are :
+#
+# ``True``
+#   Default. The service is enabled.
+#
+# ``False``
+#   The service is disabled from startup.
 nft_service_enabled: true
+                                                                   # ]]]
+# .. envvar:: nft_service_unit_path [[[
+#
+# Path to store nftables service.
 nft_service_unit_path: '/lib/systemd/system/nftables.service'
+                                                                   # ]]]
+# .. envvar:: nft_service_unit_content [[[
+#
+# Template used to provide systemd unit for nftables service.
 nft_service_unit_content: 'lib/systemd/system/nftables.service.j2'
+                                                                   # ]]]
+# .. envvar:: nft__service_protect [[[
+#
+# If the systemd unit should have the Protect directives ? Possible options :
+#
+# ``True``
+#   Default. Directives will be set (ProtectSystem, ProtectHome,…).
+#
+# ``False``
+#   The directives will be ignored.
 nft__service_protect: true
+                                                                   # ]]]
+# .. envvar:: nft__fail2ban_service [[[
+#
+# If the nftables systemd unit should also restart Fail2ban service. Possible
+# options are :
+#
+# ``False``
+#   Default. Nftables service will not affect Fail2ban service.
+#
+# ``True``
+#   Any Nftables service (re)start will also restart Fail2ban service.
 nft__fail2ban_service: False
+                                                                   # ]]]
+
+                                                                   # ]]]
+                                                                   # ]]]
