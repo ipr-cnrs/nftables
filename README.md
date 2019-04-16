@@ -27,13 +27,13 @@ Highly inspired by [Mike Gleason firewall role][mikegleasonjr firewall github] (
 * **nft_conf_dir_path** : Directory to store the differents Nftables configuration files [default : `/etc/nftables.d`].
 * **nft_main_conf_path** : Main configuration file loaded by systemd unit [default : `/etc/nftables.conf`].
 * **nft_main_conf_content** : Template used to generate the previous main configuration file [default : `etc/nftables.conf.j2`].
-* **nft_input_conf_path** : Input configuration file include in main configuration file [default : `{{ nft_conf_dir_path }}filter-input.nft`].
+* **nft_input_conf_path** : Input configuration file include in main configuration file [default : `{{ nft_conf_dir_path }}/filter-input.nft`].
 * **nft_input_conf_content** : Template used to generate the previous input configuration file [default : `etc/nftables.d/filter-input.nft.j2`].
-* **nft_output_conf_path** : Output configuration file include in main configuration file [default : `{{ nft_conf_dir_path }}filter-output.nft`].
+* **nft_output_conf_path** : Output configuration file include in main configuration file [default : `{{ nft_conf_dir_path }}/filter-output.nft`].
 * **nft_output_conf_content** : Template used to generate the previous output configuration file [default : `etc/nftables.d/filter-output.nft.j2`].
-* **nft_define_conf_path** : Vars definition file include in main configuration file [default : `{{ nft_conf_dir_path }}defines.nft`].
+* **nft_define_conf_path** : Vars definition file include in main configuration file [default : `{{ nft_conf_dir_path }}/defines.nft`].
 * **nft_define_conf_content** : Template used to generate the previous vars definition file [default : `etc/nftables.d/defines.nft.j2`].
-* **nft_sets_conf_path** : Sets and maps definition file include in main configuration file [default : `{{ nft_conf_dir_path }}sets.nft`].
+* **nft_sets_conf_path** : Sets and maps definition file include in main configuration file [default : `{{ nft_conf_dir_path }}/sets.nft`].
 * **nft_sets_conf_content** : Template used to generate the previous sets and maps definition file [default : `etc/nftables.d/sets.nft.j2`].
 * **nft_global_default_rules** : Set default rules for `global` chain. Other chains will jump to `global` before apply their specific rules.
 * **nft_global_rules** : You can add `global` rules or override those defined by **nft_global_default_rules** for all hosts.
@@ -47,7 +47,20 @@ Highly inspired by [Mike Gleason firewall role][mikegleasonjr firewall github] (
 * **nft_output_default_rules** : Set default rules for `output` chain.
 * **nft_output_rules** : You can add `output` rules or override those defined by **nft_output_default_rules** for all hosts.
 * **nft_output_group_rules** : You can add `output` rules or override those defined by **nft_output_default_rules** and **nft_output_rules** for a group.
-* **nft_output_host_rules:** : Hosts can also add or override all previous `output` rules.
+* **nft_output_host_rules** : Hosts can also add or override all previous `output` rules.
+* **nft__nat_table_manage** : If the nat table should be managed [default : `False`].
+* **nft__nat_default_prerouting_rules** : Set default rules for `prerouting` chain of **nat** table.
+* **nft__nat_prerouting_rules** : Set rules for `prerouting` chain of **nat** table for all hosts in the Ansible inventory.
+* **nft__nat_group_prerouting_rules** : Set rules for `prerouting` chain of **nat** table for hosts in specific Ansible inventory group.
+* **nft__nat_host_prerouting_rules** : Set rules for `prerouting` chain of **nat** table for specific hosts the Ansible inventory.
+* **nft__nat_prerouting_conf_path** : Prerouting configuration file include in the main configuration [default : `{{ nft_conf_dir_path }}/nat-prerouting.nft`].
+* **nft__nat_prerouting_conf_content** : Template used to generate the previous prerouting configuration file [default : `etc/nftables.d/nat-prerouting.nft.j2`].
+* **nft__nat_default_postrouting_rules** : Set default rules for `postrouting` chain of **nat** table.
+* **nft__nat_postrouting_rules** : Set rules for `postrouting` chain of **nat** table for all hosts in the Ansible inventory.
+* **nft__nat_group_postrouting_rules** : Set rules for `postrouting` chain of **nat** table for hosts in specific Ansible inventory group.
+* **nft__nat_host_postrouting_rules** : Set rules for `postrouting` chain of **nat** table for specific hosts the Ansible inventory.
+* **nft__nat_postrouting_conf_path** : postrouting configuration file include in the main configuration [default : `{{ nft_conf_dir_path }}/nat-postrouting.nft`].
+* **nft__nat_postrouting_conf_content** : Template used to generate the previous postrouting configuration file [default : `etc/nftables.d/nat-postrouting.nft.j2`].
 * **nft_define_default** : Set default vars available in all rules.
 * **nft_define** : You can add vars or override those defined by **nft_define_default** for all hosts.
 * **nft_define_group** : You can add vars or override those defined by **nft_define_default** and **nft_define** for a group.

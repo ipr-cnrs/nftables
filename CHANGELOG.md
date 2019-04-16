@@ -1,5 +1,8 @@
 ## vX.Y.Z
 
+### Features
+* Able to manage a new NAT table (with prerouting and postrouting chains).
+
 ### Enhancements
 * Clean tasks name and comments in tasks/main.yml file.
 * Order and clean comments in defaults/main.yml file.
