@@ -30,6 +30,7 @@ table inet filter {
 {% if nft__nat_table_manage %}
 # Additionnal table for Network Address Translation (NAT)
 table ip nat {
+	include "{{ nft_set_conf_path }}"
 	include "{{ nft__nat_prerouting_conf_path }}"
 	include "{{ nft__nat_postrouting_conf_path }}"
 }
