@@ -1,8 +1,9 @@
-## v1.X
+## v1.5.0
 
 ### Enhancements
 * Add a variable to disable "Protect" instructions in systemd unit.
 * Improve vars description/comments in default/main.yml.
+* Add a variable to manage custom content (table, include,…).
 
 ## v1.4.1
 

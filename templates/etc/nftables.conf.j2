@@ -26,3 +26,8 @@ table inet filter {
 	include "{{ nft_input_conf_path }}"
 	include "{{ nft_output_conf_path }}"
 }
+
+{% if nft__custom_content|d() %}
+# Custom content from ipr-cnrs.nftables
+{{ nft__custom_content }}
+{% endif %}

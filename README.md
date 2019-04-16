@@ -38,7 +38,8 @@ Highly inspired by [Mike Gleason firewall role][mikegleasonjr firewall github] (
 * **nft_global_default_rules** : Set default rules for `global` chain. Other chains will jump to `global` before apply their specific rules.
 * **nft_global_rules** : You can add `global` rules or override those defined by **nft_global_default_rules** for all hosts.
 * **nft_global_group_rules** : You can add `global` rules or override those defined by **nft_global_default_rules** and **nft_global_rules** for a group.
-* **nft_global_host_rules:** : Hosts can also add or override all previours rules.
+* **nft_global_host_rules** : Hosts can also add or override all previours rules.
+* **nft__custom_content** : Custom content (tables, include,…) to add in Nftables configuration [default : `''`].
 * **nft_input_default_rules** : Set default rules for `input` chain.
 * **nft_input_rules** : You can add `input` rules or override those defined by **nft_input_default_rules** for all hosts.
 * **nft_input_group_rules** : You can add `input` rules or override those defined by **nft_input_default_rules** and **nft_input_rules** for a group.

@@ -66,6 +66,11 @@ nft_global_group_rules: {}
 # in the Ansible inventory.
 nft_global_host_rules: {}
                                                                    # ]]]
+# .. envvar:: nft__custom_content [[[
+#
+# Custom content (tables, include,…) to add in Nftables configuration.
+nft__custom_content: ''
+                                                                   # ]]]
                                                                    # ]]]
 # Nftables vars definition [[[
 # ----------------------------
