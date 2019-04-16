@@ -1,0 +1,17 @@
+# {{ ansible_managed }}
+{% set preroutingmerged = nft__nat_default_prerouting_rules.copy() %}
+{% set _ = preroutingmerged.update(nft__nat_prerouting_rules) %}
+{% set _ = preroutingmerged.update(nft__nat_group_prerouting_rules) %}
+{% set _ = preroutingmerged.update(nft__nat_host_prerouting_rules) %}
+
+chain prerouting {
+{% for group, rules in preroutingmerged|dictsort  %}
+	# {{ group }}
+{% if not rules %}
+	# (none)
+{% endif %}
+{% for rule in rules %}
+	{{ rule }}
+{% endfor %}
+{% endfor %}
+}

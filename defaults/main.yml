@@ -337,6 +337,105 @@ nft_output_conf_path: '{{ nft_conf_dir_path }}/filter-output.nft'
 nft_output_conf_content: 'etc/nftables.d/filter-output.nft.j2'
                                                                    # ]]]
                                                                    # ]]]
+# ip nat table rules [[[
+# ---------------------------
+#
+# All these rules will be set up in an ip table in order to perform some
+# Network Address Translation (NAT).
+
+# .. envvar:: nft__nat_table_manage [[[
+#
+# If the nat table should be managed ? Possible options are :
+#
+# ``False``
+#   Default. The nat table is not managed and rules will not be added.
+#
+# ``True``
+#   Add the pre and postrouting rules that follow.
+nft__nat_table_manage: False
+                                                                   # ]]]
+# .. envvar:: nft__nat_default_prerouting_rules [[[
+#
+# List of prerouting rules to configure for all hosts inherited from this role.
+nft__nat_default_prerouting_rules:
+  000 policy:
+    - type nat hook prerouting priority 0;
+                                                                   # ]]]
+# .. envvar:: nft__nat_prerouting_rules [[[
+#
+# List of prerouting rules to configure for all hosts in the Ansible inventory.
+nft__nat_prerouting_rules: {}
+                                                                   # ]]]
+# .. envvar:: nft__nat_group_prerouting_rules [[[
+#
+# List of prerouting rules to configure for hosts in specific
+# Ansible inventory group.
+nft__nat_group_prerouting_rules: {}
+                                                                   # ]]]
+# .. envvar:: nft__nat_host_prerouting_rules [[[
+#
+# List of prerouting rules to configure for specific hosts
+# in the Ansible inventory.
+nft__nat_host_prerouting_rules: {}
+                                                                   # ]]]
+# .. envvar:: nft__nat_prerouting_conf_path [[[
+#
+# Path to the prerouting rules file for the nat table to include in the main
+# configuration file in order to use the previous defined lists.
+#
+# Should include the '{{ nft_conf_dir_path }}' var or be an absolut path.
+nft__nat_prerouting_conf_path: '{{ nft_conf_dir_path }}/nat-prerouting.nft'
+                                                                   # ]]]
+# .. envvar:: nft__nat_prerouting_conf_content [[[
+#
+# Template used to provide the previous prerouting rules file.
+#
+# Must be a relative path from default/ directory of this role or from your
+# Ansible inventory directory.
+nft__nat_prerouting_conf_content: 'etc/nftables.d/nat-prerouting.nft.j2'
+                                                                   # ]]]
+
+# .. envvar:: nft__nat_default_postrouting_rules [[[
+#
+# List of postrouting rules to configure for all hosts inherited from this role.
+nft__nat_default_postrouting_rules:
+  000 policy:
+    - type nat hook postrouting priority 100;
+                                                                   # ]]]
+# .. envvar:: nft__nat_postrouting_rules [[[
+#
+# List of postrouting rules to configure for all hosts in the Ansible inventory.
+nft__nat_postrouting_rules: {}
+                                                                   # ]]]
+# .. envvar:: nft__nat_group_postrouting_rules [[[
+#
+# List of postrouting rules to configure for hosts in specific
+# Ansible inventory group.
+nft__nat_group_postrouting_rules: {}
+                                                                   # ]]]
+# .. envvar:: nft__nat_host_postrouting_rules [[[
+#
+# List of postrouting rules to configure for specific hosts
+# in the Ansible inventory.
+nft__nat_host_postrouting_rules: {}
+                                                                   # ]]]
+# .. envvar:: nft__nat_postrouting_conf_path [[[
+#
+# Path to the postrouting rules file for the nat table to include in the main
+# configuration file in order to use the previous defined lists.
+#
+# Should include the '{{ nft_conf_dir_path }}' var or be an absolut path.
+nft__nat_postrouting_conf_path: '{{ nft_conf_dir_path }}/nat-postrouting.nft'
+                                                                   # ]]]
+# .. envvar:: nft__nat_postrouting_conf_content [[[
+#
+# Template used to provide the previous postrouting rules file.
+#
+# Must be a relative path from default/ directory of this role or from your
+# Ansible inventory directory.
+nft__nat_postrouting_conf_content: 'etc/nftables.d/nat-postrouting.nft.j2'
+                                                                   # ]]]
+                                                                   # ]]]
 # Service management [[[
 # ----------------------
 

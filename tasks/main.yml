@@ -96,6 +96,31 @@
   notify: ['Restart nftables service']
   when: nft_enabled|bool
 
+# Nat table content [[[1
+- name: Nat table - generate prerouting rules file
+  template:
+    src: "{{ nft__nat_prerouting_conf_content }}"
+    dest: "{{ nft__nat_prerouting_conf_path }}"
+    owner: root
+    group: root
+    mode: 0755
+    backup: yes
+  notify: ['Restart nftables service']
+  when: (nft_enabled|bool and
+         nft__nat_table_manage|bool)
+
+- name: Nat table - generate postrouting rules file
+  template:
+    src: "{{ nft__nat_postrouting_conf_content }}"
+    dest: "{{ nft__nat_postrouting_conf_path }}"
+    owner: root
+    group: root
+    mode: 0755
+    backup: yes
+  notify: ['Restart nftables service']
+  when: (nft_enabled|bool and
+         nft__nat_table_manage|bool)
+
 # Manage service [[[1
 - name: Install Debian systemd service unit
   template:
