@@ -13,28 +13,46 @@
 # option does not remove existing installation and configuration.
 #
 nft_enabled: true
-
                                                                    # ]]]
-
-# packages
+# .. envvar:: nft_pkg_state [[[
+#
+# What is the desired state for Nftables packages ? Possible options :
+#
+# ``present``
+#   Default. Nftables packages will be installed.
+#
+# ``absent``
+#   Ensure to remove Nftables related packages.
 nft_pkg_state: 'present'
+                                                                   # ]]]
+# .. envvar:: nft_old_pkg_list [[[
+#
+# List of old Iptables packages to remove to avoid duplicate firewall.
+#
 nft_old_pkg_list: 'iptables'
+                                                                   # ]]]
+# .. envvar:: nft_old_pkg_state [[[
+#
+# What is the desired state for Iptables packages ? Possible options :
+#
+# ``absent``
+#   Default. Ensure to remove Iptables related packages.
+#
+# ``present``
+#   Iptables packages will be kept.
 nft_old_pkg_state: 'absent'
+                                                                   # ]]]
+# .. envvar:: nft_old_pkg_manage [[[
+#
+# If the old Iptables packages should be managed ? Possible options :
+#
+# ``true``
+#   Default. Ensure to apply the required state for Iptables related packages.
+#
+# ``false``
+#   Iptables packages will not be touched.
 nft_old_pkg_manage: true
-
-# files
-nft_conf_dir_path: '/etc/nftables.d'
-nft_main_conf_path: '/etc/nftables.conf'
-nft_main_conf_content: 'etc/nftables.conf.j2'
-nft_input_conf_path: '{{ nft_conf_dir_path }}/filter-input.nft'
-nft_input_conf_content: 'etc/nftables.d/filter-input.nft.j2'
-nft_output_conf_path: '{{ nft_conf_dir_path }}/filter-output.nft'
-nft_output_conf_content: 'etc/nftables.d/filter-output.nft.j2'
-nft_define_conf_path: '{{ nft_conf_dir_path }}/defines.nft'
-nft_define_conf_content: 'etc/nftables.d/defines.nft.j2'
-nft_set_conf_path: '{{ nft_conf_dir_path }}/sets.nft'
-nft_set_conf_content: 'etc/nftables.d/sets.nft.j2'
-
+                                                                   # ]]]
                                                                    # ]]]
 # Nftables global rules [[[
 # -------------------------
@@ -71,10 +89,32 @@ nft_global_host_rules: {}
 # Custom content (tables, include,…) to add in Nftables configuration.
 nft__custom_content: ''
                                                                    # ]]]
+# .. envvar:: nft_conf_dir_path [[[
+#
+# Path to the sub directory for Nftables configuration files.
+#
+# Should be an absolut path and this var will be used in all *_path vars.
+nft_conf_dir_path: '/etc/nftables.d'
+                                                                   # ]]]
+# .. envvar:: nft_main_conf_path [[[
+#
+# Path to the main configuration file called by the Systemd Nftables service.
+#
+# Should be an absolut path.
+nft_main_conf_path: '/etc/nftables.conf'
+                                                                   # ]]]
+# .. envvar:: nft_main_conf_content [[[
+#
+# Template used to provide the previous main configuration file.
+#
+# Must be a relative path from default/ directory of this role or from your
+# Ansible inventory directory.
+nft_main_conf_content: 'etc/nftables.conf.j2'
+                                                                   # ]]]
                                                                    # ]]]
 # Nftables vars definition [[[
 # ----------------------------
-
+#
 # These lists allow to define some vars that can be used in nftables rules.
 # See the official Nftables wiki page for more informations and examples :
 # https://wiki.nftables.org/wiki-nftables/index.php/Scripting#Defining_variables
@@ -117,10 +157,26 @@ nft_define_group: {}
 # in the Ansible inventory.
 nft_define_host: {}
                                                                    # ]]]
+# .. envvar:: nft_define_conf_path [[[
+#
+# Path to the defined vars file to include in the main configuration file
+# in order to use the previous defined lists.
+#
+# Should include the '{{ nft_conf_dir_path }}' var or be an absolut path.
+nft_define_conf_path: '{{ nft_conf_dir_path }}/defines.nft'
+                                                                   # ]]]
+# .. envvar:: nft_define_conf_content [[[
+#
+# Template used to provide the previous defined vars file.
+#
+# Must be a relative path from default/ directory of this role or from your
+# Ansible inventory directory.
+nft_define_conf_content: 'etc/nftables.d/defines.nft.j2'
+                                                                   # ]]]
                                                                    # ]]]
 # Nftables sets definition [[[
 # ----------------------------
-
+#
 # These "set" lists allow to define sets that can be used in Nftables rules.
 # See the official Nftables wiki page for more informations and examples :
 # https://wiki.nftables.org/wiki-nftables/index.php/Sets
@@ -159,11 +215,26 @@ nft_set_group: {}
 # List of sets to configure for specific hosts in the Ansible inventory.
 nft_set_host: {}
                                                                    # ]]]
-
+# .. envvar:: nft_set_conf_path [[[
+#
+# Path to the "sets" file to include in the main configuration file
+# in order to use the previous defined lists.
+#
+# Should include the '{{ nft_conf_dir_path }}' var or be an absolut path.
+nft_set_conf_path: '{{ nft_conf_dir_path }}/sets.nft'
+                                                                   # ]]]
+# .. envvar:: nft_set_conf_content [[[
+#
+# Template used to provide the previous "sets" file.
+#
+# Must be a relative path from default/ directory of this role or from your
+# Ansible inventory directory.
+nft_set_conf_content: 'etc/nftables.d/sets.nft.j2'
+                                                                   # ]]]
                                                                    # ]]]
 # inet filter table rules [[[
 # ---------------------------
-
+#
 # All these rules will be set up in an inet table in order to filter the
 # input and output traffic.
 
@@ -199,6 +270,22 @@ nft_input_group_rules: {}
 # List of input rules to configure for specific hosts in the Ansible inventory.
 nft_input_host_rules: {}
                                                                    # ]]]
+# .. envvar:: nft_input_conf_path [[[
+#
+# Path to the input rules file for the filter table to include in the main
+# configuration file in order to use the previous defined lists.
+#
+# Should include the '{{ nft_conf_dir_path }}' var or be an absolut path.
+nft_input_conf_path: '{{ nft_conf_dir_path }}/filter-input.nft'
+                                                                   # ]]]
+# .. envvar:: nft_input_conf_content [[[
+#
+# Template used to provide the previous input rules file.
+#
+# Must be a relative path from default/ directory of this role or from your
+# Ansible inventory directory.
+nft_input_conf_content: 'etc/nftables.d/filter-input.nft.j2'
+                                                                   # ]]]
 
 # .. envvar:: nft_output_default_rules [[[
 #
@@ -233,12 +320,29 @@ nft_output_group_rules: {}
 # List of output rules to configure for specific hosts in the Ansible inventory.
 nft_output_host_rules: {}
                                                                    # ]]]
+# .. envvar:: nft_output_conf_path [[[
+#
+# Path to the output rules file for the filter table to include in the main
+# configuration file in order to use the previous defined lists.
+#
+# Should include the '{{ nft_conf_dir_path }}' var or be an absolut path.
+nft_output_conf_path: '{{ nft_conf_dir_path }}/filter-output.nft'
+                                                                   # ]]]
+# .. envvar:: nft_output_conf_content [[[
+#
+# Template used to provide the previous output rules file.
+#
+# Must be a relative path from default/ directory of this role or from your
+# Ansible inventory directory.
+nft_output_conf_content: 'etc/nftables.d/filter-output.nft.j2'
+                                                                   # ]]]
                                                                    # ]]]
 # Service management [[[
 # ----------------------
+
 # .. envvar:: nft_service_manage [[[
 #
-# If the nftables service should be managed ? Possible options are :
+# If the Nftables service should be managed ? Possible options are :
 #
 # ``True``
 #   Default. The service is started.
@@ -254,7 +358,7 @@ nft_service_name: 'nftables'
                                                                    # ]]]
 # .. envvar:: nft_service_enabled [[[
 #
-# If the nftables service should be enabled at startup ? Possible options are :
+# If the Nftables service should be enabled at startup ? Possible options are :
 #
 # ``True``
 #   Default. The service is enabled.
@@ -265,12 +369,12 @@ nft_service_enabled: true
                                                                    # ]]]
 # .. envvar:: nft_service_unit_path [[[
 #
-# Path to store nftables service.
+# Path to store Nftables service.
 nft_service_unit_path: '/lib/systemd/system/nftables.service'
                                                                    # ]]]
 # .. envvar:: nft_service_unit_content [[[
 #
-# Template used to provide systemd unit for nftables service.
+# Template used to provide systemd unit for Nftables service.
 nft_service_unit_content: 'lib/systemd/system/nftables.service.j2'
                                                                    # ]]]
 # .. envvar:: nft__service_protect [[[
@@ -286,7 +390,7 @@ nft__service_protect: true
                                                                    # ]]]
 # .. envvar:: nft__fail2ban_service [[[
 #
-# If the nftables systemd unit should also restart Fail2ban service. Possible
+# If the Nftables systemd unit should also restart Fail2ban service. Possible
 # options are :
 #
 # ``False``
@@ -296,6 +400,5 @@ nft__service_protect: true
 #   Any Nftables service (re)start will also restart Fail2ban service.
 nft__fail2ban_service: False
                                                                    # ]]]
-
                                                                    # ]]]
                                                                    # ]]]

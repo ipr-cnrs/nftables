@@ -2,6 +2,7 @@
 
 ### Enhancements
 * Clean tasks name and comments in tasks/main.yml file.
+* Order and clean comments in defaults/main.yml file.
 
 ## v1.5.0
 
