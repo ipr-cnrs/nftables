@@ -1,15 +1,17 @@
 ---
+# .. vim: foldmarker=[[[,]]]:foldmethod=marker
+#
 # tasks file for nftables
 
-- name: Load specific OS vars for nft
+- name: Load specific OS vars for nftables
   include_vars: "{{ item }}"
   with_first_found:
     - "{{ ansible_distribution|lower }}-{{ ansible_distribution_version }}.yml"
     - "{{ ansible_distribution|lower }}.yml"
     - "{{ ansible_os_family|lower }}.yml"
 
-# package {{{
-- name: INSTALL Manage nftables packages
+# Manage packages [[[1
+- name: Ensure Nftables packages are in there desired state
   package:
     name: '{{ item }}'
     state: '{{ nft_pkg_state }}'
@@ -19,7 +21,7 @@
   until: pkg_install_result is success
   when: nft_enabled|bool
 
-- name: INSTALL Remove iptables packages
+- name: Ensure old Iptables packages are in there desired state
   apt:
     name: '{{ item }}'
     state: '{{ nft_old_pkg_state }}'
@@ -30,10 +32,8 @@
   when: (nft_enabled|bool and
          nft_old_pkg_manage|bool)
 
-# }}}
-
-# conf {{{
-- name: CONFIG create nftables.d dir
+# Common configuration [[[1
+- name: Ensure to create nftables.d directory
   file:
     path: "{{ nft_conf_dir_path }}"
     state: directory
@@ -44,28 +44,6 @@
   template:
     src: "{{ nft_main_conf_content }}"
     dest: "{{ nft_main_conf_path }}"
-    owner: root
-    group: root
-    mode: 0755
-    backup: yes
-  notify: ['Restart nftables service']
-  when: nft_enabled|bool
-
-- name: CONFIG generate input rules file
-  template:
-    src: "{{ nft_input_conf_content }}"
-    dest: "{{ nft_input_conf_path }}"
-    owner: root
-    group: root
-    mode: 0755
-    backup: yes
-  notify: ['Restart nftables service']
-  when: nft_enabled|bool
-
-- name: CONFIG generate output rules file
-  template:
-    src: "{{ nft_output_conf_content }}"
-    dest: "{{ nft_output_conf_path }}"
     owner: root
     group: root
     mode: 0755
@@ -84,7 +62,7 @@
   notify: ['Restart nftables service']
   when: nft_enabled|bool
 
-- name: CONFIG generate sets and maps file
+- name: CONFIG generate sets file
   template:
     src: "{{ nft_set_conf_content }}"
     dest: "{{ nft_set_conf_path }}"
@@ -94,11 +72,32 @@
     backup: yes
   notify: ['Restart nftables service']
   when: nft_enabled|bool
-# }}}
 
-# service {{{
+# Filter table content [[[1
+- name: Filter table - generate input rules file
+  template:
+    src: "{{ nft_input_conf_content }}"
+    dest: "{{ nft_input_conf_path }}"
+    owner: root
+    group: root
+    mode: 0755
+    backup: yes
+  notify: ['Restart nftables service']
+  when: nft_enabled|bool
 
-- name: install Debian systemd service unit
+- name: Filter table - generate output rules file
+  template:
+    src: "{{ nft_output_conf_content }}"
+    dest: "{{ nft_output_conf_path }}"
+    owner: root
+    group: root
+    mode: 0755
+    backup: yes
+  notify: ['Restart nftables service']
+  when: nft_enabled|bool
+
+# Manage service [[[1
+- name: Install Debian systemd service unit
   template:
     src: '{{ nft_service_unit_content }}'
     dest: '{{ nft_service_unit_path }}'
@@ -109,5 +108,3 @@
   when: (nft_enabled|bool and
          nft_service_manage|bool)
   notify: ['Restart nftables service']
-
-# }}}

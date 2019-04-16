@@ -1,3 +1,8 @@
+## vX.Y.Z
+
+### Enhancements
+* Clean tasks name and comments in tasks/main.yml file.
+
 ## v1.5.0
 
 ### Enhancements
