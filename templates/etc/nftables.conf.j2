@@ -27,6 +27,14 @@ table inet filter {
 	include "{{ nft_output_conf_path }}"
 }
 
+{% if nft__nat_table_manage %}
+# Additionnal table for Network Address Translation (NAT)
+table ip nat {
+	include "{{ nft__nat_prerouting_conf_path }}"
+	include "{{ nft__nat_postrouting_conf_path }}"
+}
+{% endif %}
+
 {% if nft__custom_content|d() %}
 # Custom content from ipr-cnrs.nftables
 {{ nft__custom_content }}
