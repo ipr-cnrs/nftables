@@ -7,6 +7,10 @@
 * Clean tasks name and comments in tasks/main.yml file.
 * Order and clean comments in defaults/main.yml file.
 
+### Fix
+* Fix deprecation warning with ansible 2.7: Invoking "apt" only once while
+  using a loop via squash_actions is deprecated.
+
 ## v1.5.0
 
 ### Enhancements
