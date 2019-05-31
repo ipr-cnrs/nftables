@@ -31,6 +31,7 @@ nft_pkg_state: 'present'
 #
 nft_old_pkg_list:
   - 'iptables'
+  - 'libiptc0'
                                                                    # ]]]
 # .. envvar:: nft_old_pkg_state [[[
 #
