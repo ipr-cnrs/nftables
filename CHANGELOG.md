@@ -10,6 +10,7 @@
 ### Fix
 * Fix deprecation warning with ansible 2.7: Invoking "apt" only once while
   using a loop via squash_actions is deprecated.
+* Turn nft_old_pkg_list into a list.
 
 ## v1.5.0
 
