@@ -2,6 +2,7 @@
 
 ### Features
 * Able to manage a new NAT table (with prerouting and postrouting chains).
+* Block ipv6 multicast by default.
 
 ### Enhancements
 * Clean tasks name and comments in tasks/main.yml file.
