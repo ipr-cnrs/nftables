@@ -315,6 +315,8 @@ nft_output_default_rules:
     - udp dport @out_udp_accept ct state new accept
   210 output tcp accepted:
     - tcp dport @out_tcp_accept ct state new accept
+  250 reset-ssh:  # allow the host to reset SSH connections to avoid 10 min delay from Ansible controller
+    - tcp sport ssh tcp flags { rst, psh | ack } counter accept
                                                                    # ]]]
 # .. envvar:: nft_output_rules [[[
 #

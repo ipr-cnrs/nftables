@@ -13,6 +13,7 @@
   using a loop via squash_actions is deprecated.
 * Turn nft_old_pkg_list into a list.
 * Add libiptc0 (iptables dependency) to the list of old package to remove.
+* The 10 minutes delay at first run (#1)!
 
 ## v1.5.0
 

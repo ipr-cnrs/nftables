@@ -266,12 +266,7 @@ nft_input_group_rules:
 
 ## Known Issue
 
-* The first run of a playbook may be long (~8 minutes) just after the (re)start of `nftables` service.
-  * Probably due to Ansible/OpenSSH Specific default Settings, the outgoing connections for Ansible/SSH will be blocked :
-```
-trace id d7c3a8dc inet filter output packet: oif "ens18" ip saddr REMOTE_HOST ip daddr MY_HOST ip dscp 0x02 ip ecn not-ect ip ttl 64 ip id 56799 ip length 420 tcp sport ssh tcp dport 53922 tcp flags == 0x18 tcp window 1452
-```
-  * This only happen at the first run on new clean host. The next runs will works without any delay.
+* The 10 minutes delay at the first run is finally fixed by allowing the host to reset SSH connection (flags `rst, psh | ack`) (see #1).
 
 ## Configuration
 
