@@ -7,6 +7,7 @@
 ### Enhancements
 * Clean tasks name and comments in tasks/main.yml file.
 * Order and clean comments in defaults/main.yml file.
+* Reload rules instead of restart to avoid to loose rulebase due to invalid syntax (#3 Github).
 
 ### Fix
 * Fix deprecation warning with ansible 2.7: Invoking "apt" only once while

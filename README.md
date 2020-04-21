@@ -276,7 +276,8 @@ This role will :
 * Generate a default configuration file which include all following files and loaded by systemd unit.
 * Generate input and output rules files include called by the main configuration file.
 * Generate vars in a file and sets and maps in another file.
-* Restart `nftables` service.
+* (re)Start `nftables` service at first run.
+* Reload `nftables` service at next runs to avoid to let the host without firewall rules due to invalid syntax.
 
 ## Development
 
