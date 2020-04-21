@@ -1,4 +1,4 @@
-## vX.Y.Z
+## v1.6.0
 
 ### Features
 * Able to manage a new NAT table (with prerouting and postrouting chains).
