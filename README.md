@@ -123,6 +123,7 @@ nft_output_default_rules:
     - oif lo accept
   050 icmp:
     - ip protocol icmp accept
+    - ip6 nexthdr icmpv6 counter accept
   200 output udp accepted:
     - udp dport @out_udp_accept ct state new accept
   210 output tcp accepted:
