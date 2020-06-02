@@ -252,6 +252,24 @@ table inet filter {
     - role: ipr-cnrs.nftables
 ```
 
+* Override some of the default defined sets:
+
+``` yml
+- hosts: serverXYZ
+  vars:
+    - nft_define:
+      input tcp accepted:
+        desc: Custom SSH port and torrent
+        name: in_tcp_accept
+        value: '{ 2201, 6881 }'
+      input udp accepted:
+        desc: torrent
+        name: in_udp_accept
+        value: '{ 6881 }'
+  roles:
+    - role: ipr-cnrs.nftables
+```
+
 * Use default rules with allow incoming ICMP and count dropped input packets :
 
 `group_vars/first_group` :
