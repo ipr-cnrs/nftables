@@ -8,7 +8,7 @@
 # clean
 flush ruleset
 
-include "/etc/nftables.d/defines.nft"
+include "{{ nft_define_conf_path }}"
 
 table inet filter {
 	chain global {
