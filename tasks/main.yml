@@ -11,7 +11,7 @@
     - "{{ ansible_os_family|lower }}.yml"
 
 # Manage packages [[[1
-- name: Ensure Nftables packages are in there desired state
+- name: Ensure Nftables packages are in their desired state
   package:
     name: '{{ nft_pkg_list | list }}'
     state: '{{ nft_pkg_state }}'
@@ -19,7 +19,7 @@
   until: pkg_install_result is success
   when: nft_enabled|bool
 
-- name: Ensure old Iptables packages are in there desired state
+- name: Ensure old Iptables packages are in their desired state
   apt:
     name: '{{ nft_old_pkg_list | list }}'
     state: '{{ nft_old_pkg_state }}'
