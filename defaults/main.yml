@@ -74,6 +74,17 @@ nft_global_default_rules:
 # in the Ansible inventory.
 nft_global_rules: {}
                                                                    # ]]]
+# .. envvar:: merged_groups [[[
+#
+# Enable or disable the ability to merge multiple firewall group variables
+merged_groups: false
+                                                                   # ]]]
+# .. envvar:: merged_groups_dir [[[
+#
+# The directory to read the group firewall rules from.
+# Relative to the playbook directory.
+merged_groups_dir: vars/
+                                                                   # ]]]
 # .. envvar:: nft_global_group_rules [[[
 #
 # List of global rules (applied on all tables) to configure for hosts in

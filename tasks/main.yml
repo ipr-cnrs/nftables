@@ -2,16 +2,33 @@
 # .. vim: foldmarker=[[[,]]]:foldmethod=marker
 #
 # tasks file for nftables
+- name: Import nftables-variables if merged_groups is set
+  when: merged_groups
+  set_fact:
+    "{{ groupname }}": "{{ lookup('file',merged_groups_dir ~ groupname) | from_yaml }}"
+  loop: "{{ group_names }}"
+  loop_control:
+    loop_var: groupname
+
+- name: Combine Rules when merged_groups is set
+  when: merged_groups
+  set_fact:
+    nft_combined_rules: "{{ nft_combined_rules | default({}) | combine ( hostvars[inventory_hostname][groupname], recursive=True ) }}"
+  loop: "{{ group_names }}"
+  loop_control:
+    loop_var: groupname
 
 - name: Load specific OS vars for nftables
-  include_vars: "{{ item }}"
+  include_vars: "{{ osname }}"
   with_first_found:
     - "{{ ansible_distribution|lower }}-{{ ansible_distribution_version }}.yml"
     - "{{ ansible_distribution|lower }}.yml"
     - "{{ ansible_os_family|lower }}.yml"
+  loop_control:
+    loop_var: osname
 
 # Manage packages [[[1
-- name: Ensure Nftables packages are in there desired state
+- name: Ensure Nftables packages are in their desired state
   package:
     name: '{{ nft_pkg_list | list }}'
     state: '{{ nft_pkg_state }}'
@@ -19,7 +36,7 @@
   until: pkg_install_result is success
   when: nft_enabled|bool
 
-- name: Ensure old Iptables packages are in there desired state
+- name: Ensure old Iptables packages are in their desired state
   apt:
     name: '{{ nft_old_pkg_list | list }}'
     state: '{{ nft_old_pkg_state }}'
