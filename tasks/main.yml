@@ -2,16 +2,18 @@
 # .. vim: foldmarker=[[[,]]]:foldmethod=marker
 #
 # tasks file for nftables
+
 - name: Import nftables-variables if merged_groups is set
   when: merged_groups
-  set_fact:
-    "{{ groupname }}": "{{ lookup('file',merged_groups_dir ~ groupname) | from_yaml }}"
+  include_vars:
+    file: "{{ merged_groups_dir ~ groupname }}"
+    name: "{{ groupname }}"
   loop: "{{ group_names }}"
   loop_control:
     loop_var: groupname
 
 - name: Combine Rules when merged_groups is set
-  when: merged_groups
+  when: merged_groups and hostvars[inventory_hostname][groupname]|length > 0
   set_fact:
     nft_combined_rules: "{{ nft_combined_rules | default({}) | combine ( hostvars[inventory_hostname][groupname], recursive=True ) }}"
   loop: "{{ group_names }}"
@@ -37,7 +39,7 @@
   when: nft_enabled|bool
 
 - name: Ensure old Iptables packages are in their desired state
-  apt:
+  package:
     name: '{{ nft_old_pkg_list | list }}'
     state: '{{ nft_old_pkg_state }}'
   register: pkg_remove_result

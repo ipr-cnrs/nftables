@@ -1,0 +1,4 @@
+---
+# vars file for Centos-based distros
+nft_pkg_list:
+  - nftables
