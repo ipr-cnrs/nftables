@@ -83,6 +83,7 @@ Each type of rules dictionaries will be merged and rules will be applied in the 
   * **nft_*_default_rules** : Define default rules for all nodes. You can define it in `group_vars/all`.
   * **nft_*_rules** : Can add rules and override those defined by **nft_*_default_rules**. You can define it in `group_vars/all`.
   * **nft_*_group_rules** : Can add rules and override those defined by **nft_*_default_rules** and **nft_*_rules**. You can define it in `group_vars/webservers`.
+    * If 'merged_groups' is set to true, multiple group rules from the ansible groups will also be merged together.
   * **nft_*_host_rules** : Can add rules and override those define by **nft_*_default_rules**, **nft_*_group_rules** and **nft_*_rules**. You can define it in `host_vars/www.local.domain`.
 
 `defaults/main.yml`:
@@ -94,6 +95,8 @@ nft_global_default_rules:
     - ct state established,related accept
     - ct state invalid drop
 nft_global_rules: {}
+merged_groups: false
+merged_groups_dir: vars/
 nft_global_group_rules: {}
 nft_global_host_rules: {}
 
@@ -282,6 +285,39 @@ nft_input_group_rules:
   999 count policy packet:
     - counter
 ```
+
+* Use merged group rules from multiple ansible groups:
+
+``` yml
+- hosts: serverXYZ
+  vars:
+    merged_groups: true
+    merged_groups_dir: vars/
+  roles:
+    - role: ipr-cnrs.nftables
+```
+
+And put the rules inside the "vars" folder named after your ansible groups of the server:
+
+`vars/first_group` :
+
+``` yaml
+nft_input_group_rules:
+  020 icmp:
+    - ip protocol icmp icmp type echo-request ip length <= 84 counter limit rate 1/minute accept
+  999 count policy packet:
+    - counter
+```
+
+`vars/second_group` :
+
+``` yaml
+nft_input_group_rules:
+  021 LAN:
+    - iif eth0 accept
+```
+
+These rulesets from the two groups will be merged if the host has the two groups as ansible roles.
 
 ## Known Issue
 
