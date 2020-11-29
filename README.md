@@ -70,6 +70,8 @@ Highly inspired by [Mike Gleason firewall role][mikegleasonjr firewall github] (
 * **nft_service_enabled** : Set `nftables` service available at startup [default : `true`].
 * **nft__service_protect** : If systemd unit should protect system and home [default : `true`].
 * **nft__fail2ban_service** : If the Nftables service should also restart the Fail2ban service [default : `False`].
+* **merged_groups** : If variables from the hosts Ansible groups should be merged [default : `false`].
+* **merged_groups_dir** : The dictionary where the nftables group rules, named like the Ansible groups, are located in [default : `vars/`].
 
 ### OS Specific Variables
 
