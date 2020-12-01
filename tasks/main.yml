@@ -3,22 +3,34 @@
 #
 # tasks file for nftables
 
-- name: Import nftables-variables if merged_groups is set
-  when: merged_groups
-  include_vars:
-    file: "{{ merged_groups_dir ~ groupname }}"
-    name: "{{ groupname }}"
+- name: Check for group files
+  become: no
+  delegate_to: localhost
+  stat:
+    path: "{{ merged_groups_dir ~ groupname }}"
+  register: nftable_group_rules
   loop: "{{ group_names }}"
   loop_control:
     loop_var: groupname
 
-- name: Combine Rules when merged_groups is set
-  when: merged_groups and hostvars[inventory_hostname][groupname]|length > 0
-  set_fact:
-    nft_combined_rules: "{{ nft_combined_rules | default({}) | combine ( hostvars[inventory_hostname][groupname], recursive=True ) }}"
-  loop: "{{ group_names }}"
+- debug: var=nftable_group_rules
+
+- name: Import nftables-variables if merged_groups is set
+  when: merged_groups and varfile.stat.exists
+  include_vars:
+    file: "{{ merged_groups_dir ~ varfile.groupname }}"
+    name: "{{ varfile.groupname }}"
+  loop: "{{ nftable_group_rules.results }}"
   loop_control:
-    loop_var: groupname
+    loop_var: varfile
+
+- name: Combine Rules when merged_groups is set
+  when: merged_groups and (hostvars[inventory_hostname][varfile.groupname] is defined and hostvars[inventory_hostname][varfile.groupname]|length > 0) and varfile.stat.exists
+  set_fact:
+    nft_combined_rules: "{{ nft_combined_rules | default({}) | combine ( hostvars[inventory_hostname][varfile.groupname], recursive=True ) }}"
+  loop: "{{ nftable_group_rules.results }}"
+  loop_control:
+    loop_var: varfile
 
 - name: Load specific OS vars for nftables
   include_vars: "{{ osname }}"
