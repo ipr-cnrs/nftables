@@ -3,7 +3,7 @@
 {% set inputmerged = nft_input_default_rules.copy() %}
 {% set _ = inputmerged.update(nft_input_rules) %}
 {% set _ = inputmerged.update(nft_input_group_rules) %}
-{% if merged_groups and hostvars[inventory_hostname]['nft_combined_rules'].nft_input_group_rules is defined %}
+{% if nft_merged_groups and hostvars[inventory_hostname]['nft_combined_rules'].nft_input_group_rules is defined %}
   {% set _ = inputmerged.update(hostvars[inventory_hostname]['nft_combined_rules'].nft_input_group_rules) %}
 {% endif %}
 {% set _ = inputmerged.update(nft_input_host_rules) %}

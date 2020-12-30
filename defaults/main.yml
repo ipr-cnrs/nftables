@@ -74,16 +74,16 @@ nft_global_default_rules:
 # in the Ansible inventory.
 nft_global_rules: {}
                                                                    # ]]]
-# .. envvar:: merged_groups [[[
+# .. envvar:: nft_merged_groups [[[
 #
 # Enable or disable the ability to merge multiple firewall group variables
-merged_groups: false
+nft_merged_groups: false
                                                                    # ]]]
-# .. envvar:: merged_groups_dir [[[
+# .. envvar:: nft_merged_groups_dir [[[
 #
 # The directory to read the group firewall rules from.
 # Relative to the playbook directory.
-merged_groups_dir: vars/
+nft_merged_groups_dir: vars/
                                                                    # ]]]
 # .. envvar:: nft_global_group_rules [[[
 #
@@ -525,5 +525,17 @@ nft__service_protect: true
 #   Any Nftables service (re)start will also restart Fail2ban service.
 nft__fail2ban_service: False
                                                                    # ]]]
+# .. envvar:: nft_debug [
+#
+# Toggle on/off more verbose output. Possible options are:
+#
+# ''Flase''
+# Default. No additional output will be given.
+#
+# ''True''
+# More verbose output.
+nft_debug: False
+
+
                                                                    # ]]]
                                                                    # ]]]

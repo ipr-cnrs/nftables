@@ -3,7 +3,7 @@
 {% set preroutingmerged = nft__nat_default_prerouting_rules.copy() %}
 {% set _ = preroutingmerged.update(nft__nat_prerouting_rules) %}
 {% set _ = preroutingmerged.update(nft__nat_group_prerouting_rules) %}
-{% if merged_groups and hostvars[inventory_hostname]['nft_combined_rules'].nft__nat_group_prerouting_rules is defined %}
+{% if nft_merged_groups and hostvars[inventory_hostname]['nft_combined_rules'].nft__nat_group_prerouting_rules is defined %}
   {% set _ = preroutingmerged.update(hostvars[inventory_hostname]['nft_combined_rules'].nft__nat_group_prerouting_rules) %}
 {% endif %}
 {% set _ = preroutingmerged.update(nft__nat_host_prerouting_rules) %}

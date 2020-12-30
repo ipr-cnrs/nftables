@@ -3,7 +3,7 @@
 {% set definemerged = nft_define_default.copy() %}
 {% set _ = definemerged.update(nft_define) %}
 {% set _ = definemerged.update(nft_define_group) %}
-{% if merged_groups and hostvars[inventory_hostname]['nft_combined_rules'].nft_define_group is defined%}
+{% if nft_merged_groups and hostvars[inventory_hostname]['nft_combined_rules'].nft_define_group is defined%}
   {% set _ = definemerged.update(hostvars[inventory_hostname]['nft_combined_rules'].nft_define_group) %}
 {% endif %}
 {% set _ = definemerged.update(nft_define_host) %}
