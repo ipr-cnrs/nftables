@@ -1,8 +1,12 @@
+#jinja2: lstrip_blocks: "True", trim_blocks: "True"
 #!/usr/sbin/nft -f
 # {{ ansible_managed }}
 {% set globalmerged = nft_global_default_rules.copy() %}
 {% set _ = globalmerged.update(nft_global_rules) %}
 {% set _ = globalmerged.update(nft_global_group_rules) %}
+{% if nft_merged_groups and hostvars[inventory_hostname]['nft_combined_rules'].nft_global_group_rules is defined%}
+  {% set _ = globalmerged.update(hostvars[inventory_hostname]['nft_combined_rules'].nft_global_group_rules) %}
+{% endif %}
 {% set _ = globalmerged.update(nft_global_host_rules) %}
 
 # clean
@@ -14,12 +18,12 @@ table inet filter {
 	chain global {
 {% for group, rules in globalmerged|dictsort  %}
 		# {{ group }}
-{% if not rules %}
+  {% if not rules %}
 		# (none)
-{% endif %}
-{% for rule in rules %}
+  {% endif %}
+  {% for rule in rules %}
 		{{ rule }}
-{% endfor %}
+  {% endfor %}
 {% endfor %}
 	}
 	include "{{ nft_set_conf_path }}"

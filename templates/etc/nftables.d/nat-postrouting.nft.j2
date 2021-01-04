@@ -1,17 +1,21 @@
+#jinja2: lstrip_blocks: "True", trim_blocks: "True"
 # {{ ansible_managed }}
 {% set postroutingmerged = nft__nat_default_postrouting_rules.copy() %}
 {% set _ = postroutingmerged.update(nft__nat_postrouting_rules) %}
 {% set _ = postroutingmerged.update(nft__nat_group_postrouting_rules) %}
+{% if nft_merged_groups and hostvars[inventory_hostname]['nft_combined_rules'].nft__nat_group_postrouting_rules is defined %}
+  {% set _ = postroutingmerged.update(hostvars[inventory_hostname]['nft_combined_rules'].nft__nat_group_postrouting_rules) %}
+{% endif %}
 {% set _ = postroutingmerged.update(nft__nat_host_postrouting_rules) %}
 
 chain postrouting {
 {% for group, rules in postroutingmerged|dictsort  %}
 	# {{ group }}
-{% if not rules %}
+  {% if not rules %}
 	# (none)
-{% endif %}
-{% for rule in rules %}
+  {% endif %}
+  {% for rule in rules %}
 	{{ rule }}
-{% endfor %}
+  {% endfor %}
 {% endfor %}
 }

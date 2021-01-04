@@ -3,15 +3,50 @@
 #
 # tasks file for nftables
 
+- name: Check for group files
+  become: no
+  delegate_to: localhost
+  stat:
+    path: "{{ nft_merged_groups_dir ~ groupname }}"
+  register: nftables_group_rules
+  loop: "{{ group_names }}"
+  loop_control:
+    loop_var: groupname
+
+- debug: var=nftables_group_rules
+  when: nft_debug
+
+- name: Import nftables-variables if nft_merged_groups is set
+  when: nft_merged_groups and varfile.stat.exists
+  include_vars:
+    file: "{{ nft_merged_groups_dir ~ varfile.groupname }}"
+    name: "{{ varfile.groupname }}"
+  loop: "{{ nftables_group_rules.results }}"
+  loop_control:
+    loop_var: varfile
+
+- name: Combine Rules when nft_merged_groups is set
+  when: nft_merged_groups and (hostvars[inventory_hostname][varfile.groupname] is defined and hostvars[inventory_hostname][varfile.groupname]|length > 0) and varfile.stat.exists
+  set_fact:
+    nft_combined_rules: "{{ nft_combined_rules | default({}) | combine ( hostvars[inventory_hostname][varfile.groupname], recursive=True ) }}"
+  loop: "{{ nftables_group_rules.results }}"
+  loop_control:
+    loop_var: varfile
+
+- debug: var=nft_combined_rules
+  when: nft_debug
+
 - name: Load specific OS vars for nftables
-  include_vars: "{{ item }}"
+  include_vars: "{{ osname }}"
   with_first_found:
     - "{{ ansible_distribution|lower }}-{{ ansible_distribution_version }}.yml"
     - "{{ ansible_distribution|lower }}.yml"
     - "{{ ansible_os_family|lower }}.yml"
+  loop_control:
+    loop_var: osname
 
 # Manage packages [[[1
-- name: Ensure Nftables packages are in there desired state
+- name: Ensure Nftables packages are in their desired state
   package:
     name: '{{ nft_pkg_list | list }}'
     state: '{{ nft_pkg_state }}'
@@ -19,8 +54,8 @@
   until: pkg_install_result is success
   when: nft_enabled|bool
 
-- name: Ensure old Iptables packages are in there desired state
-  apt:
+- name: Ensure old Iptables packages are in their desired state
+  package:
     name: '{{ nft_old_pkg_list | list }}'
     state: '{{ nft_old_pkg_state }}'
   register: pkg_remove_result

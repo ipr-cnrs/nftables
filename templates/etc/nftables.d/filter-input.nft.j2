@@ -1,17 +1,21 @@
+#jinja2: lstrip_blocks: "True", trim_blocks: "True"
 # {{ ansible_managed }}
 {% set inputmerged = nft_input_default_rules.copy() %}
 {% set _ = inputmerged.update(nft_input_rules) %}
 {% set _ = inputmerged.update(nft_input_group_rules) %}
+{% if nft_merged_groups and hostvars[inventory_hostname]['nft_combined_rules'].nft_input_group_rules is defined %}
+  {% set _ = inputmerged.update(hostvars[inventory_hostname]['nft_combined_rules'].nft_input_group_rules) %}
+{% endif %}
 {% set _ = inputmerged.update(nft_input_host_rules) %}
 
 chain input {
 {% for group, rules in inputmerged|dictsort  %}
 	# {{ group }}
-{% if not rules %}
+  {% if not rules %}
 	# (none)
-{% endif %}
-{% for rule in rules %}
+  {% endif %}
+  {% for rule in rules %}
 	{{ rule }}
-{% endfor %}
+  {% endfor %}
 {% endfor %}
 }

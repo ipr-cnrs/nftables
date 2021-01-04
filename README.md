@@ -70,6 +70,9 @@ Highly inspired by [Mike Gleason firewall role][mikegleasonjr firewall github] (
 * **nft_service_enabled** : Set `nftables` service available at startup [default : `true`].
 * **nft__service_protect** : If systemd unit should protect system and home [default : `true`].
 * **nft__fail2ban_service** : If the Nftables service should also restart the Fail2ban service [default : `False`].
+* **nft_merged_groups** : If variables from the hosts Ansible groups should be merged [default : `false`].
+* **nft_merged_groups_dir** : The dictionary where the nftables group rules, named like the Ansible groups, are located in [default : `vars/`].
+* **nft_debug** : Toggle more verbose output on/off. [default: 'false'].
 
 ### OS Specific Variables
 
@@ -83,6 +86,7 @@ Each type of rules dictionaries will be merged and rules will be applied in the 
   * **nft_*_default_rules** : Define default rules for all nodes. You can define it in `group_vars/all`.
   * **nft_*_rules** : Can add rules and override those defined by **nft_*_default_rules**. You can define it in `group_vars/all`.
   * **nft_*_group_rules** : Can add rules and override those defined by **nft_*_default_rules** and **nft_*_rules**. You can define it in `group_vars/webservers`.
+    * If 'nft_merged_groups' is set to true, multiple group rules from the ansible groups will also be merged together.
   * **nft_*_host_rules** : Can add rules and override those define by **nft_*_default_rules**, **nft_*_group_rules** and **nft_*_rules**. You can define it in `host_vars/www.local.domain`.
 
 `defaults/main.yml`:
@@ -94,6 +98,8 @@ nft_global_default_rules:
     - ct state established,related accept
     - ct state invalid drop
 nft_global_rules: {}
+nft_merged_groups: false
+nft_merged_groups_dir: vars/
 nft_global_group_rules: {}
 nft_global_host_rules: {}
 
@@ -282,6 +288,39 @@ nft_input_group_rules:
   999 count policy packet:
     - counter
 ```
+
+* Use merged group rules from multiple ansible groups:
+
+``` yml
+- hosts: serverXYZ
+  vars:
+    nft_merged_groups: true
+    nft_merged_groups_dir: vars/
+  roles:
+    - role: ipr-cnrs.nftables
+```
+
+And put the rules inside the "vars" folder named after your ansible groups of the server:
+
+`vars/first_group` :
+
+``` yaml
+nft_input_group_rules:
+  020 icmp:
+    - ip protocol icmp icmp type echo-request ip length <= 84 counter limit rate 1/minute accept
+  999 count policy packet:
+    - counter
+```
+
+`vars/second_group` :
+
+``` yaml
+nft_input_group_rules:
+  021 LAN:
+    - iif eth0 accept
+```
+
+These rulesets from the two groups will be merged if the host has the two groups as ansible roles.
 
 ## Known Issue
 
