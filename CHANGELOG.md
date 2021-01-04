@@ -1,3 +1,15 @@
+## v1.7.0
+
+### Features
+* Allow to merge group variables with **nft_merged_groups** (#11 #12).
+
+### Enhancements
+* Debug var with **nft_debug** (useful to set up merging group variables).
+* Extra example to override default variables.
+
+### Fix
+* Add missing ICMPv6 rule.
+
 ## v1.6.0
 
 ### Features

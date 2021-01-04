@@ -1,8 +1,8 @@
 ---
 # .. vim: foldmarker=[[[,]]]:foldmethod=marker
 #
-# ipr-cnrs.nftables default variables [[[
-# =======================================
+# ipr-cnrs.nftables default variables
+# ===================================
 
 # Packages and installation [[[
 # -----------------------------
@@ -525,7 +525,7 @@ nft__service_protect: true
 #   Any Nftables service (re)start will also restart Fail2ban service.
 nft__fail2ban_service: False
                                                                    # ]]]
-# .. envvar:: nft_debug [
+# .. envvar:: nft_debug [[[
 #
 # Toggle on/off more verbose output. Possible options are:
 #
@@ -536,6 +536,5 @@ nft__fail2ban_service: False
 # More verbose output.
 nft_debug: False
 
-                                                                   # ]]]
                                                                    # ]]]
                                                                    # ]]]
