@@ -26,7 +26,10 @@
     loop_var: varfile
 
 - name: Combine Rules when nft_merged_groups is set
-  when: nft_merged_groups and (hostvars[inventory_hostname][varfile.groupname] is defined and hostvars[inventory_hostname][varfile.groupname]|length > 0) and varfile.stat.exists
+  when: nft_merged_groups and
+        ((hostvars[inventory_hostname][varfile.groupname] is defined) and
+         (hostvars[inventory_hostname][varfile.groupname]|length > 0)) and
+        varfile.stat.exists
   set_fact:
     nft_combined_rules: "{{ nft_combined_rules | default({}) | combine ( hostvars[inventory_hostname][varfile.groupname], recursive=True ) }}"
   loop: "{{ nftables_group_rules.results }}"

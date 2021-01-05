@@ -1,3 +1,8 @@
+## v1.X.Y
+
+### Fix
+* Ansible-lint: Fix line longer than 160 chars.
+
 ## v1.7.0
 
 ### Features
