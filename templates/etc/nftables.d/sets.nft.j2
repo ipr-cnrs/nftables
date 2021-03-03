@@ -1,5 +1,6 @@
 #jinja2: lstrip_blocks: "True", trim_blocks: "True"
 # {{ ansible_managed }}
+{% from './templates/etc/nftables.d/defines.j2' import definemerged with context %}
 {% set setmerged = nft_set_default.copy() %}
 {% set _ = setmerged.update(nft_set) %}
 {% set _ = setmerged.update(nft_set_group) %}
@@ -8,13 +9,21 @@
 {% endif %}
 {% set _ = setmerged.update(nft_set_host) %}
 
-{% for set, rules in setmerged|dictsort  %}
-  {% if rules %}
+{% for def in definemerged %}
+  {% set searchstr = '\$' ~ definemerged[def].name %}
+  {% if definemerged[def].value is defined %}
+    {% if definemerged[def].value != 'none' %}
+      {% for set, rules in setmerged|dictsort  %}
+        {% if rules %}
+          {% if rules | select('search', searchstr ) %}
 set {{ set }} {
-    {% for rule in rules %}
+            {% for rule in rules %}
 	{{ rule }}
-    {% endfor %}
+            {% endfor %}
 }
+          {% endif %}
+        {% endif %}
+      {% endfor %}
+    {% endif %}
   {% endif %}
-
 {% endfor %}

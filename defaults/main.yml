@@ -213,6 +213,7 @@ nft_set_default:
     - elements = $in_tcp_accept
   in_udp_accept:
     - type inet_service; flags interval;
+    - elements = $in_udp_accept
   out_tcp_accept:
     - type inet_service; flags interval;
     - elements = $out_tcp_accept
