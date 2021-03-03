@@ -29,6 +29,15 @@ table inet filter {
 	include "{{ nft_set_conf_path }}"
 	include "{{ nft_input_conf_path }}"
 	include "{{ nft_output_conf_path }}"
+{% if nft_custom_includes | default() %}
+  {% if nft_custom_includes is string %}
+	include "{{ nft_custom_includes }}"
+  {% elif nft_custom_includes is iterable and (nft_custom_includes is not string and nft_custom_includes is not mapping) %}
+    {% for include in nft_custom_includes %}
+	include "{{ include }}"
+    {% endfor %}
+  {% endif %}
+{% endif %}
 }
 
 {% if nft__nat_table_manage %}

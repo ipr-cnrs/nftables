@@ -102,6 +102,11 @@ nft_global_host_rules: {}
 # Custom content (tables, include,…) to add in Nftables configuration.
 nft__custom_content: ''
                                                                    # ]]]
+# .. envvar:: nft_custom_includes [[[
+#
+# Custom includes to add into the main Nftables filter configuration.
+nft_custom_includes: ''
+                                                                   # ]]]
 # .. envvar:: nft_conf_dir_path [[[
 #
 # Path to the sub directory for Nftables configuration files.
