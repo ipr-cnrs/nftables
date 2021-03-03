@@ -1,5 +1,6 @@
 #jinja2: lstrip_blocks: "True", trim_blocks: "True"
 # {{ ansible_managed }}
+{% from './templates/etc/nftables.d/defines.j2' import definemerged with context %}
 {% set inputmerged = nft_input_default_rules.copy() %}
 {% set _ = inputmerged.update(nft_input_rules) %}
 {% set _ = inputmerged.update(nft_input_group_rules) %}
@@ -9,13 +10,21 @@
 {% set _ = inputmerged.update(nft_input_host_rules) %}
 
 chain input {
-{% for group, rules in inputmerged|dictsort  %}
-	# {{ group }}
-  {% if not rules %}
-	# (none)
-  {% endif %}
-  {% for rule in rules %}
-	{{ rule }}
+{% for group, rules in inputmerged|dictsort %}
+  {% for def in definemerged if definemerged[def].value is defined %}
+    {% if definemerged[def].value == 'none' %}
+      {% set skipempty = true %}
+    {% endif %}
+    {% set searchstr = '\@' ~ definemerged[def].name %}
+    {% if not rules | select('search', searchstr ) and skipempty is true %}
+    # {{ group }}
+      {% if not rules %}
+    # (none)
+      {% endif %}
+      {% for rule in rules %}
+    {{ rule }}
+      {% endfor %}
+    {% endif %}
   {% endfor %}
 {% endfor %}
 }
