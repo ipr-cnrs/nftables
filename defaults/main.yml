@@ -367,6 +367,57 @@ nft_output_conf_path: '{{ nft_conf_dir_path }}/filter-output.nft'
 # Ansible inventory directory.
 nft_output_conf_content: 'etc/nftables.d/filter-output.nft.j2'
                                                                    # ]]]
+# .. envvar:: nft__forward_table_manage [[[
+#
+# If the forward table should be managed ? Possible options are :
+#
+# ``False``
+#   Default. The forward table is not managed and rules will not be added.
+#
+# ``True``
+#   Add the forwarding rules that follow.
+nft__forward_table_manage: false
+                                                                   # ]]]
+# .. envvar:: nft_forward_default_rules [[[
+#
+# List of forward rules to configure for all hosts inherited from this role.
+nft_forward_default_rules:
+  000 policy:
+    - type filter hook forward priority 0; policy drop;
+  005 global:
+    - jump global
+                                                                   # ]]]
+# .. envvar:: nft_forward_rules [[[
+#
+# List of forward rules to configure for all hosts in the Ansible inventory.
+nft_forward_rules: {}
+                                                                   # ]]]
+# .. envvar:: nft_forward_group_rules [[[
+#
+# List of forward rules to configure for hosts in specific Ansible inventory group.
+nft_forward_group_rules: {}
+                                                                   # ]]]
+# .. envvar:: nft_forward_host_rules [[[
+#
+# List of forward rules to configure for specific hosts in the Ansible inventory.
+nft_forward_host_rules: {}
+                                                                   # ]]]
+# .. envvar:: nft_forward_conf_path [[[
+#
+# Path to the forward rules file for the filter table to include in the main
+# configuration file in order to use the previous defined lists.
+#
+# Should include the '{{ nft_conf_dir_path }}' var or be an absolut path.
+nft_forward_conf_path: '{{ nft_conf_dir_path }}/filter-forward.nft'
+                                                                   # ]]]
+# .. envvar:: nft_forward_conf_content [[[
+#
+# Template used to provide the previous forward rules file.
+#
+# Must be a relative path from default/ directory of this role or from your
+# Ansible inventory directory.
+nft_forward_conf_content: 'etc/nftables.d/filter-forward.nft.j2'
+                                                                   # ]]]
                                                                    # ]]]
 # ip nat table rules [[[
 # ---------------------------

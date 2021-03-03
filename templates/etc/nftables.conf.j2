@@ -29,6 +29,9 @@ table inet filter {
 	include "{{ nft_set_conf_path }}"
 	include "{{ nft_input_conf_path }}"
 	include "{{ nft_output_conf_path }}"
+{% if nft__forward_table_manage %}
+	include "{{ nft_forward_conf_path }}"
+{% endif %}
 {% if nft_custom_includes | default() %}
   {% if nft_custom_includes is string %}
 	include "{{ nft_custom_includes }}"
