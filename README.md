@@ -112,8 +112,6 @@ nft_input_default_rules:
     - ip daddr @blackhole counter drop
   015 localhost:
     - iif lo accept
-  200 input udp accepted:
-    - udp dport @in_udp_accept ct state new accept
   210 input tcp accepted:
     - tcp dport @in_tcp_accept ct state new accept
 nft_input_rules: {}
@@ -147,9 +145,6 @@ nft_define_default:
   input tcp accepted:
     name: in_tcp_accept
     value: '{ ssh }'
-  input udp accepted:
-    name: in_udp_accept
-    value: 'none'
   output tcp accepted:
     name: out_tcp_accept
     value: '{ http, https, hkp }'
@@ -168,8 +163,6 @@ nft_set_default:
   in_tcp_accept:
     - type inet_service; flags interval;
     - elements = $in_tcp_accept
-  in_udp_accept:
-    - type inet_service; flags interval;
   out_tcp_accept:
     - type inet_service; flags interval;
     - elements = $out_tcp_accept
@@ -234,7 +227,6 @@ table inet filter {
 		jump global
 		ip daddr @blackhole counter packets 0 bytes 0 drop
 		iif "lo" accept
-		udp dport @in_udp_accept ct state new accept
 		tcp dport @in_tcp_accept ct state new accept
 	}
 

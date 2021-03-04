@@ -2,6 +2,8 @@
 
 ### Fix
 * Ansible-lint: Fix line longer than 160 chars.
+* Remove everything related to in_udp_accept (see conversation in PR #13).
+  Cause it was empty by default and the role currently doesn't manage it well.
 
 ## v1.7.0
 
