@@ -130,6 +130,18 @@
   notify: ['Reload nftables service']
   when: nft_enabled|bool
 
+- name: Filter table - generate forward rules file
+  template:
+    src: "{{ nft_forward_conf_content }}"
+    dest: "{{ nft_forward_conf_path }}"
+    owner: root
+    group: root
+    mode: 0755
+    backup: yes
+  notify: ['Reload nftables service']
+  when: (nft_enabled|bool and
+         nft__forward_table_manage|bool)
+
 # Nat table content [[[1
 - name: Nat table - generate prerouting rules file
   template:
