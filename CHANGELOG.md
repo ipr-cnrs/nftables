@@ -1,9 +1,16 @@
 ## v1.X.Y
 
-### Fix
+### Added
+* New examples usecases (mostly for playbooks) in README.md.
+
+### Removed
+* Remove everything related to **in_udp_accept** (see conversation in PR #13).
+  Cause it was empty by default and the role currently doesn't manage it very
+  well. Take a look to new examples in README.md to find your preferred solution
+  (re-adding it, new simple/multi-ports filter rule,…).
+
+### Fixed
 * Ansible-lint: Fix line longer than 160 chars.
-* Remove everything related to in_udp_accept (see conversation in PR #13).
-  Cause it was empty by default and the role currently doesn't manage it well.
 
 ## v1.7.0
 

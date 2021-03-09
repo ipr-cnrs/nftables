@@ -1,21 +1,24 @@
 # Nftables
 
 1. [Overview](#overview)
-2. [Role Variables](#role-variables)
+1. [Role Variables](#role-variables)
      * [OS Specific Variables](#os-specific-variables)
      * [Rules Dictionaries](#rules-dictionaries)
-3. [Example Playbook](#example-playbook)
-4. [Known Issue](#known-issue)
-5. [Configuration](#configuration)
-6. [Development](#development)
-7. [License](#license)
-8. [Author Information](#author-information)
+1. [Examples](#examples)
+     * [With playbooks](#with-playbooks)
+     * [With group_vars and host_vars](#with-group_vars-and-host_vars)
+1. [Configuration](#configuration)
+1. [Development](#development)
+1. [License](#license)
+1. [Author Information](#author-information)
 
 ## Overview
 
 A role to manage Nftables rules and packages.
 
-Highly inspired by [Mike Gleason firewall role][mikegleasonjr firewall github] (3 levels of rules definition and template), thanks ! I hope i haven't complexify his philosophy… ^^
+Highly inspired by [Mike Gleason firewall role][mikegleasonjr firewall github]
+(3 levels of rules definition and template), thanks ! I hope i haven't
+complexify his philosophy… (I'm pretty sure, i now did complexify it :D) ^^
 
 ## Role Variables
 
@@ -241,17 +244,189 @@ table inet filter {
 }
 ```
 
-## Example Playbook
+## Examples
 
-* Manage Nftables with defaults vars :
+### With playbooks
+
+<details>
+  <summary>Manage Nftables with defaults vars (<i>click to expand</i>)</summary>
+  <!-- have to be followed by an empty line! -->
 
 ``` yml
 - hosts: serverXYZ
   roles:
     - role: ipr-cnrs.nftables
 ```
+</details>
 
-* Override some of the default defined sets:
+<details>
+  <summary>Add a new <b>simple</b> filter rule for incoming traffic (eg. 1 port for UDP/torrent) (<i>click to expand</i>)</summary>
+
+``` yml
+- hosts: serverXYZ
+  vars:
+      nft_input_rules:
+        400 input torrent accepted:
+          - udp dport 6881 ct state new accept
+  roles:
+    - role: ipr-cnrs.nftables
+```
+* **nft_input_group_rules** or **nft_input_host_rules** variables can
+  also be used.
+* The weight (`400`) allow to order all merged rules (from
+  <b>nft_input_*rules</b> dictionaries).
+* The text following the weight (`input torrent accepted`) is a small
+  description that will be added as a comment in **nft_input_conf_path** file
+  on the remote host.
+</details>
+
+<details>
+  <summary>Add a new <b>multi-ports</b> filter rule for incoming traffic (eg. TCP/http, https, http-alt,…) (<i>click to expand</i>)</summary>
+
+``` yml
+- hosts: serverXYZ
+  vars:
+      nft_input_rules:
+        400 input http accepted:
+          - tcp dport { 80, 443, 8080-8082 } ct state new accept
+  roles:
+    - role: ipr-cnrs.nftables
+```
+* **nft_input_group_rules** or **nft_input_host_rules** variables can
+  also be used.
+* The weight (`400`) allow to order all merged rules (from
+  <b>nft_input_*rules</b> dictionaries).
+* The text following the weight (`input http accepted`) is a small
+  description that will be added as a comment in **nft_input_conf_path** file
+ on the remote host.
+* In this case, brackets are useful and define a anonymous set. For a single
+  element (port, IP address,…), brackets are overkill and the singleton
+  definition is enought.
+</details>
+
+<details>
+  <summary>Add a new rule with a variable (<i>click to expand</i>)</summary>
+
+Nftables variables can be useful if you define somes generic rules for all hosts
+with such variables (called with **$**) and override variable's value for some
+groups or hosts.
+``` yml
+- hosts: serverXYZ
+  vars:
+    - nft_define_group:
+        input http accepted:
+          desc: HTTP and HTTPS
+          name: in_http_accept
+          value: '{ 80, 443 }'
+      nft_input_group_rules:
+        400 input http accepted:
+          - tcp dport $in_http_accept ct state new accept
+  roles:
+    - role: ipr-cnrs.nftables
+```
+1. Add a new variable with **define** for HTTP ports.
+1. Add a new rule for incoming traffic and use the previous defined variable.
+1. Result of `nft list ruleset` on the remote host will be :
+   ``` bash
+   table inet filter {
+           …
+
+           chain input {
+                   …
+                   tcp dport { http, https } ct state new accept
+                   …
+           }
+           …
+   }
+   ```
+   * No mention of `$in_http_accept` variable.
+* **nft_define** or **nft_define_host** variables can also be used.
+* **nft_input_rules** or **nft_input_host_rules** variables can also be used.
+* The weight (`400`) allow to order all merged rules (from
+  <b>nft_input_*rules</b> dictionaries).
+* The text following the weight (`input http accepted`) is a small description
+  that will be added as a comment in **nft_input_conf_path** file on
+  the remote host.
+</details>
+
+<details>
+  <summary>Add a new rule with a named set (<i>click to expand</i>)</summary>
+
+Quite similar to Nftables variables, **named set** can be useful if you define
+somes generic rules and sets (eg. for all hosts) and override only the set in
+some case (eg. for a group or some hosts).
+
+In addition to variables, it is possible to add content to named sets on the
+fly from the host without completely rewrite the rule.
+``` yml
+- hosts: serverXYZ
+  vars:
+      nft_set_group:
+        in_udp_accept:
+          - type inet_service; flags interval;
+          - elements = { 6881-6887, 6889 }
+      nft_input_group_rules:
+        200 input udp accepted:
+          - udp dport @in_udp_accept ct state new accept
+  roles:
+    - role: ipr-cnrs.nftables
+```
+1. Add a new named set with <b>nft_set_group</b> dictionary (eg. for torrent ports).
+1. Add a new rule for incoming traffic and use the previous defined set.
+1. On the remote host, if you try to add a port to this set : `nft add element inet filter in_udp_accept \{ 6999 \}`
+1. Result of `nft list ruleset` on the remote host will now be :
+   ``` bash
+   table inet filter {
+           …
+           set in_udp_accept {
+                   type inet_service
+                   flags interval
+                   elements = { 6881-6887, 6889, 6999 }
+           }
+           chain input {
+                   …
+                   udp dport @in_udp_accept ct state new accept
+                   …
+           }
+           …
+   }
+   ```
+* **nft_set** or **nft_set_host** variables can also be used.
+* **nft_input_rules** or **nft_input_host_rules** variables can also be used.
+* The weight (`200`) allow to order all merged rules (from
+  <b>nft_input_*rules</b> dictionaries).
+* The text following the weight (`input upd accepted`) is a small description
+  that will be added as a comment in **nft_input_conf_path** file on
+  the remote host.
+</details>
+
+<details>
+  <summary>Override a default rule with 2 new rules (<i>click to expand</i>)</summary>
+
+``` yml
+- hosts: serverXYZ
+  vars:
+      nft_input_host_rules:
+        050 icmp:⏎
+          - ip protocol icmp  ip saddr != 192.168.0.0/24  counter  drop⏎
+          - ip protocol icmp  icmp type echo-request  ip length <= 84  counter  limit rate 10/minute  accept
+  roles:
+    - role: ipr-cnrs.nftables
+```
+1. Get rule description from `defaults/main.yml` file (eg. `050 icmp`).
+1. Drop any ICMP request that doesn't come from 192.168.0.0 network.
+1. Ensure the request is less or equal to 84 bytes and set up a limit
+   to 10 requests per minute.
+* **nft_input_rules** or **nft_input_group_rules** variables can also be used.
+* The weight (`050`) allow to order all merged rules (from
+  <b>nft_input_*rules</b> dictionaries).
+* The text following the weight (`icmp`) is a small description that
+  will be added as a comment in **nft_input_conf_path** file on
+  the remote host.
+</details>
+
+<details>
+  <summary>Override some of the default defined sets (<i>click to expand</i>)</summary>
 
 ``` yml
 - hosts: serverXYZ
@@ -261,15 +436,76 @@ table inet filter {
         desc: Custom SSH port and torrent
         name: in_tcp_accept
         value: '{ 2201, 6881 }'
-      input udp accepted:
-        desc: torrent
-        name: in_udp_accept
-        value: '{ 6881 }'
   roles:
     - role: ipr-cnrs.nftables
 ```
+1. Get item name (eg. `input tcp accepted`) and variable name
+   (eg. `in_tcp_accept`) from `defaults/main.yml` file.
+1. Set a new value (eg. `'{ 2201, 6881 }'`).
+1. You can add a `desc` attribute that will be set as a comment in
+   **nft_input_conf_path** file on the remote host.
+* **nft_define_group** or **nft_define_host** variables can also be used.
+</details>
 
-* Use default rules with allow incoming ICMP and count dropped input packets :
+<details>
+  <summary>Override all default rules (eg. for outgoing traffic) (<i>click to expand</i>)</summary>
+
+If the default rules are too permissive, if you already override most of them,…
+In some case, i guess, it can be interesting to redefine the default variable :
+``` yml
+- hosts: serverXYZ
+  vars:
+      nft_output_default_rules:
+        000 policy:
+          - type filter hook output priority 0; policy drop;
+        005 state management:
+          - ct state established,related accept
+          - ct state invalid drop
+        015 localhost:
+          - oif lo accept
+        050 my rule for XXX hosts and services:
+          - tcp dport 2000  ip saddr { xxx.xxx.xxx.xxx, yyy.yyy.yyy.yyy }  ct state new  accept
+        250 reset-ssh:  # allow the host to reset SSH connections to avoid 10 min delay from Ansible controller
+          - tcp sport ssh tcp flags { rst, psh | ack } counter accept
+  roles:
+    - role: ipr-cnrs.nftables
+```
+* At least, don't forget to :
+  1. set a default `policy`.
+  1. manage already `established` state.
+  1. accept `rst, psh | ack` flags for **ssh** to avoid a 10 minutes delay at
+     the first run of this Nftables role (see #1).
+* Then add your own rules with the wanted weight to order all merged rules (from
+  <b>nft_output_*rules</b> dictionaries) and descriptions.
+</details>
+
+<details>
+  <summary>Remove a default rule (<i>click to expand</i>)</summary>
+
+``` yml
+- hosts: serverXYZ
+  vars:
+      nft_output_host_rules:
+        210 output tcp accepted:
+          -
+  roles:
+    - role: ipr-cnrs.nftables
+```
+1. Get rule description from `defaults/main.yml` file (`210 output tcp accepted`).
+1. The default policy for outgoing traffic (**drop**) will now be applied to
+   ports defined in **out_tcp_accept** variable. Be sure of what you are doing.
+1. The rule will no longer be present in `nft list ruleset` result, just a
+   comment will remain (`210 output tcp accepted`) in **nft_output_conf_path**
+   file on the remote host.
+* **nft_output_rules** or **nft_output_group_rules** variables can also be used.
+* The weight (`210`) allow to order all merged rules (from
+  <b>nft_output_*rules</b> dictionaries).
+</details>
+
+### With group_vars and host_vars
+
+<details>
+  <summary>Use default rules and allow, for <b>first_group</b>, incoming ICMP and count both ICMP and default policy (<b>drop</b>) packets (<i>click to expand</i>)</summary>
 
 `group_vars/first_group` :
 
@@ -280,62 +516,61 @@ nft_input_group_rules:
   999 count policy packet:
     - counter
 ```
+</details>
 
-* Use merged group rules from multiple ansible groups:
+<details>
+  <summary>Use merged group rules from multiple ansible groups (<i>click to expand</i>)</summary>
 
-``` yml
-- hosts: serverXYZ
-  vars:
-    nft_merged_groups: true
-    nft_merged_groups_dir: vars/
-  roles:
-    - role: ipr-cnrs.nftables
-```
-
-And put the rules inside the "vars" folder named after your ansible groups of the server:
-
-`vars/first_group` :
-
-``` yaml
-nft_input_group_rules:
-  020 icmp:
-    - ip protocol icmp icmp type echo-request ip length <= 84 counter limit rate 1/minute accept
-  999 count policy packet:
-    - counter
-```
-
-`vars/second_group` :
-
-``` yaml
-nft_input_group_rules:
-  021 LAN:
-    - iif eth0 accept
-```
-
-These rulesets from the two groups will be merged if the host has the two groups as ansible roles.
-
-## Known Issue
-
-* The 10 minutes delay at the first run is finally fixed by allowing the host to reset SSH connection (flags `rst, psh | ack`) (see #1).
+1. Enable to merge group's variables :
+    ``` yml
+    - hosts: serverXYZ
+      vars:
+        nft_merged_groups: true
+        nft_merged_groups_dir: vars/
+      roles:
+        - role: ipr-cnrs.nftables
+    ```
+1. Put extra rules inside the "vars" folder named after your ansible groups for serverXYZ :
+   * `vars/first_group` :
+       ``` yaml
+       nft_input_group_rules:
+         020 icmp:
+           - ip protocol icmp icmp type echo-request ip length <= 84 counter limit rate 1/minute accept
+         999 count policy packet:
+           - counter
+       ```
+   * `vars/second_group` :
+       ``` yaml
+       nft_input_group_rules:
+         021 LAN:
+           - iif eth0 accept
+       ```
+1. These rulesets, from the two groups, will be merged if the host is a member
+   of these groups.
+</details>
 
 ## Configuration
 
 This role will :
 * Install `nftables` on the system.
 * Enable `nftables` service by default at startup.
-* Generate a default configuration file which include all following files and loaded by systemd unit.
+* Generate a default configuration file which include all following files and
+  loaded by systemd unit.
 * Generate input and output rules files include called by the main configuration file.
 * Generate vars in a file and sets and maps in another file.
 * (re)Start `nftables` service at first run.
-* Reload `nftables` service at next runs to avoid to let the host without firewall rules due to invalid syntax.
+* Reload `nftables` service at next runs to avoid to let the host without firewall
+  rules due to invalid syntax.
 
 ## Development
 
-This source code comes from our [Gogs instance][nftables source] and the [Github repo][nftables github] exist just to be able to send the role to Ansible Galaxy…
+This source code comes from our [Gitea instance][nftables source] and the
+[Github repo][nftables github] exist just to be able to send the role to Ansible
+Galaxy…
 
 But feel free to send issue/PR here :)
 
-Thanks to this [hook][gogs to github hook], Github automatically got updates from our [Gogs instance][nftables source] :)
+Thanks to this [hook][gogs to github hook], Github automatically got updates from our [Gitea instance][nftables source] :)
 
 ## License
 
@@ -344,7 +579,7 @@ Thanks to this [hook][gogs to github hook], Github automatically got updates fro
 ## Author Information
 
 Jérémy Gardais
-* Source : [on IPR's Gogs][nftables source]
+* Source : [on IPR's Gitea][nftables source]
 * [IPR][ipr website] (Institut de Physique de Rennes)
 
 [gogs to github hook]: https://stackoverflow.com/a/21998477
