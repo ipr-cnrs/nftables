@@ -81,7 +81,7 @@
     owner: root
     group: root
     mode: 0755
-    backup: yes
+    backup: "{{ nft_backup_conf }}"
   notify: ['Reload nftables service']
   when: nft_enabled|bool
 
@@ -92,7 +92,7 @@
     owner: root
     group: root
     mode: 0755
-    backup: yes
+    backup: "{{ nft_backup_conf }}"
   notify: ['Reload nftables service']
   when: nft_enabled|bool
 
@@ -103,7 +103,7 @@
     owner: root
     group: root
     mode: 0755
-    backup: yes
+    backup: "{{ nft_backup_conf }}"
   notify: ['Reload nftables service']
   when: nft_enabled|bool
 
@@ -115,7 +115,7 @@
     owner: root
     group: root
     mode: 0755
-    backup: yes
+    backup: "{{ nft_backup_conf }}"
   notify: ['Reload nftables service']
   when: nft_enabled|bool
 
@@ -126,7 +126,7 @@
     owner: root
     group: root
     mode: 0755
-    backup: yes
+    backup: "{{ nft_backup_conf }}"
   notify: ['Reload nftables service']
   when: nft_enabled|bool
 
@@ -150,7 +150,7 @@
     owner: root
     group: root
     mode: 0755
-    backup: yes
+    backup: "{{ nft_backup_conf }}"
   notify: ['Reload nftables service']
   when: (nft_enabled|bool and
          nft__nat_table_manage|bool)
@@ -162,7 +162,7 @@
     owner: root
     group: root
     mode: 0755
-    backup: yes
+    backup: "{{ nft_backup_conf }}"
   notify: ['Reload nftables service']
   when: (nft_enabled|bool and
          nft__nat_table_manage|bool)
@@ -179,3 +179,4 @@
   when: (nft_enabled|bool and
          nft_service_manage|bool)
   notify: ['Restart nftables service']
+
