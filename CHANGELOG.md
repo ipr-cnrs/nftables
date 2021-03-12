@@ -2,6 +2,9 @@
 
 ### Added
 * New examples usecases (mostly for playbooks) in README.md.
+* New rules (disable by default) can be define in *forward* chain (thanks to
+  @p-rintz − PR #14).
+* Possibility to toggle file's backup (thanks to @p-rintz − PR #15).
 
 ### Removed
 * Remove everything related to **in_udp_accept** (see conversation in PR #13).
