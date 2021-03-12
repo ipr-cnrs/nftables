@@ -585,5 +585,17 @@ nft__fail2ban_service: False
 # More verbose output.
 nft_debug: False
 
+# .. envvar:: nft_backup_conf [[[
+#
+# If the nftables config files should be backuped when changed ?
+# Possible options are:
+#
+# ``True``
+#   Default. Backup all nftables config files inside the nftables directory.
+#
+# ``False``
+#   Configs will not be backuped.
+nft_backup_conf: True
+                                                                   # ]]]
                                                                    # ]]]
                                                                    # ]]]
