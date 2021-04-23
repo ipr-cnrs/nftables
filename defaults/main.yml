@@ -541,26 +541,15 @@ nft_service_name: 'nftables'
 #   The service is disabled from startup.
 nft_service_enabled: true
                                                                    # ]]]
-# .. envvar:: nft_service_unit_path [[[
+# .. envvar:: nft_fail2ban_service_unit_path [[[
 #
-# Path to store Nftables service.
-nft_service_unit_path: '/lib/systemd/system/nftables.service'
+# Path to store Fail2Ban custom conf.
+nft_fail2ban_service_unit_path: '/etc/systemd/system/fail2ban.service.d/override.conf'
                                                                    # ]]]
-# .. envvar:: nft_service_unit_content [[[
+# .. envvar:: nft_fail2ban_service_unit_content [[[
 #
-# Template used to provide systemd unit for Nftables service.
-nft_service_unit_content: 'lib/systemd/system/nftables.service.j2'
-                                                                   # ]]]
-# .. envvar:: nft__service_protect [[[
-#
-# If the systemd unit should have the Protect directives ? Possible options :
-#
-# ``True``
-#   Default. Directives will be set (ProtectSystem, ProtectHome,…).
-#
-# ``False``
-#   The directives will be ignored.
-nft__service_protect: true
+# Template used to provide systemd custom conf for Fail2Ban service.
+nft_fail2ban_service_unit_content: 'etc/systemd/system/fail2ban.service.d/override.conf.j2'
                                                                    # ]]]
 # .. envvar:: nft__fail2ban_service [[[
 #

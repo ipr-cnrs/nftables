@@ -82,7 +82,7 @@
     group: root
     mode: 0755
     backup: "{{ nft_backup_conf }}"
-  notify: ['Reload nftables service']
+  notify: ['Restart nftables service']
   when: nft_enabled|bool
 
 - name: CONFIG generate vars definition file
@@ -93,7 +93,7 @@
     group: root
     mode: 0755
     backup: "{{ nft_backup_conf }}"
-  notify: ['Reload nftables service']
+  notify: ['Restart nftables service']
   when: nft_enabled|bool
 
 - name: CONFIG generate sets file
@@ -104,7 +104,7 @@
     group: root
     mode: 0755
     backup: "{{ nft_backup_conf }}"
-  notify: ['Reload nftables service']
+  notify: ['Restart nftables service']
   when: nft_enabled|bool
 
 # Filter table content [[[1
@@ -116,7 +116,7 @@
     group: root
     mode: 0755
     backup: "{{ nft_backup_conf }}"
-  notify: ['Reload nftables service']
+  notify: ['Restart nftables service']
   when: nft_enabled|bool
 
 - name: Filter table - generate output rules file
@@ -127,7 +127,7 @@
     group: root
     mode: 0755
     backup: "{{ nft_backup_conf }}"
-  notify: ['Reload nftables service']
+  notify: ['Restart nftables service']
   when: nft_enabled|bool
 
 - name: Filter table - generate forward rules file
@@ -138,7 +138,7 @@
     group: root
     mode: 0755
     backup: yes
-  notify: ['Reload nftables service']
+  notify: ['Restart nftables service']
   when: (nft_enabled|bool and
          nft__forward_table_manage|bool)
 
@@ -151,7 +151,7 @@
     group: root
     mode: 0755
     backup: "{{ nft_backup_conf }}"
-  notify: ['Reload nftables service']
+  notify: ['Restart nftables service']
   when: (nft_enabled|bool and
          nft__nat_table_manage|bool)
 
@@ -163,20 +163,22 @@
     group: root
     mode: 0755
     backup: "{{ nft_backup_conf }}"
-  notify: ['Reload nftables service']
+  notify: ['Restart nftables service']
   when: (nft_enabled|bool and
          nft__nat_table_manage|bool)
 
-# Manage service [[[1
-- name: Install Debian systemd service unit
+# Manage custom fail2ban service [[[1
+- name: Install Debian Fail2Ban custom service
   template:
-    src: '{{ nft_service_unit_content }}'
-    dest: '{{ nft_service_unit_path }}'
+    src: '{{ nft_fail2ban_service_unit_content }}'
+    dest: '{{ nft_fail2ban_service_unit_path }}'
     owner: 'root'
     group: 'root'
     mode: '0644'
   register: nftables__register_systemd_service
-  when: (nft_enabled|bool and
-         nft_service_manage|bool)
+  when:
+    - nft_enabled|bool
+    - nft_service_manage|bool
+    - nft__fail2ban_service|bool
   notify: ['Restart nftables service']
 
