@@ -168,6 +168,16 @@
          nft__nat_table_manage|bool)
 
 # Manage custom fail2ban service [[[1
+- name: Create Fail2Ban custom directory for systemd service
+  file:
+    path: "{{ nft_fail2ban_service_unit_path | dirname }}"
+    state: directory
+    recurse: yes
+  when:
+    - nft_enabled|bool
+    - nft_service_manage|bool
+    - nft__fail2ban_service|bool
+
 - name: Install Debian Fail2Ban custom service
   template:
     src: '{{ nft_fail2ban_service_unit_content }}'
