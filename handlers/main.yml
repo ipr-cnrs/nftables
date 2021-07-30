@@ -6,7 +6,8 @@
   systemd:
     daemon_reload: '{{ (nftables__register_systemd_service.changed | default(False)) or
                        (nftables__register_fail2ban_service.changed | default(False)) or
-                       (nftables__register_fix_systemd_target.changed | default(False)) }}'
+                       (nftables__register_fix_systemd_target.changed | default(False)) or
+                       (nftables__register_systemd_custom.changed | default(False)) }}'
     state: 'restarted'
     name: '{{ nft_service_name }}'
     enabled: '{{ nft_service_enabled }}'

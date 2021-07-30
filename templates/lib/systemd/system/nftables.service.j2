@@ -11,10 +11,8 @@ DefaultDependencies=no
 Type=oneshot
 RemainAfterExit=yes
 StandardInput=null
-{% if nft__service_protect %}
 ProtectSystem=full
 ProtectHome=true
-{% endif %}
 ExecStart={{ nft__bin_location }} -f {{ nft_main_conf_path }}
 ExecReload={{ nft__bin_location }} -f {{ nft_main_conf_path }}
 ExecStop={{ nft__bin_location }} flush ruleset

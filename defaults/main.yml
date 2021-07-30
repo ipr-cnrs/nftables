@@ -551,6 +551,16 @@ nft_service_unit_path: '/lib/systemd/system/nftables.service'
 # Template used to provide systemd unit for Nftables service.
 nft_service_unit_content: 'lib/systemd/system/nftables.service.j2'
                                                                    # ]]]
+# .. envvar:: nft__service_override_path [[[
+#
+# Path to store Nftables custom conf.
+nft__service_override_path: '/etc/systemd/system/nftables.service.d/override.conf'
+                                                                   # ]]]
+# .. envvar:: nft__service_override_content [[[
+#
+# Template used to provide systemd custom conf for Nftables service.
+nft__service_override_content: 'etc/systemd/system/nftables.service.d/override.conf.j2'
+                                                                   # ]]]
 # .. envvar:: nft__service_protect [[[
 #
 # If the systemd unit should have the Protect directives ? Possible options :

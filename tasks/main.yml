@@ -196,6 +196,31 @@
          nft_service_manage|bool)
   notify: ['Restart nftables service']
 
+# Manage custom nftables service [[[1
+- name: Create Nftables custom directory for systemd service
+  file:
+    path: "{{ nft__service_override_path | dirname }}"
+    state: directory
+    recurse: yes
+  when:
+    - nft_enabled|bool
+    - nft_service_manage|bool
+    - not nft__service_protect|bool
+
+- name: Add Nftables systemd custom configuration
+  template:
+    src: '{{ nft__service_override_content }}'
+    dest: '{{ nft__service_override_path }}'
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
+  register: nftables__register_systemd_custom
+  when:
+    - nft_enabled|bool
+    - nft_service_manage|bool
+    - not nft__service_protect|bool
+  notify: ['Restart nftables service']
+
 # Manage custom fail2ban service [[[1
 - name: Create Fail2Ban custom directory for systemd service
   file:
