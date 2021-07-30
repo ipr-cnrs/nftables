@@ -17,6 +17,7 @@
 
 ### Fixed
 * Ansible-lint: Fix line longer than 160 chars.
+* Start nftables systemd unit earlier (thanks to @kravietz − PR #19).
 
 ## v1.7.0
 
