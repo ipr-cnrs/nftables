@@ -4,7 +4,8 @@
 # (re)Start will be called at first run
 - name: Restart nftables service
   systemd:
-    daemon_reload: '{{ nftables__register_systemd_service.changed | default(False) }}'
+    daemon_reload: '{{ (nftables__register_systemd_service.changed | default(False)) or
+                       (nftables__register_fail2ban_service.changed | default(False)) }}'
     state: 'restarted'
     name: '{{ nft_service_name }}'
     enabled: '{{ nft_service_enabled }}'
