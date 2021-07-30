@@ -196,7 +196,6 @@
   when:
     - nft_enabled|bool
     - nft_service_manage|bool
-    - nft__fail2ban_service|bool
 
 - name: Install Debian Fail2Ban custom service
   template:
@@ -209,5 +208,4 @@
   when:
     - nft_enabled|bool
     - nft_service_manage|bool
-    - nft__fail2ban_service|bool
   notify: ['Restart nftables service']

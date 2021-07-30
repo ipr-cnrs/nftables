@@ -573,18 +573,6 @@ nft__fail2ban_service_unit_path: '/etc/systemd/system/fail2ban.service.d/overrid
 # Template used to provide systemd custom conf for Fail2Ban service.
 nft__fail2ban_service_unit_content: 'etc/systemd/system/fail2ban.service.d/override.conf.j2'
                                                                    # ]]]
-# .. envvar:: nft__fail2ban_service [[[
-#
-# If the Nftables systemd unit should also restart Fail2ban service. Possible
-# options are :
-#
-# ``False``
-#   Default. Nftables service will not affect Fail2ban service.
-#
-# ``True``
-#   Any Nftables service (re)start will also restart Fail2ban service.
-nft__fail2ban_service: False
-                                                                   # ]]]
                                                                    #
 # .. envvar:: nft_debug [[[
 #

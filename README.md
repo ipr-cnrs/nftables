@@ -79,7 +79,6 @@ complexify his philosophy… (I'm pretty sure, i now did complexify it :D) ^^
 * **nft_service_name** : `nftables` service name [default : `nftables`].
 * **nft_service_enabled** : Set `nftables` service available at startup [default : `true`].
 * **nft__service_protect** : If systemd unit should protect system and home [default : `true`].
-* **nft__fail2ban_service** : If the Nftables service should also restart the Fail2ban service [default : `False`].
 * **nft_merged_groups** : If variables from the hosts Ansible groups should be merged [default : `false`].
 * **nft_merged_groups_dir** : The dictionary where the nftables group rules, named like the Ansible groups, are located in [default : `vars/`].
 * **nft_debug** : Toggle more verbose output on/off. [default: 'false'].
