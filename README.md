@@ -8,6 +8,7 @@
      * [With playbooks](#with-playbooks)
      * [With group_vars and host_vars](#with-group_vars-and-host_vars)
 1. [Configuration](#configuration)
+     * [Fail2ban integration](#fail2ban-integration)
 1. [Development](#development)
 1. [License](#license)
 1. [Author Information](#author-information)
@@ -568,6 +569,15 @@ This role will :
 * (re)Start `nftables` service at first run.
 * Reload `nftables` service at next runs to avoid to let the host without firewall
   rules due to invalid syntax.
+
+### Fail2ban integration
+
+Before Debian Bullseye, systemd unit for Fail2ban doesn't come with a decent
+integration with Nftables.
+So this role will create override file for `fail2ban` unit, even if it's not
+(yet) available on the host, in order to :
+* Start `fail2ban` unit after `nftables`.
+* Restart `fail2ban` unit when `nftables` unit restart.
 
 ## Development
 
