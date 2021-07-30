@@ -12,15 +12,9 @@ StandardInput=null
 ProtectSystem=full
 ProtectHome=true
 {% endif %}
-{% if nft__fail2ban_service %}
-ExecStart={{ nft__bin_location }} -f {{ nft_main_conf_path }} ; /bin/systemctl restart fail2ban.service
-ExecReload={{ nft__bin_location }} -f {{ nft_main_conf_path }} ; /bin/systemctl restart fail2ban.service
-ExecStop=/bin/systemctl stop fail2ban.service ; {{ nft__bin_location }} flush ruleset
-{% else %}
 ExecStart={{ nft__bin_location }} -f {{ nft_main_conf_path }}
 ExecReload={{ nft__bin_location }} -f {{ nft_main_conf_path }}
 ExecStop={{ nft__bin_location }} flush ruleset
-{% endif %}
 
 [Install]
 WantedBy=multi-user.target
