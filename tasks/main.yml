@@ -201,6 +201,7 @@
   file:
     path: "{{ nft__service_override_path | dirname }}"
     state: directory
+    mode: '0755'
     recurse: yes
   when:
     - nft_enabled|bool
@@ -226,6 +227,7 @@
   file:
     path: "{{ nft__fail2ban_service_unit_path | dirname }}"
     state: directory
+    mode: '0755'
     recurse: yes
   when:
     - nft_enabled|bool
