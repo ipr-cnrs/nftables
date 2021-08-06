@@ -8,7 +8,7 @@ galaxy_info:
   license: WTFPL
   company: IPR
   issue_tracker_url: https://git.ipr.univ-rennes1.fr/cellinfo/ansible.nftables/issues
-  min_ansible_version: 2.5
+  min_ansible_version: '2.5'
   platforms:
   - name: Debian
     versions:
