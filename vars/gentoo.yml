@@ -1,0 +1,4 @@
+---
+# vars file for Gentoo
+nft_pkg_list:
+  - net-firewall/nftables
