@@ -1,0 +1,20 @@
+---
+name: Molecule
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Ansible Molecule
+        uses: MonolithProjects/action-molecule@v1.4.3
