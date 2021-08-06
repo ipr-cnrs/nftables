@@ -13,13 +13,13 @@ ProtectSystem=full
 ProtectHome=true
 {% endif %}
 {% if nft__fail2ban_service %}
-ExecStart=/usr/sbin/nft -f {{ nft_main_conf_path }} ; /bin/systemctl restart fail2ban.service
-ExecReload=/usr/sbin/nft -f {{ nft_main_conf_path }} ; /bin/systemctl restart fail2ban.service
-ExecStop=/bin/systemctl stop fail2ban.service ; /usr/sbin/nft flush ruleset
+ExecStart={{ nft__bin_location }} -f {{ nft_main_conf_path }} ; /bin/systemctl restart fail2ban.service
+ExecReload={{ nft__bin_location }} -f {{ nft_main_conf_path }} ; /bin/systemctl restart fail2ban.service
+ExecStop=/bin/systemctl stop fail2ban.service ; {{ nft__bin_location }} flush ruleset
 {% else %}
-ExecStart=/usr/sbin/nft -f {{ nft_main_conf_path }}
-ExecReload=/usr/sbin/nft -f {{ nft_main_conf_path }}
-ExecStop=/usr/sbin/nft flush ruleset
+ExecStart={{ nft__bin_location }} -f {{ nft_main_conf_path }}
+ExecReload={{ nft__bin_location }} -f {{ nft_main_conf_path }}
+ExecStop={{ nft__bin_location }} flush ruleset
 {% endif %}
 
 [Install]
