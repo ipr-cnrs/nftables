@@ -12,18 +12,12 @@ on:
 jobs:
   molecule:
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        image:
-          - alpine
-          #- centos
     steps:
+
       - name: checkout
         uses: actions/checkout@v2
         with:
           path: "${{ github.repository }}"
+
       - name: molecule
         uses: robertdebock/molecule-action@2.6.17
-        with:
-          image: "${{ matrix.image }}"

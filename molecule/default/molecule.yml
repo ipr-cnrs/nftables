@@ -6,6 +6,9 @@ driver:
 platforms:
   - name: instance
     image: centos/systemd:latest
+    privileged: true
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
 provisioner:
   name: ansible
 verifier:
