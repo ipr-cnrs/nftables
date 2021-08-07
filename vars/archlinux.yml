@@ -1,0 +1,4 @@
+---
+# vars file for Archlinux-based distros
+nft_pkg_list:
+  - nftables
