@@ -15,30 +15,15 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        config:
-          - os: centos/systemd
-            tag: latest
-          # - os: debian
-          #   tag: latest
-          # - os: ubuntu
-          #   tag: latest
-          # - os: centos
-          #   tag: latest
-          # - os: fedora
-          #   tag: latest
-          # - os: archlinux
-          #   tag: latest
-          # - os: latest
-          #   tag: latest
-
+        image:
+          - debian
+          - centos
     steps:
-      - uses: actions/checkout@v2
+      - name: checkout
+        uses: actions/checkout@v2
         with:
-          path: ${{ github.repository }}
-
-
-      - name: Ansible Molecule
-        uses: MonolithProjects/action-molecule@v1.4.3
+          path: "${{ github.repository }}"
+      - name: molecule
+        uses: robertdebock/molecule-action@2.6.17
         with:
-          os: ${{ matrix.config.os }}
-          tag: ${{ matrix.config.tag }}
+          image: "${{ matrix.image }}"
