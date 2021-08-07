@@ -1,11 +1,15 @@
 ---
 dependency:
   name: galaxy
+lint: |
+  set -e
+  yamllint .
+  ansible-lint
 driver:
   name: docker
 platforms:
-  - name: instance
-    image: centos/systemd:latest
+  - name: "nftables-${image:-debian}-${tag:-latest}"
+    image: "${image:-debian}:${tag:-latest}"
     privileged: true
     volumes:
       - /sys/fs/cgroup:/sys/fs/cgroup:ro

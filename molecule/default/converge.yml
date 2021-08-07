@@ -2,6 +2,8 @@
 - name: Converge
   hosts: localhost
   connection: local
+  become: yes
+  gather_facts: yes
   roles:
     - role: ipr-cnrs.nftables
       nft_debug: true
