@@ -41,6 +41,10 @@
   debug: var=nft_combined_rules
   when: nft_debug
 
+- name: Debug ansible_os_family
+  debug: var=ansible_os_family
+  when: nft_debug
+
 - name: Load specific OS vars for nftables
   include_vars: "{{ osname }}"
   with_first_found:
