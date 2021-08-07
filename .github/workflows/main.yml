@@ -1,20 +1,41 @@
 ---
-name: Molecule
+name: ipr-cnrs.nftables.molecule
 
 on:
   push:
-    branches: [main]
+    branches: [master]
   pull_request:
-    branches: [main]
+    branches: [master]
 
   workflow_dispatch:
 
 jobs:
-  build:
+  molecule:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+          - os: debian
+            tag: latest
+          - os: ubuntu
+            tag: latest
+          - os: centos
+            tag: latest
+          - os: fedora
+            tag: latest
+          - os: archlinux
+            tag: latest
+          - os: latest
+            tag: latest
 
     steps:
       - uses: actions/checkout@v2
+        with:
+          path: ${{ github.repository }}
 
       - name: Ansible Molecule
         uses: MonolithProjects/action-molecule@v1.4.3
+        with:
+          os: ${{ matrix.config.os }}
+          tag: ${{ matrix.config.tag }}
