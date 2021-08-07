@@ -16,8 +16,8 @@ jobs:
       fail-fast: false
       matrix:
         image:
-          - debian
-          - centos
+          - alpine
+          #- centos
     steps:
       - name: checkout
         uses: actions/checkout@v2
