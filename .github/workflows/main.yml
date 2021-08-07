@@ -18,16 +18,16 @@ jobs:
         config:
           - os: debian
             tag: latest
-          - os: ubuntu
-            tag: latest
-          - os: centos
-            tag: latest
-          - os: fedora
-            tag: latest
-          - os: archlinux
-            tag: latest
-          - os: latest
-            tag: latest
+          # - os: ubuntu
+          #   tag: latest
+          # - os: centos
+          #   tag: latest
+          # - os: fedora
+          #   tag: latest
+          # - os: archlinux
+          #   tag: latest
+          # - os: latest
+          #   tag: latest
 
     steps:
       - uses: actions/checkout@v2
