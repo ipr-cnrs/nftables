@@ -33,8 +33,6 @@ jobs:
             tag: latest
           - image: debian
             tag: latest
-  molecule:
-    runs-on: ubuntu-latest
     steps:
 
       - name: checkout
