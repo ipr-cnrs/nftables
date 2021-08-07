@@ -10,20 +10,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  lint:
-    runs-on: ubuntu-latest
-    steps:
-      - name: checkout
-        uses: actions/checkout@v2
-        with:
-          path: "${{ github.repository }}"
-      - name: molecule
-        uses: robertdebock/molecule-action@2.6.16
-        with:
-          command: lint
   test:
-    needs:
-      - lint
     runs-on:  ubuntu-latest
     strategy:
       fail-fast: false
