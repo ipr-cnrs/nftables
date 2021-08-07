@@ -13,7 +13,8 @@
   loop_control:
     loop_var: groupname
 
-- debug: var=nftables_group_rules
+- name: Debug nftables_group_rules
+  debug: var=nftables_group_rules
   when: nft_debug
 
 - name: Import nftables-variables if nft_merged_groups is set
@@ -36,7 +37,8 @@
   loop_control:
     loop_var: varfile
 
-- debug: var=nft_combined_rules
+- name: Debug nft_combined_rules
+  debug: var=nft_combined_rules
   when: nft_debug
 
 - name: Load specific OS vars for nftables
