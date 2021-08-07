@@ -16,8 +16,10 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - os: debian
+          - os: centos/systemd
             tag: latest
+          # - os: debian
+          #   tag: latest
           # - os: ubuntu
           #   tag: latest
           # - os: centos
