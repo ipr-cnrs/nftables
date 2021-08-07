@@ -34,6 +34,8 @@ jobs:
         with:
           path: ${{ github.repository }}
 
+      - run: echo -e "[all]\nlocalhost" > /etc/ansible/inventory
+
       - name: Ansible Molecule
         uses: MonolithProjects/action-molecule@v1.4.3
         with:
