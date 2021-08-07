@@ -53,6 +53,7 @@
   package:
     name: '{{ nft_pkg_list | list }}'
     state: '{{ nft_pkg_state }}'
+    update_cache: true
   register: pkg_install_result
   until: pkg_install_result is success
   when: nft_enabled|bool
