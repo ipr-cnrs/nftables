@@ -186,4 +186,3 @@
   when: (nft_enabled|bool and
          nft_service_manage|bool)
   notify: ['Restart nftables service']
-
