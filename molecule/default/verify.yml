@@ -9,7 +9,7 @@
   - name: check for nftables.d
     stat:
       path: /etc/nftables.d
-    register: s
+    register: p
 
   - name: check nftables.d
     assert:
@@ -19,7 +19,7 @@
   - name: check for nftables.conf
     stat:
       path: /etc/nftables.conf
-    register: s
+    register: p
 
   - name: check nftables.conf
     assert:
@@ -29,7 +29,7 @@
   - name: check for nftables.conf
     stat:
       path: /etc/nftables.d/filter-input.nft
-    register: s
+    register: p
 
   - name: check filter-input.nft
     assert:
