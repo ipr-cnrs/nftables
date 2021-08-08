@@ -1,8 +1,6 @@
 ---
 - name: Converge
-  hosts: localhost
-  connection: local
-  become: yes
+  hosts: all
   gather_facts: yes
   roles:
     - role: ipr-cnrs.nftables

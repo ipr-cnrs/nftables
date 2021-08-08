@@ -8,11 +8,16 @@ lint: |
 driver:
   name: docker
 platforms:
-  - name: "nftables-${image:-debian}-${tag:-latest}"
-    image: "${image:-debian}:${tag:-latest}"
-    privileged: true
-    volumes:
-      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+  - name: ubuntu-latest
+    image: ubuntu:latest
+  - name: centos-latest
+    image: centos-latest
+  # - name: "nftables-${image:-debian}-${tag:-latest}"
+  #   image: "${image:-debian}:${tag:-latest}"
+    # command: /lib/systemd/systemd
+    # privileged: true
+    # volumes:
+    #   - /sys/fs/cgroup:/sys/fs/cgroup:ro
 provisioner:
   name: ansible
 verifier:
