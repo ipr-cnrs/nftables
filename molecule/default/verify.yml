@@ -16,8 +16,12 @@
   - name: check rules
     assert:
       that:
-        - '"type filter hook input priority 0; policy drop;" in nft.stdout'
-        - '"type filter hook output priority 0; policy drop;" in nft.stdout'
+        # The whole line is:
+        # type filter hook input priority 0; policy drop;
+        # However on CentOS will return "priority 0", while Debian will
+        # show "priority filter"
+        - '"type filter hook input" in nft.stdout'
+        - '"type filter hook output" in nft.stdout'
 
   - name: service status - active
     command: systemctl is-active nftables.service
