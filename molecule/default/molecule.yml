@@ -10,6 +10,9 @@ driver:
 platforms:
   - name: ubuntu-latest
     image: jrei/systemd-ubuntu:latest
+    privileged: true
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
   - name: centos-latest
     image: centos/systemd:latest
     command: /usr/sbin/init
