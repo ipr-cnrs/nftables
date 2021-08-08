@@ -6,6 +6,36 @@
   gather_facts: false
   tasks:
 
+  - name: check for nftables.d
+    stat:
+      path: /etc/nftables.d
+    register: s
+
+  - name: check nftables.d
+    assert:
+      that:
+        - p.stat.exists and p.stat.isdir
+
+  - name: check for nftables.conf
+    stat:
+      path: /etc/nftables.conf
+    register: s
+
+  - name: check nftables.conf
+    assert:
+      that:
+        - p.stat.exists
+
+  - name: check for nftables.conf
+    stat:
+      path: /etc/nftables.d/filter-input.nft
+    register: s
+
+  - name: check filter-input.nft
+    assert:
+      that:
+        - p.stat.exists
+
   - name: list rules
     command: nft list ruleset
     register: nft
