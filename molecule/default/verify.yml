@@ -5,6 +5,32 @@
   hosts: all
   gather_facts: false
   tasks:
-  - name: Example assertion
+  
+  - name: list rules
+    command: nft list ruleset
+    register: nft
+
+  - name: check rules
     assert:
-      that: true
+      that:
+        - '"type filter hook input priority 0; policy drop;" in nft.stdout'
+        - '"type filter hook output priority 0; policy drop;" in nft.stdout'
+
+  - name: service status - active
+    command: systemctl is-active nftables.service
+    register: status
+
+  - name: check service status
+    assert:
+      that:
+        - 'status.stdout == "active"'
+
+  - name: service status - enabled
+    command: systemctl is-enabled nftables.service
+    register: status
+
+  - name: check service status
+    assert:
+      that:
+        - 'status.stdout == "enabled"'
+  
