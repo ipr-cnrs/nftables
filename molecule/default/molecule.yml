@@ -8,16 +8,25 @@ lint: |
 driver:
   name: docker
 platforms:
-  - name: ubuntu-latest
+  - name: systemd-ubuntu-latest
     image: jrei/systemd-ubuntu:latest
     command: /usr/sbin/init
     privileged: true
     volumes:
       - /sys/fs/cgroup:/sys/fs/cgroup:ro
-  - name: centos-latest
+  - name: systemd-centos-latest
     image: centos/systemd:latest
     command: /usr/sbin/init
     privileged: true
+  - name: systemd-debian-latest
+    image: jrei/systemd-debian:latest
+    command: /usr/sbin/init
+    privileged: true
+  - name: systemd-fedora-latest
+    image: jrei/systemd-fedora:latest
+    command: /usr/sbin/init
+    privileged: true
+
 provisioner:
   name: ansible
 verifier:
