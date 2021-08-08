@@ -15,6 +15,9 @@ platforms:
     privileged: true
     volumes:
       - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    tmpfs:
+      - /run
+      - /tmp
 
   - name: systemd-centos-latest
     image: centos/systemd:latest
@@ -22,20 +25,33 @@ platforms:
     privileged: true
     volumes:
       - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    tmpfs:
+      - /run
+      - /tmp
 
-  - name: systemd-debian-latest
-    image: jrei/systemd-debian:latest
-    command: /sbin/init
-    privileged: true
-    volumes:
-      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+  # - name: systemd-debian-latest
+  #   image: jrei/systemd-debian:latest
+  #   command: /sbin/init
+  #   privileged: true
+  #   volumes:
+  #     - /sys/fs/cgroup:/sys/fs/cgroup:ro
 
-  - name: systemd-fedora-latest
-    image: jrei/systemd-fedora:latest
+  # - name: systemd-fedora-latest
+  #   image: jrei/systemd-fedora:latest
+  #   command: /usr/sbin/init
+  #   privileged: true
+  #   volumes:
+  #     - /sys/fs/cgroup:/sys/fs/cgroup:ro
+
+  - name: archlinux
+    image: archlinux:latest
     command: /usr/sbin/init
     privileged: true
     volumes:
       - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    tmpfs:
+      - /run
+      - /tmp
 
 provisioner:
   name: ansible

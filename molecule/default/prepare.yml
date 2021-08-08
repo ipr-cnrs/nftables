@@ -1,0 +1,6 @@
+---
+- name: prepare
+  hosts: archlinux
+  package:
+    name: python
+    update_cache: true
