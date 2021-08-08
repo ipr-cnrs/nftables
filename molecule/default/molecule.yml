@@ -10,6 +10,7 @@ driver:
 platforms:
   - name: ubuntu-latest
     image: jrei/systemd-ubuntu:latest
+    command: /usr/sbin/init
     privileged: true
     volumes:
       - /sys/fs/cgroup:/sys/fs/cgroup:ro
