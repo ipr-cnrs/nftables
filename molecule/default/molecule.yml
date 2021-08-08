@@ -20,16 +20,22 @@ platforms:
     image: centos/systemd:latest
     command: /usr/sbin/init
     privileged: true
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
 
   - name: systemd-debian-latest
     image: jrei/systemd-debian:latest
     command: /sbin/init
     privileged: true
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
 
   - name: systemd-fedora-latest
     image: jrei/systemd-fedora:latest
     command: /usr/sbin/init
     privileged: true
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
 
 provisioner:
   name: ansible
