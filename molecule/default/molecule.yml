@@ -11,7 +11,7 @@ platforms:
   - name: ubuntu-latest
     image: ubuntu:latest
   - name: centos-latest
-    image: centos-latest
+    image: centos:latest
   # - name: "nftables-${image:-debian}-${tag:-latest}"
   #   image: "${image:-debian}:${tag:-latest}"
     # command: /lib/systemd/systemd
