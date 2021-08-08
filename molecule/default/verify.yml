@@ -10,6 +10,9 @@
     command: nft list ruleset
     register: nft
 
+  - name: debug rules
+    debug: var=nft
+
   - name: check rules
     assert:
       that:
