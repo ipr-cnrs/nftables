@@ -12,14 +12,6 @@ on:
 jobs:
   test:
     runs-on:  ubuntu-latest
-    # strategy:
-    #   fail-fast: false
-    #   matrix:
-    #     config:
-    #       - image: centos
-    #         tag: latest
-    #       - image: debian
-    #         tag: latest
     steps:
 
       - name: checkout
@@ -29,6 +21,3 @@ jobs:
 
       - name: molecule
         uses: robertdebock/molecule-action@2.6.17
-        # with:
-        #   image: ${{ matrix.config.image }}
-        #   tag: ${{ matrix.config.tag }}

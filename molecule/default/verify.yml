@@ -5,7 +5,7 @@
   hosts: all
   gather_facts: false
   tasks:
-  
+
   - name: list rules
     command: nft list ruleset
     register: nft
@@ -33,4 +33,3 @@
     assert:
       that:
         - 'status.stdout == "enabled"'
-  

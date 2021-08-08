@@ -9,17 +9,11 @@ driver:
   name: docker
 platforms:
   - name: ubuntu-latest
-    image: ubuntu:latest
+    image: jrei/systemd-ubuntu:latest
   - name: centos-latest
     image: centos/systemd:latest
     command: /usr/sbin/init
     privileged: true
-  # - name: "nftables-${image:-debian}-${tag:-latest}"
-  #   image: "${image:-debian}:${tag:-latest}"
-    # command: /lib/systemd/systemd
-    # privileged: true
-    # volumes:
-    #   - /sys/fs/cgroup:/sys/fs/cgroup:ro
 provisioner:
   name: ansible
 verifier:
