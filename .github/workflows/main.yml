@@ -1,20 +1,23 @@
 ---
-name: Molecule
+name: ipr-cnrs.nftables.molecule
 
 on:
   push:
-    branches: [main]
+    branches: [master]
   pull_request:
-    branches: [main]
+    branches: [master]
 
   workflow_dispatch:
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-
+  test:
+    runs-on:  ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
 
-      - name: Ansible Molecule
-        uses: MonolithProjects/action-molecule@v1.4.3
+      - name: checkout
+        uses: actions/checkout@v2
+        with:
+          path: "${{ github.repository }}"
+
+      - name: molecule
+        uses: robertdebock/molecule-action@2.6.17
