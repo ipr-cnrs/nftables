@@ -43,15 +43,6 @@ platforms:
   #   volumes:
   #     - /sys/fs/cgroup:/sys/fs/cgroup:ro
 
-  # - name: archlinux
-  #   image: archlinux:latest
-  #   command: /usr/sbin/init
-  #   privileged: true
-  #   volumes:
-  #     - /sys/fs/cgroup:/sys/fs/cgroup:ro
-  #   tmpfs:
-  #     - /run
-  #     - /tmp
 
 provisioner:
   name: ansible

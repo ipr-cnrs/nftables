@@ -1,0 +1,72 @@
+---
+# This is an example playbook to execute Ansible tests.
+
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+
+  - name: check for nftables.d
+    stat:
+      path: /etc/nftables.d
+    register: p
+
+  - name: check nftables.d
+    assert:
+      that:
+        - p.stat.exists and p.stat.isdir
+
+  - name: check for nftables.conf
+    stat:
+      path: /etc/nftables.conf
+    register: p
+
+  - name: check nftables.conf
+    assert:
+      that:
+        - p.stat.exists
+
+  - name: check for nftables.conf
+    stat:
+      path: /etc/nftables.d/filter-input.nft
+    register: p
+
+  - name: check filter-input.nft
+    assert:
+      that:
+        - p.stat.exists
+
+  - name: list rules
+    command: nft list ruleset
+    register: nft
+
+  - name: debug rules
+    debug: var=nft
+
+  - name: check rules
+    assert:
+      that:
+        # The whole line is:
+        # type filter hook input priority 0; policy drop;
+        # However on CentOS will return "priority 0", while Debian will
+        # show "priority filter"
+        - '"type filter hook input" in nft.stdout'
+        - '"type filter hook output" in nft.stdout'
+
+  - name: service status - active
+    command: systemctl is-active nftables.service
+    register: status
+
+  - name: check service status
+    assert:
+      that:
+        - 'status.stdout == "active"'
+
+  - name: service status - enabled
+    command: systemctl is-enabled nftables.service
+    register: status
+
+  - name: check service status
+    assert:
+      that:
+        - 'status.stdout == "enabled"'

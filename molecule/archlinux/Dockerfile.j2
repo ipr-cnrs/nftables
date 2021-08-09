@@ -1,0 +1,7 @@
+FROM archlinux:latest
+ENV container=docker
+
+RUN pacman -Sy --noconfirm python
+
+VOLUME ["/sys/fs/cgroup", "/tmp", "/run"]
+CMD ["/usr/sbin/init"]
