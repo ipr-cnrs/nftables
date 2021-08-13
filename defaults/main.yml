@@ -599,3 +599,13 @@ nft_backup_conf: True
                                                                    # ]]]
                                                                    # ]]]
                                                                    # ]]]
+# OS specific variables defaults [[[
+# ----------------------------------
+
+# .. envvar:: nft__bin_location [[[
+#
+# Specify Nftables executable location.
+#
+nft__bin_location: '/usr/sbin/nft'
+                                                                   # ]]]
+                                                                   # ]]]
