@@ -89,6 +89,7 @@ complexify his philosophy… (I'm pretty sure, i now did complexify it :D) ^^
 Please see default value by Operating System file in [vars][vars directory] directory.
 
 * **nft_pkg_list** : The list of package(s) to provide `nftables`.
+* **nft__bin_location** : Path to `nftables` executable. [default : `/usr/sbin/nft`]
 
 ### Rules Dictionaries
 
