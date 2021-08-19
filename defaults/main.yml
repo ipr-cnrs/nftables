@@ -551,6 +551,16 @@ nft_service_unit_path: '/lib/systemd/system/nftables.service'
 # Template used to provide systemd unit for Nftables service.
 nft_service_unit_content: 'lib/systemd/system/nftables.service.j2'
                                                                    # ]]]
+# .. envvar:: nft__service_override_path [[[
+#
+# Path to store Nftables custom conf.
+nft__service_override_path: '/etc/systemd/system/nftables.service.d/override.conf'
+                                                                   # ]]]
+# .. envvar:: nft__service_override_content [[[
+#
+# Template used to provide systemd custom conf for Nftables service.
+nft__service_override_content: 'etc/systemd/system/nftables.service.d/override.conf.j2'
+                                                                   # ]]]
 # .. envvar:: nft__service_protect [[[
 #
 # If the systemd unit should have the Protect directives ? Possible options :
@@ -562,18 +572,18 @@ nft_service_unit_content: 'lib/systemd/system/nftables.service.j2'
 #   The directives will be ignored.
 nft__service_protect: true
                                                                    # ]]]
-# .. envvar:: nft__fail2ban_service [[[
+
+# .. envvar:: nft__fail2ban_service_unit_path [[[
 #
-# If the Nftables systemd unit should also restart Fail2ban service. Possible
-# options are :
-#
-# ``False``
-#   Default. Nftables service will not affect Fail2ban service.
-#
-# ``True``
-#   Any Nftables service (re)start will also restart Fail2ban service.
-nft__fail2ban_service: False
+# Path to store Fail2Ban custom conf.
+nft__fail2ban_service_unit_path: '/etc/systemd/system/fail2ban.service.d/override.conf'
                                                                    # ]]]
+# .. envvar:: nft__fail2ban_service_unit_content [[[
+#
+# Template used to provide systemd custom conf for Fail2Ban service.
+nft__fail2ban_service_unit_content: 'etc/systemd/system/fail2ban.service.d/override.conf.j2'
+                                                                   # ]]]
+                                                                   #
 # .. envvar:: nft_debug [[[
 #
 # Toggle on/off more verbose output. Possible options are:

@@ -7,6 +7,7 @@
 * Possibility to toggle file's backup (thanks to @p-rintz − PR #15).
 * Gentoo-specific variables
 * Ability to specify nft binary path through **nft__bin_location**
+* Manage Fail2ban in the "systemd way" (thanks to @FinweVI − PR #16).
 
 ### Removed
 * Remove everything related to **in_udp_accept** (see conversation in PR #13).
@@ -16,6 +17,9 @@
 
 ### Fixed
 * Ansible-lint: Fix line longer than 160 chars.
+* Start nftables systemd unit earlier (thanks to @kravietz − PR #19).
+* Ensure to disable nftables systemd unit from old target.
+* Move systemd "Protect" options for nftables to specific override.conf file.
 
 ## v1.7.0
 

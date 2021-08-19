@@ -8,6 +8,7 @@
      * [With playbooks](#with-playbooks)
      * [With group_vars and host_vars](#with-group_vars-and-host_vars)
 1. [Configuration](#configuration)
+     * [Fail2ban integration](#fail2ban-integration)
 1. [Development](#development)
 1. [License](#license)
 1. [Author Information](#author-information)
@@ -79,7 +80,6 @@ complexify his philosophy… (I'm pretty sure, i now did complexify it :D) ^^
 * **nft_service_name** : `nftables` service name [default : `nftables`].
 * **nft_service_enabled** : Set `nftables` service available at startup [default : `true`].
 * **nft__service_protect** : If systemd unit should protect system and home [default : `true`].
-* **nft__fail2ban_service** : If the Nftables service should also restart the Fail2ban service [default : `False`].
 * **nft_merged_groups** : If variables from the hosts Ansible groups should be merged [default : `false`].
 * **nft_merged_groups_dir** : The dictionary where the nftables group rules, named like the Ansible groups, are located in [default : `vars/`].
 * **nft_debug** : Toggle more verbose output on/off. [default: 'false'].
@@ -569,6 +569,15 @@ This role will :
 * (re)Start `nftables` service at first run.
 * Reload `nftables` service at next runs to avoid to let the host without firewall
   rules due to invalid syntax.
+
+### Fail2ban integration
+
+Before Debian Bullseye, systemd unit for Fail2ban doesn't come with a decent
+integration with Nftables.
+So this role will create override file for `fail2ban` unit, even if it's not
+(yet) available on the host, in order to :
+* Start `fail2ban` unit after `nftables`.
+* Restart `fail2ban` unit when `nftables` unit restart.
 
 ## Development
 

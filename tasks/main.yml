@@ -174,8 +174,8 @@
   when: (nft_enabled|bool and
          nft__nat_table_manage|bool)
 
-# Manage service [[[1
-- name: Install Debian systemd service unit
+# Manage nftables service [[[1
+- name: Install nftables Debian systemd service unit
   template:
     src: '{{ nft_service_unit_content }}'
     dest: '{{ nft_service_unit_path }}'
@@ -185,4 +185,61 @@
   register: nftables__register_systemd_service
   when: (nft_enabled|bool and
          nft_service_manage|bool)
+  notify: ['Restart nftables service']
+
+- name: Ensure to remove nftables systemd service from old target
+  file:
+    path: '/etc/systemd/system/multi-user.target.wants/nftables.service'
+    state: absent
+  register: nftables__register_fix_systemd_target
+  when: (nft_enabled|bool and
+         nft_service_manage|bool)
+  notify: ['Restart nftables service']
+
+# Manage custom nftables service [[[1
+- name: Create Nftables custom directory for systemd service
+  file:
+    path: "{{ nft__service_override_path | dirname }}"
+    state: directory
+    mode: '0755'
+  when:
+    - nft_enabled|bool
+    - nft_service_manage|bool
+    - not nft__service_protect|bool
+
+- name: Add Nftables systemd custom configuration
+  template:
+    src: '{{ nft__service_override_content }}'
+    dest: '{{ nft__service_override_path }}'
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
+  register: nftables__register_systemd_custom
+  when:
+    - nft_enabled|bool
+    - nft_service_manage|bool
+    - not nft__service_protect|bool
+  notify: ['Restart nftables service']
+
+# Manage custom fail2ban service [[[1
+- name: Create Fail2Ban custom directory for systemd service
+  file:
+    path: "{{ nft__fail2ban_service_unit_path | dirname }}"
+    state: directory
+    mode: '0755'
+  when:
+    - nft_enabled|bool
+    - nft_service_manage|bool
+
+- name: Install Debian Fail2Ban custom service
+  template:
+    src: '{{ nft__fail2ban_service_unit_content }}'
+    dest: '{{ nft__fail2ban_service_unit_path }}'
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
+  register: nftables__register_fail2ban_service
+  when:
+    - nft_enabled|bool
+    - nft_service_manage|bool
   notify: ['Restart nftables service']

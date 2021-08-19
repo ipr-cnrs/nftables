@@ -26,7 +26,7 @@
       that:
         - p.stat.exists
 
-  - name: check for nftables.conf
+  - name: check for filter-input.nft
     stat:
       path: /etc/nftables.d/filter-input.nft
     register: p
@@ -52,6 +52,26 @@
         # show "priority filter"
         - '"type filter hook input" in nft.stdout'
         - '"type filter hook output" in nft.stdout'
+
+  - name: check for fail2ban systemd custom dir
+    stat:
+      path: /etc/systemd/system/fail2ban.service.d
+    register: f2b_systemd_dir
+
+  - name: check fail2ban systemd custom dir
+    assert:
+      that:
+        - f2b_systemd_dir.stat.exists and f2b_systemd_dir.stat.isdir
+
+  - name: check for fail2ban systemd override
+    stat:
+      path: /etc/systemd/system/fail2ban.service.d/override.conf
+    register: f2b_systemd_override
+
+  - name: check fail2ban systemd override
+    assert:
+      that:
+        - f2b_systemd_override.stat.exists
 
   - name: service status - active
     command: systemctl is-active nftables.service

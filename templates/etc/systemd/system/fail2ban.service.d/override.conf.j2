@@ -1,0 +1,8 @@
+# {{ ansible_managed }}
+
+[Unit]
+After=network.target iptables.service firewalld.service ip6tables.service ipset.service nftables.service
+PartOf=firewalld.service nftables.service
+
+[Install]
+WantedBy=multi-user.target nftables.service
