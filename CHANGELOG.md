@@ -1,16 +1,19 @@
-## v1.X.Y
+## v2.0.0
 
 ### Added
 * New examples usecases (mostly for playbooks) in README.md.
 * New rules (disable by default) can be define in *forward* chain (thanks to
   @p-rintz − PR #14).
 * Possibility to toggle file's backup (thanks to @p-rintz − PR #15).
-* Gentoo-specific variables
-* Ability to specify nft binary path through **nft__bin_location**
+* Gentoo-specific variables (thanks to @VTimofeenko − PR #22).
+* Ability to specify nft binary path through **nft__bin_location** (thanks to @VTimofeenko − PR #22).
 * Manage Fail2ban in the "systemd way" (thanks to @FinweVI − PR #16).
+* Molecule tests (on Archlinux, Ubuntu, CentOS, Debian and Fedora) (many thanks to @kravietz ! − PR #23).
+* Support for Debian Bullseye (everything should now works fine).
 
 ### Removed
-* Remove everything related to **in_udp_accept** (see conversation in PR #13).
+* Remove everything related to **in_udp_accept** (see conversation in
+  [Github PR #13](https://github.com/ipr-cnrs/nftables/pull/13)).
   Cause it was empty by default and the role currently doesn't manage it very
   well. Take a look to new examples in README.md to find your preferred solution
   (re-adding it, new simple/multi-ports filter rule,…).
@@ -18,8 +21,8 @@
 ### Fixed
 * Ansible-lint: Fix line longer than 160 chars.
 * Start nftables systemd unit earlier (thanks to @kravietz − PR #19).
-* Ensure to disable nftables systemd unit from old target.
-* Move systemd "Protect" options for nftables to specific override.conf file.
+* Ensure to disable nftables systemd unit from old target (PR #20).
+* Move systemd "Protect" options for nftables to specific override.conf file (PR #20).
 
 ## v1.7.0
 

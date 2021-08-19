@@ -14,7 +14,21 @@ galaxy_info:
   platforms:
   - name: Debian
     versions:
+    - bullseye
+    - buster
     - stretch
+  - name: Archlinux
+    versions:
+    - all
+  - name: Fedora
+    versions:
+    - all
+  - name: Gentoo
+    versions:
+    - all
+  - name: Ubuntu
+    versions:
+    - focal
   galaxy_tags:
     - system
     - nftables
