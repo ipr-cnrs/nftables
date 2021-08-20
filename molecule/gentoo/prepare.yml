@@ -1,0 +1,34 @@
+# Taken from https://github.com/VTimofeenko/portage-overlay-cfg on commit d8914035e236c4f3819985098dd1ae36551bfc52
+# If bugs are found – check that repository
+# Since Gentoo builds from source, to save time on molecule tests, we should reuse artifacts as much as possible
+# This playbook performs the initial setup of a Gentoo container
+# It configures portage to try to use prebuilt packages if available and to save the built packages.
+---
+- name: Run preparation playbook
+  hosts: Gentoo
+  tasks:
+    - name: Enable buildpkg feature
+      lineinfile:
+        line: "FEATURES='buildpkg'"
+        dest: /etc/portage/make.conf
+        state: present
+    - name: Enable trying to install from binpkgs by default
+      lineinfile:
+        line: "EMERGE_DEFAULT_OPTS='--usepkg'"
+        dest: /etc/portage/make.conf
+        state: present
+    - name: Synchronize gentoo repository if needed
+      block:
+        - name: Check if there is anything in the repo
+          find:
+            paths: '/var/db/repos/gentoo/'
+          register: find_files_in_repo
+        - name: Synchronize the repo if needed
+          command: "emaint sync -a"
+          when: find_files_in_repo.matched == 0
+
+    - name: Install equery, needed for package check
+      # Command, because equery does not exist yet
+      command: emerge --changed-use --oneshot app-portage/gentoolkit
+      changed_when: false
+# The rest of the original file is specific to that role and not needed here
