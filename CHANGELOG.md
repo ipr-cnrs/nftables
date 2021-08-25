@@ -1,3 +1,11 @@
+## v2.X.Y
+
+### Added
+* Molecule tests for Gentoo (many thanks to @VTimofeenko ! − PR #25).
+
+### Fixed
+* Separate repositories update from installation task (fix #24).
+
 ## v2.0.0
 
 ### Added

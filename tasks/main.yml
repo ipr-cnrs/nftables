@@ -55,11 +55,16 @@
     loop_var: osname
 
 # Manage packages [[[1
+- name: Update repositories
+  package:
+    update_cache: true
+  when: (nft_enabled|bool and
+         ansible_os_family not in [ 'Gentoo' ])
+
 - name: Ensure Nftables packages are in their desired state
   package:
     name: '{{ nft_pkg_list | list }}'
     state: '{{ nft_pkg_state }}'
-    # update_cache: true
   register: pkg_install_result
   until: pkg_install_result is success
   when: nft_enabled|bool
