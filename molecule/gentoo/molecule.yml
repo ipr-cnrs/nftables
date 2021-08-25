@@ -1,0 +1,21 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: docker
+platforms:
+  - name: Gentoo
+    image: gentoo/stage3:systemd
+    command: /sbin/init
+    privileged: true
+    volumes:
+      - /srv/gentoo-molecule/gentoo-repo:/var/db/repos/gentoo
+      - /srv/gentoo-molecule/binpkgs:/var/cache/binpkgs
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    tmpfs:
+      - /run
+      - /tmp
+provisioner:
+  name: ansible
+verifier:
+  name: ansible
