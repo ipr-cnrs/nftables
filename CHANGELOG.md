@@ -1,4 +1,4 @@
-## v2.X.Y
+## v2.0.1
 
 ### Added
 * Molecule tests for Gentoo (many thanks to @VTimofeenko ! − PR #25).
