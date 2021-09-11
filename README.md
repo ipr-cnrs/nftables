@@ -83,6 +83,14 @@ complexify his philosophy… (I'm pretty sure, i now did complexify it :D) ^^
 * **nft_merged_groups** : If variables from the hosts Ansible groups should be merged [default : `false`].
 * **nft_merged_groups_dir** : The dictionary where the nftables group rules, named like the Ansible groups, are located in [default : `vars/`].
 * **nft_debug** : Toggle more verbose output on/off. [default: 'false'].
+* **nft__netdev_table_manage**: If the `netdev` table should be managed. Sets up a chain for controlling `ingress` that can catch packets before they are passed further. [default: `false`]
+    + **nft__netdev_device_name**: the ingress hook is attached to a particular network interface. **Important**: Please specify the interface name for the ingress chain to work.
+    + **nft__netdev_default_ingress_rules**: Set default rules for `ingress` chain of **netdev** table.
+    + **nft__netdev_ingress_rules** : Set rules for `ingress` chain of **netdev** table for all hosts in the Ansible inventory.
+    + **nft__netdev_group_ingress_rules** : Set rules for `ingress` chain of **netdev** table for hosts in specific Ansible inventory group.
+    + **nft__netdev_host_ingress_rules** : Set rules for `ingress` chain of **netdev** table for specific hosts the Ansible inventory.
+    + **nft__netdev_ingress_conf_path** : ingress configuration file include in the main configuration [default : `{{ nft_conf_dir_path }}/netdev-ingress.nft`].
+    + **nft__netdev_ingress_conf_content** : Template used to generate the previous ingress configuration file [default : `etc/nftables.d/netdev-ingress.nft.j2`].
 
 ### OS Specific Variables
 

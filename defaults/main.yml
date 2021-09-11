@@ -511,6 +511,60 @@ nft__nat_postrouting_conf_path: '{{ nft_conf_dir_path }}/nat-postrouting.nft'
 nft__nat_postrouting_conf_content: 'etc/nftables.d/nat-postrouting.nft.j2'
                                                                    # ]]]
                                                                    # ]]]
+
+# .. envvar:: nft__netdev_table_manage [[[
+#
+# If the netdev table should be managed ? Possible options are :
+#
+# ``False``
+#   Default. The netdev table is not managed and rules will not be added.
+#
+# ``True``
+#   Add the ingress rules that follow.
+nft__netdev_table_manage: False
+                                                                   # ]]]
+# .. envvar:: nft__netdev_default_ingress_rules [[[
+#
+# List of ingress rules to configure for all hosts inherited from this role.
+# Note: unlike other tables, ingress hooks need a device name to be operational
+#
+nft__netdev_default_ingress_rules:
+  000 policy:
+    - type filter hook ingress device {{ nft__netdev_device_name }} priority -500;
+                                                                   # ]]]
+# .. envvar:: nft__netdev_ingress_rules [[[
+#
+# List of prerouting rules to configure for all hosts in the Ansible inventory.
+nft__netdev_ingress_rules: {}
+                                                                   # ]]]
+# .. envvar:: nft__netdev_group_ingress_rules [[[
+#
+# List of ingress rules to configure for hosts in specific
+# Ansible inventory group.
+nft__netdev_group_ingress_rules: {}
+                                                                   # ]]]
+# .. envvar:: nft__netdev_host_ingress_rules [[[
+#
+# List of ingress rules to configure for specific hosts
+# in the Ansible inventory.
+nft__netdev_host_ingress_rules: {}
+                                                                   # ]]]
+# .. envvar:: nft__netdev_ingress_conf_path [[[
+#
+# Path to the ingress rules file for the netdev table to include in the main
+# configuration file in order to use the previous defined lists.
+#
+# Should include the '{{ nft_conf_dir_path }}' var or be an absolut path.
+nft__netdev_ingress_conf_path: '{{ nft_conf_dir_path }}/netdev-ingress.nft'
+                                                                   # ]]]
+# .. envvar:: nft__netdev_ingress_conf_content [[[
+#
+# Template used to provide the previous ingress rules file.
+#
+# Must be a relative path from default/ directory of this role or from your
+# Ansible inventory directory.
+nft__netdev_ingress_conf_content: 'etc/nftables.d/netdev-ingress.nft.j2'
+                                                                   # ]]]
 # Service management [[[
 # ----------------------
 

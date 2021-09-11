@@ -1,0 +1,21 @@
+#jinja2: lstrip_blocks: "True", trim_blocks: "True"
+# {{ ansible_managed }}
+{% set ingressmerged = nft__netdev_default_ingress_rules.copy() %}
+{% set _ = ingressmerged.update(nft__netdev_ingress_rules) %}
+{% set _ = ingressmerged.update(nft__netdev_group_ingress_rules) %}
+{% if nft_merged_groups and hostvars[inventory_hostname]['nft_combined_rules'].nft__netdev_group_ingress_rules is defined %}
+  {% set _ = ingressmerged.update(hostvars[inventory_hostname]['nft_combined_rules'].nft__netdev_group_ingress_rules) %}
+{% endif %}
+{% set _ = ingressmerged.update(nft__netdev_host_ingress_rules) %}
+
+chain ingress {
+{% for group, rules in ingressmerged|dictsort  %}
+	# {{ group }}
+  {% if not rules %}
+	# (none)
+  {% endif %}
+  {% for rule in rules %}
+	{{ rule }}
+  {% endfor %}
+{% endfor %}
+}

@@ -179,6 +179,25 @@
   when: (nft_enabled|bool and
          nft__nat_table_manage|bool)
 
+# Netdev table content [[[1
+- name: Manage netdev table
+  block:
+  - name: Check that the nft__netdev_device_name is set
+    debug:
+      msg: "if net__netdev_table_manage is set - nft__netdev_device_name must be set to an interface name"
+    failed_when: nft__netdev_device_name is not defined
+  - name: Netdev table - generate ingress rules file
+    template:
+      src: "{{ nft__netdev_ingress_conf_content }}"
+      dest: "{{ nft__netdev_ingress_conf_path }}"
+      owner: root
+      group: root
+      mode: 0755
+      backup: "{{ nft_backup_conf }}"
+    notify: ['Reload nftables service']
+  when: (nft_enabled|bool and
+         nft__netdev_table_manage|bool)
+
 # Manage nftables service [[[1
 - name: Install nftables Debian systemd service unit
   template:
