@@ -1,5 +1,5 @@
 #jinja2: lstrip_blocks: "True", trim_blocks: "True"
-# {{ ansible_managed }}
+{{ ansible_managed | comment }}
 {% set definemerged = nft_define_default.copy() %}
 {% set _ = definemerged.update(nft_define) %}
 {% set _ = definemerged.update(nft_define_group) %}

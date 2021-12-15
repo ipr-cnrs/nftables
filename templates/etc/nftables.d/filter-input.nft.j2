@@ -1,5 +1,5 @@
 #jinja2: lstrip_blocks: "True", trim_blocks: "True"
-# {{ ansible_managed }}
+{{ ansible_managed | comment }}
 {% set inputmerged = nft_input_default_rules.copy() %}
 {% set _ = inputmerged.update(nft_input_rules) %}
 {% set _ = inputmerged.update(nft_input_group_rules) %}
