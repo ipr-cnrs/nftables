@@ -45,6 +45,7 @@ complexify his philosophy… (I'm pretty sure, i now did complexify it :D) ^^
 * **nft_global_rules** : You can add `global` rules or override those defined by **nft_global_default_rules** for all hosts.
 * **nft_global_group_rules** : You can add `global` rules or override those defined by **nft_global_default_rules** and **nft_global_rules** for a group.
 * **nft_global_host_rules** : Hosts can also add or override all previours rules.
+* **nft__custom_global_includes** : Custom Global Includes to be read before any other content [default: `''`].
 * **nft__custom_content** : Custom content (tables, include,…) to add in Nftables configuration [default : `''`].
 * **nft_input_default_rules** : Set default rules for `input` chain.
 * **nft_input_rules** : You can add `input` rules or override those defined by **nft_input_default_rules** for all hosts.

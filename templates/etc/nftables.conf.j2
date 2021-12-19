@@ -13,11 +13,11 @@
 flush ruleset
 
 include "{{ nft_define_conf_path }}"
-{% if nft_custom_global_includes | default() %}
-  {% if nft_custom_global_includes is string %}
-	include "{{ nft_custom_global_includes }}"
-  {% elif nft_custom_global_includes is iterable and (nft_custom_global_includes is not string and nft_custom_global_includes is not mapping) %}
-    {% for include in nft_custom_global_includes %}
+{% if nft__custom_global_includes | default() %}
+  {% if nft__custom_global_includes is string %}
+	include "{{ nft__custom_global_includes }}"
+  {% elif nft__custom_global_includes is iterable and (nft__custom_global_includes is not string and nft__custom_global_includes is not mapping) %}
+    {% for include in nft__custom_global_includes %}
 	include "{{ include }}"
     {% endfor %}
   {% endif %}
