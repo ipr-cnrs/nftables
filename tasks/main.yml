@@ -248,3 +248,22 @@
     - nft_enabled|bool
     - nft_service_manage|bool
   notify: ['Restart nftables service']
+
+
+# Disable preinstalled firewalls [[[1
+- name: check if firewalld is installed
+  package_facts:
+    manager: "auto"
+  when:
+    - ansible_os_family == "RedHat"
+    - nft_disable_preinstalled_firewalls
+
+- name: disable firewalld
+  service:
+    name: firewalld
+    state: stopped
+    enabled: false
+  when:
+    - ansible_os_family == "RedHat"
+    - "'firewalld' in ansible_facts.packages"
+    - nft_disable_preinstalled_firewalls

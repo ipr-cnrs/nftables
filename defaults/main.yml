@@ -607,6 +607,17 @@ nft_debug: False
 #   Configs will not be backuped.
 nft_backup_conf: True
                                                                    # ]]]
+# .. envvar:: nft_disable_preinstalled_firewalls [[[
+#
+# Shall we disable preexisting firewalls to avoid conflicts? Possible options are :
+#
+# ``True``
+#   Default. The conflicting service will be disabled.
+#
+# ``False``
+#   The conflicting services will be leaved as is.
+nft_disable_preinstalled_firewalls: true
+                                                                   # ]]]
                                                                    # ]]]
                                                                    # ]]]
 # OS specific variables defaults [[[

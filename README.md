@@ -83,6 +83,7 @@ complexify his philosophy… (I'm pretty sure, i now did complexify it :D) ^^
 * **nft_merged_groups** : If variables from the hosts Ansible groups should be merged [default : `false`].
 * **nft_merged_groups_dir** : The dictionary where the nftables group rules, named like the Ansible groups, are located in [default : `vars/`].
 * **nft_debug** : Toggle more verbose output on/off. [default: 'false'].
+* **nft_disable_preinstalled_firewalls** : Shall we disable preexisting firewalls to avoid conflicts? [default : `true`].
 
 ### OS Specific Variables
 
