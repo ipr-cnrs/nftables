@@ -10,7 +10,6 @@
                        (nftables__register_systemd_custom.changed | default(False)) }}'
     state: 'restarted'
     name: '{{ nft_service_name }}'
-    enabled: '{{ nft_service_enabled }}'
   when: ansible_service_mgr == 'systemd' and nft_service_manage
 
 # Reload will avoid to loose Nftables rulebase if an invalid syntax is added
