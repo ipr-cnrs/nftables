@@ -259,7 +259,7 @@
     - nft_disable_preinstalled_firewalls
 
 - name: disable firewalld
-  service:
+  systemd:
     name: firewalld
     state: stopped
     enabled: false
