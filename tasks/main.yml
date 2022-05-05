@@ -254,4 +254,6 @@
     state: 'started'
     name: '{{ nft_service_name }}'
     enabled: '{{ nft_service_enabled }}'
+  async: 5
+  poll: 2
   when: ansible_service_mgr == 'systemd' and nft_service_manage
