@@ -1,7 +1,7 @@
 ---
 # handlers file for nftables
 
-# (re)Start will be called at first run
+# (re)Start will be called at first run or when systemd units are modified
 - name: Restart nftables service
   systemd:
     daemon_reload: '{{ (nftables__register_systemd_service.changed | default(False)) or
