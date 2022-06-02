@@ -1,0 +1,2 @@
+# Linguist: treat YAML as code
+*.yml linguist-detectable=true
