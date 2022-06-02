@@ -573,6 +573,18 @@ nft__service_override_content: 'etc/systemd/system/nftables.service.d/override.c
 nft__service_protect: true
                                                                    # ]]]
 
+# .. envvar:: nft_fail2ban_service_override [[[
+#
+# Should the systemd unit override file for fail2ban.service be added?
+
+# Options:
+# ``True``:
+#   Default. The fail2ban override file should be present, at path 'nft__fail2ban_service_unit_path'.
+#
+# ``False``:
+#   Skip the tasks that put the fail2ban override file into place.
+nft_fail2ban_service_override: true
+                                                                   # ]]]
 # .. envvar:: nft__fail2ban_service_unit_path [[[
 #
 # Path to store Fail2Ban custom conf.
