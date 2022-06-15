@@ -180,7 +180,7 @@
          nft__nat_table_manage|bool)
 
 # Manage nftables service [[[1
-- name: Install nftables Debian systemd service unit
+- name: Install managed nftables systemd service unit
   template:
     src: '{{ nft_service_unit_content }}'
     dest: '{{ nft_service_unit_path }}'
@@ -188,8 +188,10 @@
     group: 'root'
     mode: '0644'
   register: nftables__register_systemd_service
-  when: (nft_enabled|bool and
-         nft_service_manage|bool)
+  when:
+    - nft_enabled|bool
+    - nft_service_manage|bool
+    - nft_service_unit_from_role|bool
   notify: ['Restart nftables service']
 
 - name: Ensure to remove nftables systemd service from old target
@@ -197,8 +199,10 @@
     path: '/etc/systemd/system/multi-user.target.wants/nftables.service'
     state: absent
   register: nftables__register_fix_systemd_target
-  when: (nft_enabled|bool and
-         nft_service_manage|bool)
+  when:
+    - nft_enabled|bool
+    - nft_service_manage|bool
+    - nft_service_unit_from_role|bool
   notify: ['Restart nftables service']
 
 # Manage custom nftables service [[[1
