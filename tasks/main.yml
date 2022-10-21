@@ -154,6 +154,18 @@
   when: (nft_enabled|bool and
          nft__forward_table_manage|bool)
 
+- name: Filter table - generate custom rules file
+  template:
+    src: "{{ nft_custom_conf_content }}"
+    dest: "{{ nft_custom_conf_path }}"
+    owner: root
+    group: root
+    mode: 0755
+    backup: yes
+  notify: ['Reload nftables service']
+  when: (nft_enabled|bool and
+         nft_define_custom_chains.keys()|length > 0)
+
 # Nat table content [[[1
 - name: Nat table - generate prerouting rules file
   template:

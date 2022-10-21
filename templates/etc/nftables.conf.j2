@@ -32,6 +32,9 @@ table inet filter {
 {% if nft__forward_table_manage %}
 	include "{{ nft_forward_conf_path }}"
 {% endif %}
+{% if nft_define_custom_chains %}
+	include "{{ nft_custom_conf_path }}"
+{% endif %}
 {% if nft_custom_includes | default() %}
   {% if nft_custom_includes is string %}
 	include "{{ nft_custom_includes }}"

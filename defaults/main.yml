@@ -309,6 +309,16 @@ nft_input_conf_path: '{{ nft_conf_dir_path }}/filter-input.nft'
 nft_input_conf_content: 'etc/nftables.d/filter-input.nft.j2'
                                                                    # ]]]
 
+nft_custom_conf_path: '{{ nft_conf_dir_path }}/filter-custom.nft'
+nft_custom_conf_content: 'etc/nftables.d/filter-custom.nft.j2'
+
+nft_define_custom_chains: {}
+#  docker:
+#    - nft_docker_rules
+#    - nft_docker_group_rules
+#    - nft_docker_host_rules
+
+
 # .. envvar:: nft_output_default_rules [[[
 #
 # List of output rules to configure for all hosts inherited from this role.
