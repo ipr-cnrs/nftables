@@ -544,12 +544,12 @@ nft_service_enabled: true
 # .. envvar:: nft_service_unit_path [[[
 #
 # Path to store Nftables service.
-nft_service_unit_path: '/lib/systemd/system/nftables.service'
+nft_service_unit_path: '/etc/systemd/system/nftables.service'
                                                                    # ]]]
 # .. envvar:: nft_service_unit_content [[[
 #
 # Template used to provide systemd unit for Nftables service.
-nft_service_unit_content: 'lib/systemd/system/nftables.service.j2'
+nft_service_unit_content: 'etc/systemd/system/nftables.service.j2'
                                                                    # ]]]
 # .. envvar:: nft__service_override_path [[[
 #
