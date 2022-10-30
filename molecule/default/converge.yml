@@ -7,3 +7,6 @@
       nft_debug: true
       # can't remove iptables on an instance with docker
       nft_old_pkg_manage: false
+      # Prevent distribution-specific paths while testing
+      nft_conf_dir_path: '/etc/nftables.d'
+      nft_main_conf_path: '/etc/nftables.conf'

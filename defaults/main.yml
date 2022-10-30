@@ -541,6 +541,18 @@ nft_service_name: 'nftables'
 #   The service is disabled from startup.
 nft_service_enabled: true
                                                                    # ]]]
+# .. envvar:: nft_service_unit_from_role [[[
+#
+# Should the role supply a custom nftables.service unit file?
+# Or use the distribution provided one?
+#
+# ``true``
+#   Default. Install our service unit, written to 'nft_service_unit_path'.
+#
+# ``false``
+#   No service unit will be added. Use distribution provided nftables.service.
+nft_service_unit_from_role: true
+                                                                   # ]]]
 # .. envvar:: nft_service_unit_path [[[
 #
 # Path to store Nftables service.

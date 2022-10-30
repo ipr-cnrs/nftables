@@ -79,11 +79,11 @@
          nft_old_pkg_manage|bool)
 
 # Common configuration [[[1
-- name: Ensure to create nftables.d directory
+- name: Ensure the nftables config directory
   file:
     path: "{{ nft_conf_dir_path }}"
     state: directory
-    mode: 0755
+    mode: 0700
   when: nft_enabled|bool
 
 - name: CONFIG generate main conf file
@@ -92,7 +92,7 @@
     dest: "{{ nft_main_conf_path }}"
     owner: root
     group: root
-    mode: 0755
+    mode: 0700
     backup: "{{ nft_backup_conf }}"
   notify: ['Reload nftables service']
   when: nft_enabled|bool
@@ -103,7 +103,7 @@
     dest: "{{ nft_define_conf_path }}"
     owner: root
     group: root
-    mode: 0755
+    mode: 0600
     backup: "{{ nft_backup_conf }}"
   notify: ['Reload nftables service']
   when: nft_enabled|bool
@@ -114,7 +114,7 @@
     dest: "{{ nft_set_conf_path }}"
     owner: root
     group: root
-    mode: 0755
+    mode: 0600
     backup: "{{ nft_backup_conf }}"
   notify: ['Reload nftables service']
   when: nft_enabled|bool
@@ -126,7 +126,7 @@
     dest: "{{ nft_input_conf_path }}"
     owner: root
     group: root
-    mode: 0755
+    mode: 0600
     backup: "{{ nft_backup_conf }}"
   notify: ['Reload nftables service']
   when: nft_enabled|bool
@@ -137,7 +137,7 @@
     dest: "{{ nft_output_conf_path }}"
     owner: root
     group: root
-    mode: 0755
+    mode: 0600
     backup: "{{ nft_backup_conf }}"
   notify: ['Reload nftables service']
   when: nft_enabled|bool
@@ -148,7 +148,7 @@
     dest: "{{ nft_forward_conf_path }}"
     owner: root
     group: root
-    mode: 0755
+    mode: 0600
     backup: yes
   notify: ['Reload nftables service']
   when: (nft_enabled|bool and
@@ -161,7 +161,7 @@
     dest: "{{ nft__nat_prerouting_conf_path }}"
     owner: root
     group: root
-    mode: 0755
+    mode: 0600
     backup: "{{ nft_backup_conf }}"
   notify: ['Reload nftables service']
   when: (nft_enabled|bool and
@@ -173,14 +173,14 @@
     dest: "{{ nft__nat_postrouting_conf_path }}"
     owner: root
     group: root
-    mode: 0755
+    mode: 0600
     backup: "{{ nft_backup_conf }}"
   notify: ['Reload nftables service']
   when: (nft_enabled|bool and
          nft__nat_table_manage|bool)
 
 # Manage nftables service [[[1
-- name: Install nftables Debian systemd service unit
+- name: Install managed nftables systemd service unit
   template:
     src: '{{ nft_service_unit_content }}'
     dest: '{{ nft_service_unit_path }}'
@@ -188,8 +188,10 @@
     group: 'root'
     mode: '0644'
   register: nftables__register_systemd_service
-  when: (nft_enabled|bool and
-         nft_service_manage|bool)
+  when:
+    - nft_enabled|bool
+    - nft_service_manage|bool
+    - nft_service_unit_from_role|bool
   notify: ['Restart nftables service']
 
 - name: Ensure to remove nftables systemd service from old target
@@ -197,8 +199,10 @@
     path: '/etc/systemd/system/multi-user.target.wants/nftables.service'
     state: absent
   register: nftables__register_fix_systemd_target
-  when: (nft_enabled|bool and
-         nft_service_manage|bool)
+  when:
+    - nft_enabled|bool
+    - nft_service_manage|bool
+    - nft_service_unit_from_role|bool
   notify: ['Restart nftables service']
 
 # Manage custom nftables service [[[1
