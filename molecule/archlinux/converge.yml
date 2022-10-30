@@ -3,7 +3,7 @@
   hosts: all
   gather_facts: yes
   roles:
-    - role: ipr-cnrs.nftables
+    - role: ipr_cnrs.nftables
       nft_debug: true
       # can't remove iptables on an instance with docker
       nft_old_pkg_manage: false
