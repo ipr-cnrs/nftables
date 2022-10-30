@@ -8,27 +8,27 @@
   hosts: Gentoo
   tasks:
     - name: Enable buildpkg feature
-      lineinfile:
+      ansible.builtin.lineinfile:
         line: "FEATURES='buildpkg'"
         dest: /etc/portage/make.conf
         state: present
     - name: Enable trying to install from binpkgs by default
-      lineinfile:
+      ansible.builtin.lineinfile:
         line: "EMERGE_DEFAULT_OPTS='--usepkg'"
         dest: /etc/portage/make.conf
         state: present
     - name: Synchronize gentoo repository if needed
       block:
         - name: Check if there is anything in the repo
-          find:
+          ansible.builtin.find:
             paths: '/var/db/repos/gentoo/'
           register: find_files_in_repo
         - name: Synchronize the repo if needed
-          command: "emaint sync -a"
+          ansible.builtin.command: "emaint sync -a"
           when: find_files_in_repo.matched == 0
 
     - name: Install equery, needed for package check
       # Command, because equery does not exist yet
-      command: emerge --changed-use --oneshot app-portage/gentoolkit
+      ansible.builtin.command: emerge --changed-use --oneshot app-portage/gentoolkit
       changed_when: false
 # The rest of the original file is specific to that role and not needed here

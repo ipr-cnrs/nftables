@@ -4,9 +4,9 @@
 # tasks file for nftables
 
 - name: Check for group files
-  become: no
+  become: false
   delegate_to: localhost
-  stat:
+  ansible.builtin.stat:
     path: "{{ nft_merged_groups_dir ~ groupname }}"
   register: nftables_group_rules
   loop: "{{ group_names }}"
@@ -14,12 +14,12 @@
     loop_var: groupname
 
 - name: Debug nftables_group_rules
-  debug: var=nftables_group_rules
+  ansible.builtin.debug: var=nftables_group_rules
   when: nft_debug
 
 - name: Import nftables-variables if nft_merged_groups is set
   when: nft_merged_groups and varfile.stat.exists
-  include_vars:
+  ansible.builtin.include_vars:
     file: "{{ nft_merged_groups_dir ~ varfile.groupname }}"
     name: "{{ varfile.groupname }}"
   loop: "{{ nftables_group_rules.results }}"
@@ -31,38 +31,38 @@
         ((hostvars[inventory_hostname][varfile.groupname] is defined) and
          (hostvars[inventory_hostname][varfile.groupname]|length > 0)) and
         varfile.stat.exists
-  set_fact:
-    nft_combined_rules: "{{ nft_combined_rules | default({}) | combine ( hostvars[inventory_hostname][varfile.groupname], recursive=True ) }}"
+  ansible.builtin.set_fact:
+    nft_combined_rules: "{{ nft_combined_rules | default({}) | combine(hostvars[inventory_hostname][varfile.groupname], recursive=True) }}"
   loop: "{{ nftables_group_rules.results }}"
   loop_control:
     loop_var: varfile
 
 - name: Debug nft_combined_rules
-  debug: var=nft_combined_rules
+  ansible.builtin.debug: var=nft_combined_rules
   when: nft_debug
 
 - name: Debug ansible_os_family
-  debug: var=ansible_os_family
+  ansible.builtin.debug: var=ansible_os_family
   when: nft_debug
 
 - name: Load specific OS vars for nftables
-  include_vars: "{{ osname }}"
+  ansible.builtin.include_vars: "{{ osname }}"
   with_first_found:
-    - "{{ ansible_distribution|lower }}-{{ ansible_distribution_version }}.yml"
-    - "{{ ansible_distribution|lower }}.yml"
-    - "{{ ansible_os_family|lower }}.yml"
+    - "{{ ansible_distribution | lower }}-{{ ansible_distribution_version }}.yml"
+    - "{{ ansible_distribution | lower }}.yml"
+    - "{{ ansible_os_family | lower }}.yml"
   loop_control:
     loop_var: osname
 
 # Manage packages [[[1
 - name: Update repositories
-  package:
+  ansible.builtin.package:
     update_cache: true
   when: (nft_enabled|bool and
          ansible_os_family not in [ 'Gentoo' ])
 
 - name: Ensure Nftables packages are in their desired state
-  package:
+  ansible.builtin.package:
     name: '{{ nft_pkg_list | list }}'
     state: '{{ nft_pkg_state }}'
   register: pkg_install_result
@@ -70,7 +70,7 @@
   when: nft_enabled|bool
 
 - name: Ensure old Iptables packages are in their desired state
-  package:
+  ansible.builtin.package:
     name: '{{ nft_old_pkg_list | list }}'
     state: '{{ nft_old_pkg_state }}'
   register: pkg_remove_result
@@ -80,14 +80,14 @@
 
 # Common configuration [[[1
 - name: Ensure the nftables config directory
-  file:
+  ansible.builtin.file:
     path: "{{ nft_conf_dir_path }}"
     state: directory
     mode: 0700
   when: nft_enabled|bool
 
 - name: CONFIG generate main conf file
-  template:
+  ansible.builtin.template:
     src: "{{ nft_main_conf_content }}"
     dest: "{{ nft_main_conf_path }}"
     owner: root
@@ -98,7 +98,7 @@
   when: nft_enabled|bool
 
 - name: CONFIG generate vars definition file
-  template:
+  ansible.builtin.template:
     src: "{{ nft_define_conf_content }}"
     dest: "{{ nft_define_conf_path }}"
     owner: root
@@ -109,7 +109,7 @@
   when: nft_enabled|bool
 
 - name: CONFIG generate sets file
-  template:
+  ansible.builtin.template:
     src: "{{ nft_set_conf_content }}"
     dest: "{{ nft_set_conf_path }}"
     owner: root
@@ -121,7 +121,7 @@
 
 # Filter table content [[[1
 - name: Filter table - generate input rules file
-  template:
+  ansible.builtin.template:
     src: "{{ nft_input_conf_content }}"
     dest: "{{ nft_input_conf_path }}"
     owner: root
@@ -132,7 +132,7 @@
   when: nft_enabled|bool
 
 - name: Filter table - generate output rules file
-  template:
+  ansible.builtin.template:
     src: "{{ nft_output_conf_content }}"
     dest: "{{ nft_output_conf_path }}"
     owner: root
@@ -143,7 +143,7 @@
   when: nft_enabled|bool
 
 - name: Filter table - generate forward rules file
-  template:
+  ansible.builtin.template:
     src: "{{ nft_forward_conf_content }}"
     dest: "{{ nft_forward_conf_path }}"
     owner: root
@@ -156,7 +156,7 @@
 
 # Nat table content [[[1
 - name: Nat table - generate prerouting rules file
-  template:
+  ansible.builtin.template:
     src: "{{ nft__nat_prerouting_conf_content }}"
     dest: "{{ nft__nat_prerouting_conf_path }}"
     owner: root
@@ -168,7 +168,7 @@
          nft__nat_table_manage|bool)
 
 - name: Nat table - generate postrouting rules file
-  template:
+  ansible.builtin.template:
     src: "{{ nft__nat_postrouting_conf_content }}"
     dest: "{{ nft__nat_postrouting_conf_path }}"
     owner: root
@@ -181,7 +181,7 @@
 
 # Manage nftables service [[[1
 - name: Install managed nftables systemd service unit
-  template:
+  ansible.builtin.template:
     src: '{{ nft_service_unit_content }}'
     dest: '{{ nft_service_unit_path }}'
     owner: 'root'
@@ -195,7 +195,7 @@
   notify: ['Restart nftables service']
 
 - name: Ensure to remove nftables systemd service from old target
-  file:
+  ansible.builtin.file:
     path: '/etc/systemd/system/multi-user.target.wants/nftables.service'
     state: absent
   register: nftables__register_fix_systemd_target
@@ -207,7 +207,7 @@
 
 # Manage custom nftables service [[[1
 - name: Create Nftables custom directory for systemd service
-  file:
+  ansible.builtin.file:
     path: "{{ nft__service_override_path | dirname }}"
     state: directory
     mode: '0755'
@@ -217,7 +217,7 @@
     - not nft__service_protect|bool
 
 - name: Add Nftables systemd custom configuration
-  template:
+  ansible.builtin.template:
     src: '{{ nft__service_override_content }}'
     dest: '{{ nft__service_override_path }}'
     owner: 'root'
@@ -232,7 +232,7 @@
 
 # Manage custom fail2ban service [[[1
 - name: Create Fail2Ban custom directory for systemd service
-  file:
+  ansible.builtin.file:
     path: "{{ nft__fail2ban_service_unit_path | dirname }}"
     state: directory
     mode: '0755'
@@ -241,7 +241,7 @@
     - nft_service_manage|bool
 
 - name: Install Debian Fail2Ban custom service
-  template:
+  ansible.builtin.template:
     src: '{{ nft__fail2ban_service_unit_content }}'
     dest: '{{ nft__fail2ban_service_unit_path }}'
     owner: 'root'
@@ -254,7 +254,7 @@
   notify: ['Restart nftables service']
 
 - name: Enable nftables service
-  systemd:
+  ansible.builtin.systemd:
     state: 'started'
     name: '{{ nft_service_name }}'
     enabled: '{{ nft_service_enabled }}'

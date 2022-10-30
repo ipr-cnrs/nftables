@@ -17,7 +17,7 @@ galaxy_info:
     - bullseye
     - buster
     - stretch
-  - name: Archlinux
+  - name: ArchLinux
     versions:
     - all
   - name: Fedora
