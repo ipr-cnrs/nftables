@@ -23,3 +23,4 @@ jobs:
         uses: gofrolist/molecule-action@v2.3.2
         with:
           molecule_working_dir: "${{ github.repository }}"
+          molecule_command: converge
