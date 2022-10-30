@@ -20,7 +20,6 @@ jobs:
           path: "${{ github.repository }}"
 
       - name: Ansible Molecule
-        uses: gofrolist/molecule-action@v2.3.2
+        uses: robertdebock/molecule-action@4.0.9
         with:
           molecule_working_dir: "${{ github.repository }}"
-          molecule_command: converge
