@@ -575,10 +575,11 @@ This role will :
 
 Before Debian Bullseye, systemd unit for Fail2ban doesn't come with a decent
 integration with Nftables.
-So this role will create override file for `fail2ban` unit, even if it's not
-(yet) available on the host, in order to :
-* Start `fail2ban` unit after `nftables`.
-* Restart `fail2ban` unit when `nftables` unit restart.
+This role will create override file for `fail2ban` unit, unless
+`nft_fail2ban_service_override` is set to `false`. Default is to add it even if
+it's not (yet) available on the host. This ensures :
+* The `fail2ban` unit is started after the `nftables` unit.
+* The `fail2ban` unit is restarted when `nftables` unit restarts.
 
 ## Development
 
