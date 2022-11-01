@@ -7,44 +7,44 @@
   tasks:
 
   - name: check for nftables.d
-    stat:
+    ansible.builtin.stat:
       path: /etc/nftables.d
     register: p
 
   - name: check nftables.d
-    assert:
+    ansible.builtin.assert:
       that:
         - p.stat.exists and p.stat.isdir
 
   - name: check for nftables.conf
-    stat:
+    ansible.builtin.stat:
       path: /etc/nftables.conf
     register: p
 
   - name: check nftables.conf
-    assert:
+    ansible.builtin.assert:
       that:
         - p.stat.exists
 
   - name: check for filter-input.nft
-    stat:
+    ansible.builtin.stat:
       path: /etc/nftables.d/filter-input.nft
     register: p
 
   - name: check filter-input.nft
-    assert:
+    ansible.builtin.assert:
       that:
         - p.stat.exists
 
   - name: list rules
-    command: nft list ruleset
+    ansible.builtin.command: nft list ruleset
     register: nft
 
   - name: debug rules
-    debug: var=nft
+    ansible.builtin.debug: var=nft
 
   - name: check rules
-    assert:
+    ansible.builtin.assert:
       that:
         # The whole line is:
         # type filter hook input priority 0; policy drop;
@@ -54,39 +54,39 @@
         - '"type filter hook output" in nft.stdout'
 
   - name: check for fail2ban systemd custom dir
-    stat:
+    ansible.builtin.stat:
       path: /etc/systemd/system/fail2ban.service.d
     register: f2b_systemd_dir
 
   - name: check fail2ban systemd custom dir
-    assert:
+    ansible.builtin.assert:
       that:
         - f2b_systemd_dir.stat.exists and f2b_systemd_dir.stat.isdir
 
   - name: check for fail2ban systemd override
-    stat:
+    ansible.builtin.stat:
       path: /etc/systemd/system/fail2ban.service.d/override.conf
     register: f2b_systemd_override
 
   - name: check fail2ban systemd override
-    assert:
+    ansible.builtin.assert:
       that:
         - f2b_systemd_override.stat.exists
 
   - name: service status - active
-    command: systemctl is-active nftables.service
+    ansible.builtin.command: systemctl is-active nftables.service
     register: status
 
   - name: check service status
-    assert:
+    ansible.builtin.assert:
       that:
         - 'status.stdout == "active"'
 
   - name: service status - enabled
-    command: systemctl is-enabled nftables.service
+    ansible.builtin.command: systemctl is-enabled nftables.service
     register: status
 
   - name: check service status
-    assert:
+    ansible.builtin.assert:
       that:
         - 'status.stdout == "enabled"'
