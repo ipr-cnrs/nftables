@@ -179,7 +179,7 @@
   when: (nft_enabled|bool and
          nft__nat_table_manage|bool)
 
-# Manage nftables service [[[1
+# Manage nftables service units [[[1
 - name: Install managed nftables systemd service unit
   template:
     src: '{{ nft_service_unit_content }}'
@@ -255,11 +255,15 @@
     - nft_service_manage|bool
   notify: ['Restart nftables service']
 
-- name: Enable nftables service
+# Manage nftables service [[[1
+- name: Manage nftables service
   systemd:
     state: 'started'
     name: '{{ nft_service_name }}'
     enabled: '{{ nft_service_enabled }}'
-  async: 5
+  async: 10
   poll: 2
-  when: ansible_service_mgr == 'systemd' and nft_service_manage
+  when:
+    - not ansible_check_mode
+    - ansible_service_mgr == 'systemd'
+    - nft_service_manage
