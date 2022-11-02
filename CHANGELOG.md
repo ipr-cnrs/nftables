@@ -1,3 +1,24 @@
+## v2.1.0
+
+### Improvements
+* Asynchronous polling of nftables service and enable unit from task (thanks to @mjourdan - PR #36).
+* Put nftables.service at systemd.unit (5) path (thanks to @stejoo - PR #40).
+* More strict permissions on configuration files (thanks to @stejoo - PR #42).
+* Allow skipping of Fail2ban integration (thanks to @stejoo - PR #41).
+* Allow user to prefer distro provided service file (thanks to @stejoo - PR #42).
+* Use FQCN (ansible.builtin.…) to call Ansible's modules (thanks to @kravietz - PR #47).
+
+### Fixed
+* Tell Linguist to treat .yml as code (thanks to @stejoo - PR #37).
+* Do not remove iptables on Arch Linux (thanks to @kravietz - PR #46).
+* Define vars for Red Hat distro (thanks to @stejoo - PR #42).
+* Execute nftables service task when not running in check mode (thanks to @stejoo - PR #48).
+
+### Thanks
+
+Many thanks to @kravietz for all the work on this project and to all other
+contributors (@stejoo, @mjourdan,…) and those with pending PRs….
+
 ## v2.0.1
 
 ### Added
