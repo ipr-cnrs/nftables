@@ -1,3 +1,8 @@
+## v2.2.0
+
+### Improvements
+* Automatically upload new release to Ansible Galaxy (thanks to @kravietz - PR #45)
+
 ## v2.1.0
 
 ### Improvements
