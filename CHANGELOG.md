@@ -1,7 +1,13 @@
+## v2.2.1
+
+### Fixed
+* Continue on SigStore errors.
+* Handle output ICMP default rule (thanks to @rdbisme - PR #50).
+
 ## v2.2.0
 
 ### Improvements
-* Automatically upload new release to Ansible Galaxy (thanks to @kravietz - PR #45)
+* Automatically upload new release to Ansible Galaxy (thanks to @kravietz - PR #45).
 
 ## v2.1.0
 
