@@ -1,4 +1,4 @@
-# {{ ansible_managed }}
+{{ ansible_managed | comment }}
 
 [Unit]
 After=network.target iptables.service firewalld.service ip6tables.service ipset.service nftables.service

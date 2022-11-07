@@ -1,6 +1,6 @@
 #jinja2: lstrip_blocks: "True", trim_blocks: "True"
 #!{{ nft__bin_location }} -f
-# {{ ansible_managed }}
+{{ ansible_managed | comment }}
 {% set globalmerged = nft_global_default_rules.copy() %}
 {% set _ = globalmerged.update(nft_global_rules) %}
 {% set _ = globalmerged.update(nft_global_group_rules) %}
