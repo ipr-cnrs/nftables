@@ -91,6 +91,26 @@ Please see default value by Operating System file in [vars][vars directory] dire
 * **nft_pkg_list** : The list of package(s) to provide `nftables`.
 * **nft__bin_location** : Path to `nftables` executable. [default : `/usr/sbin/nft`]
 
+### Rule Templates
+
+The `nft_templates` dictionary contains a library of useful rules, intended to be standardized and ready to use in your firewall. For
+example `{{ nft_templates.allow_mdns }}` will expand to the following rules, covering mDNS for both IPv4 and IPv6:
+
+```
+  - meta l4proto udp ip6 daddr ff02::fb    udp dport mdns counter accept comment "mDNS IPv6 service discovery"
+  - meta l4proto udp ip  daddr 224.0.0.251 udp dport mdns counter accept comment "mDNS IPv4 service discovery"
+```
+
+Intended usage in custom rule sets:
+
+```
+nft_host_input_rules:
+  ...
+  010 allow mdns: "{{ nft_templates.allow_mdns }}"
+```
+
+Among others, the `nft_templates` dictionary contains rules implementing full recommendations for forwarding and input traffic firewalls as defined in [RFC 4890](https://www.rfc-editor.org/rfc/rfc4890), [RFC 7126](https://www.rfc-editor.org/rfc/rfc7126) and [RFC 9288](https://www.rfc-editor.org/rfc/rfc9288). For details and examples see [defaults/main.yml](defaults/main.yml#L662).
+
 ### Rules Dictionaries
 
 Each type of rules dictionaries will be merged and rules will be applied in the alphabetical order of the keys (the reason to use 000 to 999 as prefix). So :
