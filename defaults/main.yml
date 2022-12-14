@@ -64,9 +64,8 @@ nft_old_pkg_manage: true
 # List of global rules (applied on all tables) to configure for all hosts
 # inherited from this role.
 nft_global_default_rules:
-  005 state management:
-    - ct state established,related accept
-    - ct state invalid drop
+  005 established: "{{ nft_templates.allow_established }}"
+  006 invalid: "{{ nft_templates.drop_invalid_log_no_rst }}"
                                                                    # ]]]
 # .. envvar:: nft_global_rules [[[
 #
@@ -264,18 +263,23 @@ nft_set_conf_content: 'etc/nftables.d/sets.nft.j2'
 nft_input_default_rules:
   000 policy:
     - type filter hook input priority 0; policy drop;
-  005 global:
+  001 global:
     - jump global
+  002 localhost: "{{ nft_templates.allow_in_localhost }}"
+  011 dhcp4: "{{ nft_templates.allow_in_dhcp4 }}"
+  012 dhcp6: "{{ nft_templates.allow_in_dhcp6 }}"
   010 drop unwanted:
     - ip daddr @blackhole counter drop
   011 drop unwanted ipv6:
     - ip6 daddr @ip6blackhole counter drop
-  015 localhost:
-    - iif lo accept
-  050 icmp:
-    - meta l4proto {icmp,icmpv6} accept
+  013 icmpv6: "{{ nft_templates.icmpv6_in_must_allow }}"
+  014 icmp: "{{ nft_templates.icmp_in_must_allow }}"
+  015 ipv4 deprecated: "{{ nft_templates.ip_drop_deprecated }}"
+  016 ipv6 deprecated: "{{ nft_templates.ip6_drop_deprecated }}"
   210 input tcp accepted:
     - tcp dport @in_tcp_accept ct state new accept
+  900 log:
+    - counter log prefix "IN "
                                                                    # ]]]
 # .. envvar:: nft_input_rules [[[
 #
@@ -317,16 +321,21 @@ nft_output_default_rules:
     - type filter hook output priority 0; policy drop;
   005 global:
     - jump global
-  015 localhost:
-    - oif lo accept
-  050 icmp:
-    - meta l4proto {icmp,icmpv6} counter accept
+  006 localhost: "{{ nft_templates.allow_out_localhost }}"
+  007 icmpv6: "{{ nft_templates.icmpv6_in_must_allow }}"
+  008 icmp: "{{ nft_templates.icmp_in_must_allow }}"
+  009 ping6: "{{ nft_templates.icmpv6_allow_ping }}"
+  010 ping: "{{ nft_templates.icmp_allow_ping }}"
+  011 dhcp4: "{{ nft_templates.allow_out_dhcp4 }}"
+  012 dhcp6: "{{ nft_templates.allow_out_dhcp6 }}"
+  013 mdns: "{{ nft_templates.allow_mdns }}"
+  013 upnp: "{{ nft_templates.allow_upnp }}"
   200 output udp accepted:
     - udp dport @out_udp_accept ct state new accept
   210 output tcp accepted:
     - tcp dport @out_tcp_accept ct state new accept
-  250 reset-ssh:  # allow the host to reset SSH connections to avoid 10 min delay from Ansible controller
-    - tcp sport ssh tcp flags { rst, psh | ack } counter accept
+  250 reset ssh:  "{{ nft_templates.allow_rst }}"
+
                                                                    # ]]]
 # .. envvar:: nft_output_rules [[[
 #
@@ -376,8 +385,12 @@ nft__forward_table_manage: false
 nft_forward_default_rules:
   000 policy:
     - type filter hook forward priority 0; policy drop;
-  005 global:
+  001 global:
     - jump global
+  002 icmp: "{{ nft_templates.icmp_fwd_must_allow }}"
+  003 icmpv6: "{{ nft_templates.icmpv6_fwd_must_allow }}"
+  900 log:
+    - counter log prefix "FWD "
                                                                    # ]]]
 # .. envvar:: nft_forward_rules [[[
 #
@@ -641,4 +654,294 @@ nft_backup_conf: True
 #
 nft__bin_location: '/usr/sbin/nft'
                                                                    # ]]]
+                                                                   # ]]]
+
+# .. envvar:: nft_templates: [[[
+#
+# Frequently used nft rule collections.
+nft_templates:
+
+  drop_invalid_log_no_rst:
+
+    - ct state invalid tcp flags != rst log prefix "DROP INVALID "
+    - ct state invalid counter drop
+
+  allow_established:
+
+    - ct state established,related counter accept
+
+  allow_in_localhost:
+
+    - iif lo accept
+
+  allow_out_localhost:
+
+    - oif lo accept
+
+  allow_rst:
+
+    - tcp flags { rst, psh | ack } counter accept
+
+  allow_mdns:
+
+    - meta l4proto udp ip6 daddr ff02::fb    udp dport mdns counter accept comment "mDNS IPv6 service discovery"
+    - meta l4proto udp ip  daddr 224.0.0.251 udp dport mdns counter accept comment "mDNS IPv4 service discovery"
+
+  allow_in_dhcp4:
+
+    - meta l4proto udp udp sport bootps udp dport bootpc counter accept comment "DHCPv4"
+
+  allow_in_dhcp6:
+
+    - meta l4proto udp ip6 saddr fe80::/10 ip6 daddr fe80::/10 udp sport dhcpv6-server udp dport dhcpv6-client counter accept comment "DHCPv6"
+
+  allow_out_dhcp4:
+
+    - meta l4proto udp udp dport bootps udp sport bootpc counter accept comment "DHCPv4"
+
+  allow_out_dhcp6:
+
+    - meta l4proto udp ip6 saddr fe80::/10 ip6 daddr fe80::/10 udp dport dhcpv6-server udp sport dhcpv6-client counter accept comment "DHCPv6"
+
+  allow_upnp:
+
+    - meta l4proto udp ip daddr 239.255.255.250 udp dport 1900 counter accept comment "Multicast UPnP"
+
+  icmp_in_must_allow:
+
+    - meta l4proto icmp icmp type { destination-unreachable, time-exceeded, parameter-problem } counter accept
+
+  icmp_allow_ping:
+
+    - meta l4proto icmp icmp type { echo-request, echo-reply } counter accept
+
+  icmp_fwd_must_allow:
+
+    - meta l4proto icmp icmp type { destination-unreachable, time-exceeded, parameter-problem } counter accept
+
+  icmpv6_fwd_must_allow:
+
+    # RFC 4890, 4.3.1.  Traffic That Must Not Be Dropped
+    
+    - meta l4proto ipv6-icmp icmpv6 type destination-unreachable counter accept
+    - meta l4proto ipv6-icmp icmpv6 type packet-too-big counter accept
+    - meta l4proto ipv6-icmp icmpv6 type time-exceeded icmpv6 code 0 counter accept
+    - meta l4proto ipv6-icmp icmpv6 type parameter-problem icmpv6 code { 1, 2 } counter accept
+
+  icmpv6_in_must_allow:
+
+    # RFC 4890, 4.4.1.  Traffic That Must Not Be Dropped
+
+    - meta l4proto ipv6-icmp icmpv6 type destination-unreachable counter accept
+    - meta l4proto ipv6-icmp icmpv6 type packet-too-big counter accept
+    - meta l4proto ipv6-icmp icmpv6 type time-exceeded icmpv6 code 0 counter accept
+    - meta l4proto ipv6-icmp icmpv6 type parameter-problem icmpv6 code { 1, 2 } counter accept
+    - meta l4proto ipv6-icmp icmpv6 type nd-router-solicit ip6 hoplimit 255 counter accept
+    - meta l4proto ipv6-icmp icmpv6 type nd-router-advert ip6 hoplimit 255 counter accept
+    - meta l4proto ipv6-icmp icmpv6 type nd-neighbor-solicit ip6 hoplimit 255 counter accept
+    - meta l4proto ipv6-icmp icmpv6 type nd-neighbor-advert ip6 hoplimit 255 counter accept
+    - meta l4proto ipv6-icmp icmpv6 type ind-neighbor-solicit ip6 hoplimit 255 counter accept
+    - meta l4proto ipv6-icmp icmpv6 type ind-neighbor-solicit ip6 hoplimit 255 counter accept
+
+    - meta l4proto ipv6-icmp ip6 saddr fe80::/10 icmpv6 type mld-listener-query counter accept
+    - meta l4proto ipv6-icmp ip6 saddr fe80::/10 icmpv6 type mld-listener-report counter accept
+    - meta l4proto ipv6-icmp ip6 saddr fe80::/10 icmpv6 type mld-listener-reduction counter accept
+    - meta l4proto ipv6-icmp ip6 saddr fe80::/10 icmpv6 type mld2-listener-report counter accept
+
+    - meta l4proto ipv6-icmp icmpv6 type 148 counter accept comment "Certification Path Solicitation (SEND)"
+    - meta l4proto ipv6-icmp icmpv6 type 149 counter accept comment "Certification Path Advertisement (SEND)"
+
+    - meta l4proto ipv6-icmp ip6 saddr fe80::/10 icmpv6 type 151 counter accept comment "Multicast Router Advertisement (MRD)"
+    - meta l4proto ipv6-icmp ip6 saddr fe80::/10 icmpv6 type 152 counter accept comment "Multicast Router Solicitation (MRD)"
+    - meta l4proto ipv6-icmp ip6 saddr fe80::/10 icmpv6 type 153 counter accept comment "Multicast Router Termination (MRD)"
+
+  icmpv6_in_should_allow:
+
+      # RFC 4890, 4.3.2.  Traffic That Normally Should Not Be Dropped
+
+    - meta l4proto ipv6-icmp icmpv6 type time-exceeded icmpv6 code 1 counter accept
+    - meta l4proto ipv6-icmp icmpv6 type parameter-problem icmpv6 code 0 counter accept
+
+  icmpv6_in_allow_mobip:
+
+      # RFC 4890, 4.3.2.  Traffic That Normally Should Not Be Dropped
+
+    - meta l4proto ipv6-icmp icmpv6 type 144 counter accept comment "Home Agent Address Discovery Request Message"
+    - meta l4proto ipv6-icmp icmpv6 type 145 counter accept comment "Home Agent Address Discovery Reply Message"
+    - meta l4proto ipv6-icmp icmpv6 type 146 counter accept comment "Mobile Prefix Solicitation"
+    - meta l4proto ipv6-icmp icmpv6 type 147 counter accept comment "Mobile Prefix Advertisement"
+
+  icmpv6_in_allow_dropped_anyway:
+
+    # RFC 4890, 4.4.3.  Traffic That Will Be Dropped Anyway -- No Special Attention Needed
+
+    - meta l4proto ipv6-icmp icmpv6 type router-renumbering counter accept
+    - meta l4proto ipv6-icmp icmpv6 type 150 counter drop comment "Seamoby Experimental"
+
+  icmpv6_in_allow_redirect:
+
+    # RFC 4890, 4.4.4.  Traffic for Which a Policy Should Be Defined
+
+    - meta l4proto ipv6-icmp icmpv6 type nd-redirect ip6 counter accept
+
+  icmpv6_in_drop_redirect:
+
+    # RFC 4890, 4.4.4.  Traffic for Which a Policy Should Be Defined
+
+    - meta l4proto ipv6-icmp icmpv6 type nd-redirect ip6 counter drop
+
+  icmpv6_in_allow_nodeinfo:
+
+    # RFC 4890, 4.4.4.  Traffic for Which a Policy Should Be Defined
+
+    - meta l4proto ipv6-icmp icmpv6 type 139 counter accept comment "Node Information Query"
+    - meta l4proto ipv6-icmp icmpv6 type 140 counter accept comment "Node Information Response"
+
+  icmpv6_in_drop_nodeinfo:
+
+    # RFC 4890, 4.4.4.  Traffic for Which a Policy Should Be Defined
+
+    - meta l4proto ipv6-icmp icmpv6 type 139 counter drop comment "Node Information Query"
+    - meta l4proto ipv6-icmp icmpv6 type 140 counter drop comment "Node Information Response"
+
+  icmpv6_in_allow_unallocated:
+
+    # RFC 4890, 4.4.4.  Traffic for Which a Policy Should Be Defined
+
+    - meta l4proto ipv6-icmp icmpv6 type 5-99    counter accept comment "Unallocated error ICMPv6"
+    - meta l4proto ipv6-icmp icmpv6 type 102-126 counter accept comment "Unallocated error ICMPv6"
+
+  icmpv6_in_drop_unallocated:
+
+    # RFC 4890, 4.4.4.  Traffic for Which a Policy Should Be Defined
+
+    - meta l4proto ipv6-icmp icmpv6 type 5-99    counter drop comment "Unallocated error ICMPv6"
+    - meta l4proto ipv6-icmp icmpv6 type 102-126 counter drop comment "Unallocated error ICMPv6"
+
+  icmpv6_in_drop_dangerous:
+
+  # RFC 4890, 4.4.5.  Traffic That Should Be Dropped Unless a Good Case Can Be Made
+
+    - meta l4proto ipv6-icmp icmpv6 type { 100, 101, 200, 201 } counter drop comment "Experimental ICMPv6 allocations"
+    - meta l4proto ipv6-icmp icmpv6 type { 127, 255 } counter drop comment "ICMPv6 extension numbers"
+    - meta l4proto ipv6-icmp icmpv6 type 154-199 counter drop comment "Unallocated informational ICMPv6"
+    - meta l4proto ipv6-icmp icmpv6 type 202-254 counter drop comment "Unallocated informational ICMPv6"
+
+  icmpv6_allow_ping:
+
+    - meta l4proto ipv6-icmp icmpv6 type { echo-request, echo-reply } counter accept
+
+  icmpv6_fwd_should_allow:
+
+    # RFC 4890, 4.3.2.  Traffic That Normally Should Not Be Dropped
+
+    - meta l4proto ipv6-icmp icmpv6 type time-exceeded icmpv6 code 1 counter accept
+    - meta l4proto ipv6-icmp icmpv6 type parameter-problem icmpv6 code 0 counter accept
+
+  icmpv6_fwd_allow_mobip:
+
+    # RFC 4890, 4.3.2.  Traffic That Normally Should Not Be Dropped
+
+    - meta l4proto ipv6-icmp icmpv6 type 144 counter accept comment "Home Agent Address Discovery Request Message"
+    - meta l4proto ipv6-icmp icmpv6 type 145 counter accept comment "Home Agent Address Discovery Reply Message"
+    - meta l4proto ipv6-icmp icmpv6 type 146 counter accept comment "Mobile Prefix Solicitation"
+    - meta l4proto ipv6-icmp icmpv6 type 147 counter accept comment "Mobile Prefix Advertisement"
+
+  icmpv6_fwd_allow_dropped_anyway:
+
+    # RFC 4890, 4.3.3.  Traffic That Will Be Dropped Anyway
+
+    - meta l4proto ipv6-icmp icmpv6 type nd-router-solicit ip6 hoplimit 255 counter accept
+    - meta l4proto ipv6-icmp icmpv6 type nd-router-advert ip6 hoplimit 255 counter accept
+    - meta l4proto ipv6-icmp icmpv6 type nd-neighbor-solicit ip6 hoplimit 255 counter accept
+    - meta l4proto ipv6-icmp icmpv6 type nd-neighbor-advert ip6 hoplimit 255 counter accept
+    - meta l4proto ipv6-icmp icmpv6 type nd-redirect ip6 hoplimit 255 counter accept
+    - meta l4proto ipv6-icmp icmpv6 type ind-neighbor-solicit ip6 hoplimit 255 counter accept
+    - meta l4proto ipv6-icmp icmpv6 type ind-neighbor-solicit ip6 hoplimit 255 counter accept
+
+    - meta l4proto ipv6-icmp ip6 saddr fe80::/10 icmpv6 type mld-listener-query counter accept
+    - meta l4proto ipv6-icmp ip6 saddr fe80::/10 icmpv6 type mld-listener-report counter accept
+    - meta l4proto ipv6-icmp ip6 saddr fe80::/10 icmpv6 type mld-listener-reduction counter accept
+    - meta l4proto ipv6-icmp ip6 saddr fe80::/10 icmpv6 type mld2-listener-report counter accept
+
+    - meta l4proto ipv6-icmp icmpv6 type 148 ip6 hoplimit 255 counter accept comment "Certification Path Solicitation (SEND)"
+    - meta l4proto ipv6-icmp icmpv6 type 149 ip6 hoplimit 255 counter accept comment "Certification Path Advertisement (SEND)"
+
+    - meta l4proto ipv6-icmp ip6 saddr fe80::/10 icmpv6 type 151 ip6 hoplimit 1 counter accept comment "Multicast Router Advertisement (MRD)"
+    - meta l4proto ipv6-icmp ip6 saddr fe80::/10 icmpv6 type 152 ip6 hoplimit 1 counter accept comment "Multicast Router Solicitation (MRD)"
+    - meta l4proto ipv6-icmp ip6 saddr fe80::/10 icmpv6 type 153 ip6 hoplimit 1 counter accept comment "Multicast Router Termination (MRD)"
+
+  icmpv6_fwd_allow_experimental:
+
+    # RFC 4890, 4.3.4.  Traffic for Which a Policy Should Be Defined
+
+    - meta l4proto ipv6-icmp icmpv6 type 150 counter drop comment "Seamoby Experimental"
+
+  icmpv6_fwd_drop_experimental:
+
+    # RFC 4890, 4.3.4.  Traffic for Which a Policy Should Be Defined
+
+    - meta l4proto ipv6-icmp icmpv6 type 150 counter drop comment "Seamoby Experimental"
+
+  icmpv6_fwd_allow_unallocated:
+
+    # RFC 4890, 4.3.4.  Traffic for Which a Policy Should Be Defined
+
+    - meta l4proto ipv6-icmp icmpv6 type 5-99    counter drop comment "Unallocated error ICMPv6"
+    - meta l4proto ipv6-icmp icmpv6 type 102-126 counter drop comment "Unallocated error ICMPv6"
+    - meta l4proto ipv6-icmp icmpv6 type 154-199 counter drop comment "Unallocated informational ICMPv6"
+    - meta l4proto ipv6-icmp icmpv6 type 202-254 counter drop comment "Unallocated informational ICMPv6"
+
+  icmpv6_fwd_drop_unallocated:
+
+    # RFC 4890, 4.3.4.  Traffic for Which a Policy Should Be Defined
+
+    - meta l4proto ipv6-icmp icmpv6 type 5-99    counter drop comment "Unallocated error ICMPv6"
+    - meta l4proto ipv6-icmp icmpv6 type 102-126 counter drop comment "Unallocated error ICMPv6"
+    - meta l4proto ipv6-icmp icmpv6 type 154-199 counter drop comment "Unallocated informational ICMPv6"
+    - meta l4proto ipv6-icmp icmpv6 type 202-254 counter drop comment "Unallocated informational ICMPv6"
+
+  icmpv6_fwd_drop_dangerous:
+
+    # RFC 4890, 4.3.5.  Traffic That Should Be Dropped Unless a Good Case Can Be Made
+
+    - meta l4proto ipv6-icmp icmpv6 type 138 counter drop comment "Router Renumbering"
+    - meta l4proto ipv6-icmp icmpv6 type 139 counter drop comment "Node Information Query"
+    - meta l4proto ipv6-icmp icmpv6 type 140 counter drop comment "Node Information Response"
+    - meta l4proto ipv6-icmp icmpv6 type { 100, 101, 200, 201 } counter drop comment "Experimental ICMPv6 allocations"
+    - meta l4proto ipv6-icmp icmpv6 type { 127, 255 } counter drop comment "ICMPv6 extension numbers"
+
+  ip6_drop_deprecated:
+
+      # RFC 9288, section 3.5.1.5 
+    - exthdr hbh exists counter drop comment "Drop IPv6 Host-by-Host extensions"
+      # RFC 9288, section 3.5.2.5
+    - rt type { 0, 1, 3 } counter drop comment "Drop IPv6 deprecated Routing Header extension"
+      # RFC 9288, section 3.5.10.5
+    - meta l4proto { 253, 254 } counter drop comment "Drop IPv6 Experiment extension"
+  
+  ip_drop_deprecated:
+
+      # RFC 7126, section 4.3.5
+    - ip option lsrr exists counter drop comment "Drop IPv4 Loose Source Routing option"
+      # RFC 7126, section 4.4.5
+    - ip option ssrr exists counter drop comment "Drop IPv4 Strict Source Routing option"
+      # RFC 7126, section 4.5.5
+    - ip option rr exists counter drop comment "Drop IPv4 Record Route option"
+      # RFC 7126, section 4.8.5
+    - ip option ra exists counter drop comment "Drop IPv4 Router Alert option"
+
+  set_dscp:
+
+    # set DSCP QoS classes for common types of outgoing and response traffic
+    # https://www.cisco.com/c/en/us/td/docs/switches/datacenter/nexus1000/sw/4_0/qos/configuration/guide/nexus1000v_qos/qos_6dscp_val.pdf
+    - tcp dport domain ip dscp set cs2 counter continue # CS2 (DSCP 16) Precedence (immediate)
+    - udp dport { domain, ntp } ip dscp set cs2 counter continue # CS2 (DSCP 16) Precedence (immediate)
+    - udp dport http ip dscp set af21 counter continue # AF21 (DSCP 18) Assured Forwarding (AF) Class 2 – low drop precedence
+    - udp sport http ip dscp set af21 counter continue # AF21 (DSCP 18) Assured Forwarding (AF) Class 2 – low drop precedence
+    - tcp dport { http, https } ip dscp set af22 counter continue # AF22 (DSCP 20) Assured Forwarding (AF) Class 2 – medium drop precedence
+    - tcp sport { http, https } ip dscp set af22 counter continue # AF22 (DSCP 20) Assured Forwarding (AF) Class 2 – medium drop precedence
+    - tcp dport { smtp, imaps } ip dscp set af21 counter continue # AF22 (DSCP 20) Assured Forwarding (AF) Class 2 – medium drop precedence
+    - tcp sport { smtp, imaps } ip dscp set af21 counter continue # AF22 (DSCP 20) Assured Forwarding (AF) Class 2 – medium drop precedence
+
                                                                    # ]]]
