@@ -736,12 +736,12 @@ nft_templates:
     - meta l4proto ipv6-icmp icmpv6 type packet-too-big counter accept
     - meta l4proto ipv6-icmp icmpv6 type time-exceeded icmpv6 code 0 counter accept
     - meta l4proto ipv6-icmp icmpv6 type parameter-problem icmpv6 code { 1, 2 } counter accept
-    - meta l4proto ipv6-icmp icmpv6 type nd-router-solicit ip6 hoplimit 255 counter accept
-    - meta l4proto ipv6-icmp icmpv6 type nd-router-advert ip6 hoplimit 255 counter accept
-    - meta l4proto ipv6-icmp icmpv6 type nd-neighbor-solicit ip6 hoplimit 255 counter accept
-    - meta l4proto ipv6-icmp icmpv6 type nd-neighbor-advert ip6 hoplimit 255 counter accept
-    - meta l4proto ipv6-icmp icmpv6 type ind-neighbor-solicit ip6 hoplimit 255 counter accept
-    - meta l4proto ipv6-icmp icmpv6 type ind-neighbor-solicit ip6 hoplimit 255 counter accept
+    - meta l4proto ipv6-icmp icmpv6 type nd-router-solicit counter accept
+    - meta l4proto ipv6-icmp icmpv6 type nd-router-advert counter accept
+    - meta l4proto ipv6-icmp icmpv6 type nd-neighbor-solicit counter accept
+    - meta l4proto ipv6-icmp icmpv6 type nd-neighbor-advert counter accept
+    - meta l4proto ipv6-icmp icmpv6 type ind-neighbor-solicit counter accept
+    - meta l4proto ipv6-icmp icmpv6 type ind-neighbor-solicit counter accept
 
     - meta l4proto ipv6-icmp ip6 saddr fe80::/10 icmpv6 type mld-listener-query counter accept
     - meta l4proto ipv6-icmp ip6 saddr fe80::/10 icmpv6 type mld-listener-report counter accept
