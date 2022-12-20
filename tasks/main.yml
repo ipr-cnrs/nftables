@@ -62,8 +62,6 @@
   ansible.builtin.package:
     update_cache: true
   when: (nft_enabled|bool and ansible_os_family not in [ 'Gentoo' ])
-  # prevents failing molecule idempotency test
-  tags: molecule-notest
 
 - name: Ensure Nftables packages are in their desired state
   ansible.builtin.package:
