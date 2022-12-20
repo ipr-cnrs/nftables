@@ -1,9 +1,11 @@
 ---
 - name: Converge
   hosts: all
-  gather_facts: yes
-  roles:
-    - role: ipr_cnrs.nftables
-      nft_debug: true
-      # can't remove iptables on an instance with docker
-      nft_old_pkg_manage: false
+  vars:
+    nft_debug: true
+    nft_old_pkg_manage: false
+    nft_service_manage: false
+  tasks:
+    - name: "Include nftables"
+      ansible.builtin.include_role:
+        name: "nftables"

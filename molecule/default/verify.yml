@@ -36,60 +36,26 @@
       that:
         - p.stat.exists
 
-  - name: Read rules for further checks
+  - name: Check rules
+    ansible.builtin.command: nft --check -f /etc/nftables.conf
+
+  - name: Load rules
+    ansible.builtin.command: nft -f /etc/nftables.conf
+
+  - name: List rules
     ansible.builtin.command: nft list ruleset
     register: nft
 
-  - name: Display rules for debugging
+  - name: Debug rules
     ansible.builtin.debug:
       var: nft
 
   - name: Check rules
-    block:
-      - name: Check policy
-        ansible.builtin.assert:
-          that:
-            # The whole line is:
-            # type filter hook input priority 0; policy drop;
-            # However on CentOS will return "priority 0", while Debian will
-            # show "priority filter"
-            - '"type filter hook input" in nft.stdout'
-            - '"type filter hook output" in nft.stdout'
-
-  - name: Check for fail2ban systemd custom dir
-    ansible.builtin.stat:
-      path: /etc/systemd/system/fail2ban.service.d
-    register: f2b_systemd_dir
-
-  - name: Check fail2ban systemd custom dir
     ansible.builtin.assert:
       that:
-        - f2b_systemd_dir.stat.exists and f2b_systemd_dir.stat.isdir
-
-  - name: Check for fail2ban systemd override
-    ansible.builtin.stat:
-      path: /etc/systemd/system/fail2ban.service.d/override.conf
-    register: f2b_systemd_override
-
-  - name: Check fail2ban systemd override
-    ansible.builtin.assert:
-      that:
-        - f2b_systemd_override.stat.exists
-
-  - name: Service status - active
-    ansible.builtin.command: systemctl is-active nftables.service
-    register: status
-
-  - name: Sheck service status
-    ansible.builtin.assert:
-      that:
-        - 'status.stdout == "active"'
-
-  - name: Service status - enabled
-    ansible.builtin.command: systemctl is-enabled nftables.service
-    register: status
-
-  - name: Check service status
-    ansible.builtin.assert:
-      that:
-        - 'status.stdout == "enabled"'
+        # The whole line is:
+        # type filter hook input priority 0; policy drop;
+        # However on CentOS will return "priority 0", while Debian will
+        # show "priority filter"
+        - '"type filter hook input" in nft.stdout'
+        - '"type filter hook output" in nft.stdout'

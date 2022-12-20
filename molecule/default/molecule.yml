@@ -2,52 +2,27 @@
 dependency:
   name: galaxy
 lint: |
-  set -e
   yamllint .
   ansible-lint
 driver:
   name: docker
 platforms:
 
-  - name: systemd-ubuntu-latest
-    image: jrei/systemd-ubuntu:latest
-    command: /usr/sbin/init
+  - name: ubuntu
+    image: ubuntu:latest
     privileged: true
-    volumes:
-      - /sys/fs/cgroup:/sys/fs/cgroup:ro
-    tmpfs:
-      - /run
-      - /tmp
 
-  - name: systemd-centos-latest
-    image: centos/systemd:latest
-    command: /usr/sbin/init
+  - name: centos
+    image: quay.io/centos/centos:stream8
     privileged: true
-    volumes:
-      - /sys/fs/cgroup:/sys/fs/cgroup:ro
-    tmpfs:
-      - /run
-      - /tmp
 
-  - name: systemd-debian-latest
-    image: jrei/systemd-debian:latest
-    command: /sbin/init
+  - name: debian
+    image: debian:latest
     privileged: true
-    volumes:
-      - /sys/fs/cgroup:/sys/fs/cgroup:ro
-    tmpfs:
-      - /run
-      - /tmp
 
-  - name: systemd-fedora-latest
-    image: jrei/systemd-fedora:latest
-    command: /usr/sbin/init
+  - name: fedora
+    image: fedora:latest
     privileged: true
-    volumes:
-      - /sys/fs/cgroup:/sys/fs/cgroup:ro
-    tmpfs:
-      - /run
-      - /tmp
 
 provisioner:
   name: ansible
