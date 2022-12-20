@@ -6,44 +6,51 @@
   gather_facts: false
   tasks:
 
-  - name: check for nftables.d
+  - name: Check for nftables.d
     ansible.builtin.stat:
       path: /etc/nftables.d
     register: p
 
-  - name: check nftables.d
+  - name: Check nftables.d
     ansible.builtin.assert:
       that:
         - p.stat.exists and p.stat.isdir
 
-  - name: check for nftables.conf
+  - name: Check for nftables.conf
     ansible.builtin.stat:
       path: /etc/nftables.conf
     register: p
 
-  - name: check nftables.conf
+  - name: Check nftables.conf
     ansible.builtin.assert:
       that:
         - p.stat.exists
 
-  - name: check for filter-input.nft
+  - name: Check for filter-input.nft
     ansible.builtin.stat:
       path: /etc/nftables.d/filter-input.nft
     register: p
 
-  - name: check filter-input.nft
+  - name: Check filter-input.nft
     ansible.builtin.assert:
       that:
         - p.stat.exists
 
-  - name: list rules
+  - name: Check rules
+    ansible.builtin.command: nft --check -f /etc/nftables.conf
+
+  - name: Load rules
+    ansible.builtin.command: nft -f /etc/nftables.conf
+
+  - name: List rules
     ansible.builtin.command: nft list ruleset
     register: nft
 
-  - name: debug rules
-    ansible.builtin.debug: var=nft
+  - name: Debug rules
+    ansible.builtin.debug:
+      var: nft
 
-  - name: check rules
+  - name: Check rules
     ansible.builtin.assert:
       that:
         # The whole line is:
@@ -52,41 +59,3 @@
         # show "priority filter"
         - '"type filter hook input" in nft.stdout'
         - '"type filter hook output" in nft.stdout'
-
-  - name: check for fail2ban systemd custom dir
-    ansible.builtin.stat:
-      path: /etc/systemd/system/fail2ban.service.d
-    register: f2b_systemd_dir
-
-  - name: check fail2ban systemd custom dir
-    ansible.builtin.assert:
-      that:
-        - f2b_systemd_dir.stat.exists and f2b_systemd_dir.stat.isdir
-
-  - name: check for fail2ban systemd override
-    ansible.builtin.stat:
-      path: /etc/systemd/system/fail2ban.service.d/override.conf
-    register: f2b_systemd_override
-
-  - name: check fail2ban systemd override
-    ansible.builtin.assert:
-      that:
-        - f2b_systemd_override.stat.exists
-
-  - name: service status - active
-    ansible.builtin.command: systemctl is-active nftables.service
-    register: status
-
-  - name: check service status
-    ansible.builtin.assert:
-      that:
-        - 'status.stdout == "active"'
-
-  - name: service status - enabled
-    ansible.builtin.command: systemctl is-enabled nftables.service
-    register: status
-
-  - name: check service status
-    ansible.builtin.assert:
-      that:
-        - 'status.stdout == "enabled"'

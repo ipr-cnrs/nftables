@@ -6,13 +6,10 @@ driver:
 platforms:
   - name: archlinux
     image: archlinux:latest
-    command: /usr/sbin/init
+    # required to use custom Dockerfile.j2
+    pre_build_image: false
+    # required to actually load or check nft rules
     privileged: true
-    volumes:
-      - /sys/fs/cgroup:/sys/fs/cgroup:ro
-    tmpfs:
-      - /run
-      - /tmp
 provisioner:
   name: ansible
 verifier:
