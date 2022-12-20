@@ -14,7 +14,8 @@
     loop_var: groupname
 
 - name: Debug nftables_group_rules
-  ansible.builtin.debug: var=nftables_group_rules
+  ansible.builtin.debug:
+    var: nftables_group_rules
   when: nft_debug
 
 - name: Import nftables-variables if nft_merged_groups is set
@@ -38,11 +39,13 @@
     loop_var: varfile
 
 - name: Debug nft_combined_rules
-  ansible.builtin.debug: var=nft_combined_rules
+  ansible.builtin.debug:
+    var: nft_combined_rules
   when: nft_debug
 
 - name: Debug ansible_os_family
-  ansible.builtin.debug: var=ansible_os_family
+  ansible.builtin.debug:
+    var: ansible_os_family
   when: nft_debug
 
 - name: Load specific OS vars for nftables
