@@ -62,6 +62,7 @@
   ansible.builtin.package:
     update_cache: true
   when: (nft_enabled|bool and ansible_os_family not in [ 'Gentoo' ])
+  changed_when: false
 
 - name: Ensure Nftables packages are in their desired state
   ansible.builtin.package:
