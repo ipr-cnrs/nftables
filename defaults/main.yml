@@ -25,6 +25,13 @@ nft_enabled: true
 #   Ensure to remove Nftables related packages.
 nft_pkg_state: 'present'
                                                                    # ]]]
+# .. envvar:: nft_update_repositories [[[
+#
+# Enable or disable updating of repositories on a given host. Disabling this
+# option enables using this role on hosts with limited outgoing connections.
+#
+nft_update_repositories: true
+                                                                   # ]]]
 # .. envvar:: nft_old_pkg_list [[[
 #
 # List of old Iptables packages to remove to avoid duplicate firewall.

@@ -61,7 +61,7 @@
 - name: Update repositories
   ansible.builtin.package:
     update_cache: true
-  when: (nft_enabled|bool and ansible_os_family not in [ 'Gentoo' ])
+  when: (nft_enabled|bool and nft_update_repositories|bool and ansible_os_family not in [ 'Gentoo' ])
   changed_when: false
 
 - name: Ensure Nftables packages are in their desired state
