@@ -10,6 +10,7 @@
 
 chain forward {
 {% for group, rules in forwardmerged|dictsort  %}
+
     # {{ group }}
   {% if not rules %}
     # (none)
@@ -18,4 +19,5 @@ chain forward {
     {{ rule }}
   {% endfor %}
 {% endfor %}
+
 }
