@@ -789,13 +789,13 @@ nft_templates:
 
     # RFC 4890, 4.4.4.  Traffic for Which a Policy Should Be Defined
 
-    - meta l4proto ipv6-icmp icmpv6 type nd-redirect ip6 counter accept
+    - meta l4proto ipv6-icmp icmpv6 type nd-redirect counter accept
 
   icmpv6_in_drop_redirect:
 
     # RFC 4890, 4.4.4.  Traffic for Which a Policy Should Be Defined
 
-    - meta l4proto ipv6-icmp icmpv6 type nd-redirect ip6 counter drop
+    - meta l4proto ipv6-icmp icmpv6 type nd-redirect counter drop
 
   icmpv6_in_allow_nodeinfo:
 
