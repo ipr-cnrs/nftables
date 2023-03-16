@@ -10,6 +10,7 @@
 
 chain output {
 {% for group, rules in outputmerged|dictsort  %}
+
 	# {{ group }}
   {% if not rules %}
 	# (none)
@@ -18,4 +19,5 @@ chain output {
 	{{ rule }}
   {% endfor %}
 {% endfor %}
+
 }
