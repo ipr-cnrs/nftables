@@ -435,8 +435,8 @@ fly from the host without completely rewrite the rule.
 - hosts: serverXYZ
   vars:
       nft_input_host_rules:
-        050 icmp:⏎
-          - ip protocol icmp  ip saddr != 192.168.0.0/24  counter  drop⏎
+        050 icmp:
+          - ip protocol icmp  ip saddr != 192.168.0.0/24  counter  drop
           - ip protocol icmp  icmp type echo-request  ip length <= 84  counter  limit rate 10/minute  accept
   roles:
     - role: ipr-cnrs.nftables
@@ -618,12 +618,11 @@ Thanks to this [hook][gogs to github hook], Github automatically got updates fro
 ## Author Information
 
 Jérémy Gardais
-* Source : [on IPR's Gitea][nftables source]
 * [IPR][ipr website] (Institut de Physique de Rennes)
 
 [gogs to github hook]: https://stackoverflow.com/a/21998477
-[nftables source]: https://git.ipr.univ-rennes1.fr/cellinfo/ansible.nftables
+[nftables source]: https://github.com/ipr-cnrs/nftables
 [nftables github]: https://github.com/ipr-cnrs/nftables
 [wtfpl website]: http://www.wtfpl.net/about/
-[ipr website]: https://ipr.univ-rennes1.fr/
+[ipr website]: https://ipr.univ-rennes.fr/
 [mikegleasonjr firewall github]: https://github.com/mikegleasonjr/ansible-role-firewall

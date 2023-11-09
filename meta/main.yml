@@ -9,7 +9,7 @@ galaxy_info:
   description: "Manage Nftables rules and packages"
   license: WTFPL
   company: IPR
-  issue_tracker_url: https://git.ipr.univ-rennes1.fr/cellinfo/ansible.nftables/issues
+  issue_tracker_url: https://github.com/ipr-cnrs/nftables/issues
   min_ansible_version: '2.5'
   platforms:
   - name: Debian
