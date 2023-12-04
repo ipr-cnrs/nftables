@@ -1,0 +1,21 @@
+#jinja2: lstrip_blocks: "True", trim_blocks: "True"
+# {{ ansible_managed }}
+
+{% for chain,sections in nft_define_custom_chains.items() %}
+  {% set custommerged = hostvars[inventory_hostname][sections[0]].copy() %}
+  {% for section in sections[1:] %}
+    {% set _ = custommerged.update(hostvars[inventory_hostname][section].copy()) %}
+  {% endfor %}
+
+chain {{ chain }} {
+{% for group, rules in custommerged|dictsort  %}
+  # {{ group }}
+  {% if not rules %}
+  # (none)
+  {% endif %}
+  {% for rule in rules %}
+  {{ rule }}
+  {% endfor %}
+{% endfor %}
+}
+{% endfor %}
