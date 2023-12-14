@@ -1,0 +1,19 @@
+#jinja2: lstrip_blocks: "True", trim_blocks: "True"
+{{ ansible_managed | comment }}
+{% set setmerged = nft_conntrack_default.copy() %}
+{% set _ = setmerged.update(nft_conntrack) %}
+{% set _ = setmerged.update(nft_conntrack_group) %}
+{% if nft_merged_groups and hostvars[inventory_hostname]['nft_combined_rules'].nft_conntrack_group is defined %}
+  {% set _ = setmerged.update(hostvars[inventory_hostname]['nft_combined_rules'].nft_conntrack_group) %}
+{% endif %}
+{% set _ = setmerged.update(nft_conntrack_host) %}
+
+{% for set, ct in setmerged|dictsort  %}
+
+  {% if ct %}
+ct helper {{ set }} {
+  type "{{ ct.type }}" protocol {{ ct.protocol }};
+}
+  {% endif %}
+
+{% endfor %}
