@@ -12,7 +12,10 @@
     name: '{{ nft_service_name }}'
   async: 5
   poll: 2
-  when: ansible_service_mgr == 'systemd' and nft_service_manage
+  when:
+    - not ansible_check_mode
+    - ansible_service_mgr == 'systemd'
+    - nft_service_manage
 
 # Reload will avoid to loose Nftables rulebase if an invalid syntax is added
 - name: Reload nftables service
@@ -21,6 +24,8 @@
     name: '{{ nft_service_name }}'
   async: 5
   poll: 2
-  when: ansible_service_mgr == 'systemd' and
-        nft_service_manage and
-        not nftables__register_systemd_service.changed
+  when:
+    - not ansible_check_mode
+    - ansible_service_mgr == 'systemd'
+    - nft_service_manage
+    - not nftables__register_systemd_service.changed
