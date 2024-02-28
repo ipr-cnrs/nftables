@@ -538,11 +538,22 @@ nft__nat_postrouting_conf_content: 'etc/nftables.d/nat-postrouting.nft.j2'
 # If the Nftables service should be managed ? Possible options are :
 #
 # ``True``
-#   Default. The service is started.
+#   Default. The service is managed.
 #
 # ``False``
 #   The service will not be touched.
 nft_service_manage: true
+
+# .. envvar:: nft_service_manage [[[
+#
+# If the Nftables service should be managed ? Possible options are :
+#
+# ``True``
+#   Default. The service is started and reloaded.
+#
+# ``False``
+#   The service will not be started or reloaded.
+nft_service_started: true
                                                                    # ]]]
 # .. envvar:: nft_service_name [[[
 #

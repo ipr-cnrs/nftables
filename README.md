@@ -77,6 +77,7 @@ complexify his philosophy… (I'm pretty sure, i now did complexify it :D) ^^
 * **nft_define_group** : You can add vars or override those defined by **nft_define_default** and **nft_define** for a group.
 * **nft_define_host** : You can add or override all previous vars.
 * **nft_service_manage** : If `nftables` service should be managed with this role [default : `true`].
+* **nft_service_started** : If `nftables` service should be started and restarted by this role [default : `true`].
 * **nft_service_name** : `nftables` service name [default : `nftables`].
 * **nft_service_enabled** : Set `nftables` service available at startup [default : `true`].
 * **nft__service_protect** : If systemd unit should protect system and home [default : `true`].
