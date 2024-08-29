@@ -258,6 +258,50 @@ nft_set_conf_path: '{{ nft_conf_dir_path }}/sets.nft'
 nft_set_conf_content: 'etc/nftables.d/sets.nft.j2'
                                                                    # ]]]
                                                                    # ]]]
+# Nftables conntrack definition [[[
+# ----------------------------
+#
+# These "conntrack" lists allow to define conntracks that can be used in Nftables.
+# See the official Nftables wiki page for more informations and examples :
+# https://wiki.nftables.org/wiki-nftables/index.php/Setting_packet_connection_tracking_metainformation
+
+# .. envvar:: nft_conntrack_default [[[
+#
+# List of conntrack to configure for all hosts inherited from this role.
+nft_conntrack_default: {}
+                                                                   # ]]]
+# .. envvar:: nft_conntrack [[[
+#
+# List of conntrack to configure for all hosts in the Ansible inventory.
+nft_conntrack: {}
+                                                                   # ]]]
+# .. envvar:: nft_conntrack_group [[[
+#
+# List of conntrack to configure for hosts in specific Ansible inventory group.
+nft_conntrack_group: {}
+                                                                   # ]]]
+# .. envvar:: nft_conntrack_host [[[
+#
+# List of conntrack to configure for specific hosts in the Ansible inventory.
+nft_conntrack_host: {}
+                                                                   # ]]]
+# .. envvar:: nft_conntrack_conf_path [[[
+#
+# Path to the "conntrack" file to include in the main configuration file
+# in order to use the previous defined lists.
+#
+# Should include the '{{ nft_conf_dir_path }}' var or be an absolut path.
+nft_conntrack_conf_path: '{{ nft_conf_dir_path }}/conntrack.nft'
+                                                                   # ]]]
+# .. envvar:: nft_conntrack_conf_content [[[
+#
+# Template used to provide the previous "conntrack" file.
+#
+# Must be a relative path from default/ directory of this role or from your
+# Ansible inventory directory.
+nft_conntrack_conf_content: 'etc/nftables.d/conntrack.nft.j2'
+                                                                   # ]]]
+                                                                   # ]]]
 # inet filter table rules [[[
 # ---------------------------
 #

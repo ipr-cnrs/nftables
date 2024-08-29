@@ -122,6 +122,17 @@
   notify: ['Reload nftables service']
   when: nft_enabled|bool
 
+- name: CONFIG generate conntrack file
+  ansible.builtin.template:
+    src: "{{ nft_conntrack_conf_content }}"
+    dest: "{{ nft_conntrack_conf_path }}"
+    owner: root
+    group: root
+    mode: 0600
+    backup: "{{ nft_backup_conf }}"
+  notify: ['Reload nftables service']
+  when: nft_enabled|bool
+
 # Filter table content [[[1
 - name: Filter table - generate input rules file
   ansible.builtin.template:
