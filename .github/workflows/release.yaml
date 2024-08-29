@@ -2,84 +2,20 @@
 name: release
 
 on:
-  push:
-    tags: ["*"]
-
-permissions:
-  id-token: write
-  contents: write
+  release:
+    types:
+      - published
+    secrets:
+      ANSIBLE_GALAXY_TOKEN:
+        required: true
 
 jobs:
-  release:
+  build:
     runs-on: ubuntu-latest
     steps:
-      - name: Check out code
-        uses: actions/checkout@v2
-
-      - name: version
-        run: echo "version=$(/usr/bin/basename ${{ github.ref }})" >> $GITHUB_OUTPUT
-        id: version
-
-      - name: release
-        uses: actions/create-release@v1
-        id: create_release
+      - name: checkout
+        uses: actions/checkout@v4
+      - name: galaxy
+        uses: averagebit/action-galaxy@1.0.0
         with:
-          draft: false
-          prerelease: false
-          release_name: ${{ steps.version.outputs.version }}
-          tag_name: ${{ github.ref }}
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-
-      - name: Package
-        uses: a7ul/tar-action@v1.1.2
-        with:
-          files: .
-          command: c
-          outPath: ${{ steps.version.outputs.version }}.tar.gz
-
-      - name: Sign release with Sigstore
-        continue-on-error: true
-        uses: sigstore/gh-action-sigstore-python@v0.0.9
-        with:
-          inputs: ${{ steps.version.outputs.version }}.tar.gz
-          release-signing-artifacts: true
-          upload-signing-artifacts: true
-
-      - name: upload signed asset
-        continue-on-error: true
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ${{ steps.version.outputs.version }}.tar.gz
-          asset_name: ${{ steps.version.outputs.version }}.tar.gz
-          asset_content_type: application/gzip
-
-      - name: upload sigstore certificate
-        continue-on-error: true
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ${{ steps.version.outputs.version }}.tar.gz.crt
-          asset_name: ${{ steps.version.outputs.version }}.tar.gz.crt
-          asset_content_type: application/x-x509-ca-cert
-
-      - name: upload sigstore signature
-        continue-on-error: true
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ${{ steps.version.outputs.version }}.tar.gz.sig
-          asset_name: ${{ steps.version.outputs.version }}.tar.gz.sig
-          asset_content_type: application/octet-stream
-
-      - name: Build and Deploy Collection
-        uses: 0x022b/galaxy-role-import-action@1.0.0
-        with:
-          galaxy_api_key: "${{ secrets.ANSIBLE_GALAXY_TOKEN }}"
+          galaxy_token: ${{ secrets.ANSIBLE_GALAXY_TOKEN }}

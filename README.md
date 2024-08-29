@@ -35,8 +35,6 @@ complexify his philosophy… (I'm pretty sure, i now did complexify it :D) ^^
 * **nft_input_conf_content** : Template used to generate the previous input configuration file [default : `etc/nftables.d/filter-input.nft.j2`].
 * **nft_output_conf_path** : Output configuration file include in main configuration file [default : `{{ nft_conf_dir_path }}/filter-output.nft`].
 * **nft_output_conf_content** : Template used to generate the previous output configuration file [default : `etc/nftables.d/filter-output.nft.j2`].
-* **nft_forward_conf_path** : forward configuration file include in main configuration file [default : `{{ nft_conf_dir_path }}/filter-forward.nft`].
-* **nft_forward_conf_content** : Template used to generate the previous forward configuration file [default : `etc/nftables.d/filter-forward.nft.j2`].
 * **nft_define_conf_path** : Vars definition file include in main configuration file [default : `{{ nft_conf_dir_path }}/defines.nft`].
 * **nft_define_conf_content** : Template used to generate the previous vars definition file [default : `etc/nftables.d/defines.nft.j2`].
 * **nft_sets_conf_path** : Sets and maps definition file include in main configuration file [default : `{{ nft_conf_dir_path }}/sets.nft`].
@@ -54,11 +52,20 @@ complexify his philosophy… (I'm pretty sure, i now did complexify it :D) ^^
 * **nft_output_rules** : You can add `output` rules or override those defined by **nft_output_default_rules** for all hosts.
 * **nft_output_group_rules** : You can add `output` rules or override those defined by **nft_output_default_rules** and **nft_output_rules** for a group.
 * **nft_output_host_rules** : Hosts can also add or override all previous `output` rules.
+* **nft_forward_conf_path** : forward configuration file include in main configuration file [default : `{{ nft_conf_dir_path }}/filter-forward.nft`].
+* **nft_forward_conf_content** : Template used to generate the previous forward configuration file [default : `etc/nftables.d/filter-forward.nft.j2`].
 * **nft_forward_default_rules** : Set default rules for `forward` chain.
 * **nft_forward_rules** : You can add `forward` rules or override those defined by **nft_forward_default_rules** for all hosts.
 * **nft_forward_group_rules** : You can add `forward` rules or override those defined by **nft_forward_default_rules** and **nft_forward_rules** for a group.
 * **nft_forward_host_rules** : Hosts can also add or override all previous `forward` rules.
 * **nft__forward_table_manage** : If the forward table should be managed [default : `False`].
+* **nft_mangle_conf_path** : mangle configuration file include in main configuration file [default : `{{ nft_conf_dir_path }}/filter-mangle.nft`].
+* **nft_mangle_conf_content** : Template used to generate the previous mangle configuration file [default : `etc/nftables.d/filter-mangle.nft.j2`].
+* **nft_mangle_default_rules** : Set default rules for `mangle` chain.
+* **nft_mangle_rules** : You can add `mangle` rules or override those defined by **nft_mangle_default_rules** for all hosts.
+* **nft_mangle_group_rules** : You can add `mangle` rules or override those defined by **nft_mangle_default_rules** and **nft_mangle_rules** for a group.
+* **nft_mangle_host_rules** : Hosts can also add or override all previous `mangle` rules.
+* **nft__mangle_table_manage** : If the mangle table should be managed [default : `False`].
 * **nft__nat_table_manage** : If the nat table should be managed [default : `False`].
 * **nft__nat_default_prerouting_rules** : Set default rules for `prerouting` chain of **nat** table.
 * **nft__nat_prerouting_rules** : Set rules for `prerouting` chain of **nat** table for all hosts in the Ansible inventory.
@@ -83,6 +90,7 @@ complexify his philosophy… (I'm pretty sure, i now did complexify it :D) ^^
 * **nft_merged_groups** : If variables from the hosts Ansible groups should be merged [default : `false`].
 * **nft_merged_groups_dir** : The dictionary where the nftables group rules, named like the Ansible groups, are located in [default : `vars/`].
 * **nft_debug** : Toggle more verbose output on/off. [default: 'false'].
+* **nft_custom_includes** : Arbitrary extra files to include into `nftables.conf` [default: `[]`]
 
 ### OS Specific Variables
 

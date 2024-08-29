@@ -431,6 +431,54 @@ nft_forward_conf_path: '{{ nft_conf_dir_path }}/filter-forward.nft'
 nft_forward_conf_content: 'etc/nftables.d/filter-forward.nft.j2'
                                                                    # ]]]
                                                                    # ]]]
+# .. envvar:: nft__mangle_table_manage [[[
+#
+# If the mangle table should be managed ? Possible options are :
+#
+# ``False``
+#   Default. The mangle table is not managed and rules will not be added.
+#
+# ``True``
+#   Add the mangleing rules that follow.
+nft__mangle_table_manage: false
+                                                                   # ]]]
+# .. envvar:: nft_mangle_default_rules [[[
+#
+# List of mangle rules to configure for all hosts inherited from this role.
+nft_mangle_default_rules: {}
+                                                                   # ]]]
+# .. envvar:: nft_mangle_rules [[[
+#
+# List of mangle rules to configure for all hosts in the Ansible inventory.
+nft_mangle_rules: {}
+                                                                   # ]]]
+# .. envvar:: nft_mangle_group_rules [[[
+#
+# List of mangle rules to configure for hosts in specific Ansible inventory group.
+nft_mangle_group_rules: {}
+                                                                   # ]]]
+# .. envvar:: nft_mangle_host_rules [[[
+#
+# List of mangle rules to configure for specific hosts in the Ansible inventory.
+nft_mangle_host_rules: {}
+                                                                   # ]]]
+# .. envvar:: nft_mangle_conf_path [[[
+#
+# Path to the mangle rules file for the filter table to include in the main
+# configuration file in order to use the previous defined lists.
+#
+# Should include the '{{ nft_conf_dir_path }}' var or be an absolut path.
+nft_mangle_conf_path: '{{ nft_conf_dir_path }}/filter-mangle.nft'
+                                                                   # ]]]
+# .. envvar:: nft_mangle_conf_content [[[
+#
+# Template used to provide the previous mangle rules file.
+#
+# Must be a relative path from default/ directory of this role or from your
+# Ansible inventory directory.
+nft_mangle_conf_content: 'etc/nftables.d/filter-mangle.nft.j2'
+                                                                   # ]]]
+                                                                   # ]]]
 # ip nat table rules [[[
 # ---------------------------
 #
