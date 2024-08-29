@@ -1,15 +1,15 @@
 #jinja2: lstrip_blocks: "True", trim_blocks: "True"
 {{ ansible_managed | comment }}
-{% set forwardmerged = nft_forward_default_rules.copy() %}
-{% set _ = forwardmerged.update(nft_forward_rules) %}
-{% set _ = forwardmerged.update(nft_forward_group_rules) %}
-{% if nft_merged_groups and hostvars[inventory_hostname]['nft_combined_rules'].nft_forward_group_rules is defined %}
-  {% set _ = forwardmerged.update(hostvars[inventory_hostname]['nft_combined_rules'].nft_forward_group_rules) %}
+{% set manglemerged = nft_mangle_default_rules.copy() %}
+{% set _ = manglemerged.update(nft_mangle_rules) %}
+{% set _ = manglemerged.update(nft_mangle_group_rules) %}
+{% if nft_merged_groups and hostvars[inventory_hostname]['nft_combined_rules'].nft_mangle_group_rules is defined %}
+  {% set _ = manglemerged.update(hostvars[inventory_hostname]['nft_combined_rules'].nft_mangle_group_rules) %}
 {% endif %}
-{% set _ = forwardmerged.update(nft_forward_host_rules) %}
+{% set _ = manglemerged.update(nft_mangle_host_rules) %}
 
-chain forward {
-{% for group, rules in forwardmerged|dictsort  %}
+chain mangle {
+{% for group, rules in manglemerged|dictsort  %}
 
     # {{ group }}
   {% if not rules %}
