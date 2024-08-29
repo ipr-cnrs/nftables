@@ -14,12 +14,8 @@ jobs:
     runs-on:  ubuntu-latest
     steps:
 
-      - name: checkout
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           path: "${{ github.repository }}"
 
-      - name: Ansible Molecule
-        uses: robertdebock/molecule-action@4.0.9
-        with:
-          molecule_working_dir: "${{ github.repository }}"
+      - uses: gofrolist/molecule-action@v2
