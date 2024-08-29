@@ -13,7 +13,7 @@ platforms:
     privileged: true
 
   - name: centos
-    image: quay.io/centos/centos:stream8
+    image: quay.io/centos/centos:stream9-minimal
     privileged: true
 
   - name: debian
