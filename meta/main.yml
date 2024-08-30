@@ -4,7 +4,7 @@ dependencies: []
 
 galaxy_info:
   author: "Jérémy Gardais"
-  namespace: ipr_cnrs
+  namespace: ipr-cnrs
   role_name: nftables
   description: "Manage Nftables rules and packages"
   license: WTFPL
