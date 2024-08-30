@@ -1,3 +1,27 @@
+## v2.2.4
+
+### Fixed
+* Fix Ansible Galaxy namespace, ipr_cnrs ➡️ ipr-cnrs (Issue #67).
+
+## v2.2.3
+
+### Fixed
+* Fix variables names for `mangle` table (thanks to @kravietz - PR #66).
+
+## v2.2.2
+
+### Improvements
+* Add suppor for `nft_templates` (thanks to @kravietz).
+* Add support for connection tracker (thanks to @chrisvanmeer - PR #62).
+* Add support for `mangle` table (thanks to @kravietz - PR #65).
+* Use `comment` jinja filter (thanks to @ghost - PR #29).
+* Move to `inet` for NAT table (thanks to @kravietz - PR #58).
+* Various Molecule fix (thanks to @kravietz).
+
+### Fixed
+* Possibility to disable repository update (thanks to @nikosch86 - PR #55 - Issue #54).
+* Fix icmpv6 redirects rules (thanks to @rissson - PR #59).
+
 ## v2.2.1
 
 ### Fixed
