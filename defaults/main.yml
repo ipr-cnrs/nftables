@@ -135,6 +135,13 @@ nft_main_conf_path: '/etc/nftables.conf'
 # Ansible inventory directory.
 nft_main_conf_content: 'etc/nftables.conf.j2'
                                                                    # ]]]
+# .. envvar:: nft_main_conf_content [[[
+#
+# Target of rules to flush on restart.
+#
+# Must be a valid target, like "ruleset", "table <mytable>", or
+# "chain <mytable> <mychain>"
+nft_flush_target: 'ruleset'
                                                                    # ]]]
 # Nftables vars definition [[[
 # ----------------------------
