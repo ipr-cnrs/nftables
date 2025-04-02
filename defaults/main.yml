@@ -137,11 +137,11 @@ nft_main_conf_content: 'etc/nftables.conf.j2'
                                                                    # ]]]
 # .. envvar:: nft_main_conf_content [[[
 #
-# Target of rules to flush on restart.
+# Flush command on restart.
 #
-# Must be a valid target, like "ruleset", "table <mytable>", or
-# "chain <mytable> <mychain>"
-nft_flush_target: 'ruleset'
+# Must be a valid nft command, like "flush ruleset", "destroy table <mytable>", or
+# "destroy chain <mytable> <mychain>"
+nft_flush_cmd: 'flush ruleset'
                                                                    # ]]]
 # Nftables vars definition [[[
 # ----------------------------

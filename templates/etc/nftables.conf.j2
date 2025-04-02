@@ -10,7 +10,7 @@
 {% set _ = globalmerged.update(nft_global_host_rules) %}
 
 # clean
-flush {{ nft_flush_target }}
+{{ nft_flush_cmd }}
 
 include "{{ nft_define_conf_path }}"
 

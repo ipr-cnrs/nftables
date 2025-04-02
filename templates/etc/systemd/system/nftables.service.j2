@@ -15,7 +15,7 @@ ProtectSystem=full
 ProtectHome=true
 ExecStart={{ nft__bin_location }} -f {{ nft_main_conf_path }}
 ExecReload={{ nft__bin_location }} -f {{ nft_main_conf_path }}
-ExecStop={{ nft__bin_location }} flush {{ nft_flush_target }}
+ExecStop={{ nft__bin_location }} {{ nft_flush_cmd }}
 
 [Install]
 WantedBy=sysinit.target
