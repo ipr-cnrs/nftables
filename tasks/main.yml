@@ -163,7 +163,7 @@
     owner: root
     group: root
     mode: 0600
-    backup: yes
+    backup: "{{ nft_backup_conf }}"
   notify: ['Reload nftables service']
   when: (nft_enabled|bool and
          nft__forward_table_manage|bool)
