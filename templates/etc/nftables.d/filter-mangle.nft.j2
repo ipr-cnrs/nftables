@@ -1,4 +1,4 @@
-#jinja2: lstrip_blocks: "True", trim_blocks: "True"
+#jinja2: lstrip_blocks: True, trim_blocks: True
 {{ ansible_managed | comment }}
 {% set manglemerged = nft_mangle_default_rules.copy() %}
 {% set _ = manglemerged.update(nft_mangle_rules) %}
