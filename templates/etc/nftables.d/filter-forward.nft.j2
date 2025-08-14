@@ -1,4 +1,4 @@
-#jinja2: lstrip_blocks: "True", trim_blocks: "True"
+#jinja2: lstrip_blocks: True, trim_blocks: True
 {{ ansible_managed | comment }}
 {% set forwardmerged = nft_forward_default_rules.copy() %}
 {% set _ = forwardmerged.update(nft_forward_rules) %}

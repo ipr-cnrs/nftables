@@ -1,4 +1,4 @@
-#jinja2: lstrip_blocks: "True", trim_blocks: "True"
+#jinja2: lstrip_blocks: True, trim_blocks: True
 #!{{ nft__bin_location }} -f
 {{ ansible_managed | comment }}
 {% set globalmerged = nft_global_default_rules.copy() %}

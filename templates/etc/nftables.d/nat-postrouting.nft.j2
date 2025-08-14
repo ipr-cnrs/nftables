@@ -1,4 +1,4 @@
-#jinja2: lstrip_blocks: "True", trim_blocks: "True"
+#jinja2: lstrip_blocks: True, trim_blocks: True
 {{ ansible_managed | comment }}
 {% set postroutingmerged = nft__nat_default_postrouting_rules.copy() %}
 {% set _ = postroutingmerged.update(nft__nat_postrouting_rules) %}
