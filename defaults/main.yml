@@ -787,6 +787,22 @@ nft__service_override_content: 'etc/systemd/system/nftables.service.d/override.c
 #   The directives will be ignored.
 nft__service_protect: true
                                                                    # ]]]
+# .. envvar:: nft_service_restart_async_timeout [[[
+#
+# There are some cases where you may need to adjust the async setting
+# on hosts which have high latency to prevent timeouts. By default, this
+# setting is 5 (seconds).
+#
+nft_service_restart_async_timeout: 5
+                                                                   # ]]]
+# .. envvar:: nft_service_reload_async_timeout [[[
+#
+# There are some cases where you may need to adjust the async setting
+# on hosts which have high latency to prevent timeouts. By default, this
+# setting is 5 (seconds).
+#
+nft_service_reload_async_timeout: 5
+                                                                   # ]]]
 
 # .. envvar:: nft_fail2ban_service_override [[[
 #
