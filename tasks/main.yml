@@ -310,8 +310,6 @@
     state: 'started'
     name: '{{ nft_service_name }}'
     enabled: '{{ nft_service_enabled }}'
-  async: 10
-  poll: 2
   when:
     - not ansible_check_mode
     - ansible_service_mgr == 'systemd'

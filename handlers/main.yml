@@ -10,8 +10,6 @@
                        (nftables__register_systemd_custom.changed | default(False)) }}'
     state: 'restarted'
     name: '{{ nft_service_name }}'
-  async: 5
-  poll: 2
   when:
     - not ansible_check_mode
     - ansible_service_mgr == 'systemd'
@@ -22,8 +20,6 @@
   ansible.builtin.systemd:
     state: 'reloaded'
     name: '{{ nft_service_name }}'
-  async: 5
-  poll: 2
   when:
     - not ansible_check_mode
     - ansible_service_mgr == 'systemd'
