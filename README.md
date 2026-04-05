@@ -137,6 +137,8 @@ Each type of rules dictionaries will be merged and rules will be applied in the 
     * If 'nft_merged_groups' is set to true, multiple group rules from the ansible groups will also be merged together.
   * **nft_*_host_rules** : Can add rules and override those define by **nft_*_default_rules**, **nft_*_group_rules** and **nft_*_rules**. You can define it in `host_vars/www.local.domain`.
 
+Empty rules, set/map elements or those equals to `omit` will be skipped from the generated files, in this way a lists with conditional elements can be used.
+
 `defaults/main.yml`:
 
 ``` yml
@@ -606,6 +608,28 @@ In some case, i guess, it can be interesting to redefine the default variable :
 * **nft_output_rules** or **nft_output_group_rules** variables can also be used.
 * The weight (`210`) allow to order all merged rules (from
   <b>nft_output_*rules</b> dictionaries).
+</details>
+
+<details>
+  <summary>Conditionally add rules and set's options (<i>click to expand</i>)</summary>
+
+``` yml
+- hosts: serverXYZ
+  vars:
+    nft_set_host:
+      forward_ip:
+        - type ipv4_addr
+        - flags interval
+        - '{{ "auto-merge" if forward_merge_enabled }}'
+    nft_forward_host_rules:
+      010 accept outgoing:
+        - oif eth0 ip saddr 192.168.1.1 accept
+        - '{{ "oif eth1 ip saddr @forward_ip accept" if "eth1" in ansible_interfaces else omit }}'
+        - '{{ ("oif " ~ ansible_default_ipv6.interface ~ " ip6 accept") if (ansible_default_ipv6 | length) > 0 }}'
+  roles:
+    - role: ipr-cnrs.nftables
+```
+Second and third rules will be added into the output file only if their conditions evaluates to `true`.
 </details>
 
 ### With group_vars and host_vars

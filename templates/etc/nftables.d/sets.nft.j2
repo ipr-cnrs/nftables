@@ -9,12 +9,13 @@
 {% set _ = setmerged.update(nft_set_host) %}
 
 {% for set, rules in setmerged|dictsort  %}
+  {% set rules = rules | reject('eq', '') | reject('eq', none) | reject('eq', omit) %}
   {% if rules %}
 set {{ set }} {
     {% for rule in rules %}
 	{{ rule }}
     {% endfor %}
 }
-  {% endif %}
 
+  {% endif %}
 {% endfor %}
