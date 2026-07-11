@@ -12,7 +12,7 @@
     name: '{{ nft_service_name }}'
   when:
     - not ansible_check_mode
-    - ansible_service_mgr == 'systemd'
+    - ansible_facts['service_mgr'] == 'systemd'
     - nft_service_manage
 
 # Reload will avoid to loose Nftables rulebase if an invalid syntax is added
@@ -22,6 +22,6 @@
     name: '{{ nft_service_name }}'
   when:
     - not ansible_check_mode
-    - ansible_service_mgr == 'systemd'
+    - ansible_facts['service_mgr'] == 'systemd'
     - nft_service_manage
     - not nftables__register_systemd_service.changed

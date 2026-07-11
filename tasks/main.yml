@@ -45,15 +45,15 @@
 
 - name: Debug ansible_os_family
   ansible.builtin.debug:
-    var: ansible_os_family
+    var: ansible_facts['os_family']
   when: nft_debug
 
 - name: Load specific OS vars for nftables
   ansible.builtin.include_vars: "{{ osname }}"
   with_first_found:
-    - "{{ ansible_distribution | lower }}-{{ ansible_distribution_version }}.yml"
-    - "{{ ansible_distribution | lower }}.yml"
-    - "{{ ansible_os_family | lower }}.yml"
+    - "{{ ansible_facts['distribution'] | lower }}-{{ ansible_facts['distribution_version'] }}.yml"
+    - "{{ ansible_facts['distribution'] | lower }}.yml"
+    - "{{ ansible_facts['os_family'] | lower }}.yml"
   loop_control:
     loop_var: osname
 
@@ -61,7 +61,7 @@
 - name: Update repositories
   ansible.builtin.package:
     update_cache: true
-  when: (nft_enabled|bool and nft_update_repositories|bool and ansible_os_family not in [ 'Gentoo' ])
+  when: (nft_enabled|bool and nft_update_repositories|bool and ansible_facts['os_family'] not in [ 'Gentoo' ])
   changed_when: false
 
 - name: Ensure Nftables packages are in their desired state
@@ -312,5 +312,5 @@
     enabled: '{{ nft_service_enabled }}'
   when:
     - not ansible_check_mode
-    - ansible_service_mgr == 'systemd'
+    - ansible_facts['service_mgr'] == 'systemd'
     - nft_service_manage
