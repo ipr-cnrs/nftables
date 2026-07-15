@@ -70,7 +70,7 @@
     state: '{{ nft_pkg_state }}'
   register: pkg_install_result
   until: pkg_install_result is success
-  when: nft_enabled|bool
+  when: (nft_enabled|bool and nft_pkg_manage|bool)
 
 - name: Ensure old Iptables packages are in their desired state
   ansible.builtin.package:
