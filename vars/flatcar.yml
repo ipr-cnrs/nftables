@@ -1,0 +1,8 @@
+---
+# vars file for Flatcar Container Linux
+# Flatcar has no package manager, nft ships with the OS.
+nft_pkg_list: []
+nft_pkg_manage: false
+nft_old_pkg_manage: false
+nft_update_repositories: false
+nft__bin_location: '/usr/bin/nft'

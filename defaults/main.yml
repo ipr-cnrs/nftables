@@ -25,6 +25,17 @@ nft_enabled: true
 #   Ensure to remove Nftables related packages.
 nft_pkg_state: 'present'
                                                                    # ]]]
+# .. envvar:: nft_pkg_manage [[[
+#
+# If the Nftables packages should be managed ? Possible options :
+#
+# ``true``
+#   Default. Ensure to apply the required state for Nftables related packages.
+#
+# ``false``
+#   Nftables packages will not be touched.
+nft_pkg_manage: true
+                                                                   # ]]]
 # .. envvar:: nft_update_repositories [[[
 #
 # Enable or disable updating of repositories on a given host. Disabling this
