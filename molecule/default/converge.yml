@@ -13,3 +13,17 @@
         # ensure config files land in the same places on Debian/RedHat for verify
         nft_conf_dir_path: '/etc/nftables.d'
         nft_main_conf_path: '/etc/nftables.conf'
+        #
+        nft_input_group_rules:
+          250 allow_http:
+            - tcp dport { http, https } ct state new jump http_allow  # jump http_allow
+        #
+        nft_define_custom_chains:
+          http_allow: [ nft_http_allow_group_rules ]
+        #
+        nft_http_allow_group_rules:
+          010 http/https allow:
+            - ip saddr 10.0.0.0/8 counter accept
+            - ip saddr 172.16.0.0/12 counter accept
+          100 http/https drop:
+            - drop

@@ -47,6 +47,7 @@ complexify his philosophy… (I'm pretty sure, i now did complexify it :D) ^^
 * **nft_global_group_rules** : You can add `global` rules or override those defined by **nft_global_default_rules** and **nft_global_rules** for a group.
 * **nft_global_host_rules** : Hosts can also add or override all previours rules.
 * **nft__custom_content** : Custom content (tables, include,…) to add in Nftables configuration [default : `''`].
+* **nft_define_custom_chains** : Custom chains. Mapping of lists, where key is chain name, and list values are variables names with rules.
 * **nft_input_default_rules** : Set default rules for `input` chain.
 * **nft_input_rules** : You can add `input` rules or override those defined by **nft_input_default_rules** for all hosts.
 * **nft_input_group_rules** : You can add `input` rules or override those defined by **nft_input_default_rules** and **nft_input_rules** for a group.
@@ -57,6 +58,8 @@ complexify his philosophy… (I'm pretty sure, i now did complexify it :D) ^^
 * **nft_output_host_rules** : Hosts can also add or override all previous `output` rules.
 * **nft_forward_conf_path** : forward configuration file include in main configuration file [default : `{{ nft_conf_dir_path }}/filter-forward.nft`].
 * **nft_forward_conf_content** : Template used to generate the previous forward configuration file [default : `etc/nftables.d/filter-forward.nft.j2`].
+* **nft_custom_conf_path** : Custom chains configuration file include in main configuration file [default : `{{ nft_conf_dir_path }}/filter-custom.nft`].
+* **nft_custom_conf_content** : Template used to generate custom chains configuration file [default : `etc/nftables.d/filter-custom.nft.j2`].
 * **nft_forward_default_rules** : Set default rules for `forward` chain.
 * **nft_forward_rules** : You can add `forward` rules or override those defined by **nft_forward_default_rules** for all hosts.
 * **nft_forward_group_rules** : You can add `forward` rules or override those defined by **nft_forward_default_rules** and **nft_forward_rules** for a group.
@@ -654,6 +657,68 @@ nft_input_group_rules:
        ```
 1. These rulesets, from the two groups, will be merged if the host is a member
    of these groups.
+</details>
+
+### With custom chains
+
+<details>
+  <summary>Define custom chain for usage with docker (<i>click to expand</i>)</summary>
+
+Group vars (e.g. `docker_server.yml`)
+
+```yaml
+nft_old_pkg_manage: false
+nft__forward_table_manage: true
+
+# specify chains and which variables contains rules that should be used for building chain rule set
+nft_define_custom_chains:
+  docker:
+    - nft_docker_group_rules
+    - nft_docker_tenant_rules
+    - nft_docker_host_rules
+
+nft_docker_group_rules:
+  '100 allow internal vpn':
+    - 'ip saddr 10.254.0.0/16 counter accept'
+    - 'ip6 saddr 2001:db8:deaf:beaf::/64 counter accept'
+
+nft_docker_tenant_rules:
+  '200 allow ssh connection for tenant vpn':
+    - 'ip saddr 198.51.100.18 tcp dport { 22 } counter accept'
+
+nft_docker_host_rules: {}
+
+nft_forward_default_rules:
+  '000 policy':
+    - 'type filter hook forward priority -200; policy drop;'
+  '005 global':
+    - 'jump global'
+
+nft_forward_group_rules:
+  '050 docker - allow connection from containers to internet':
+    - 'iifname "docker0" counter accept'
+  '099 jump docker':
+    - 'jump docker'
+
+nft_input_group_rules:
+  '099 jump docker':
+    - 'jump docker'
+
+```
+
+Playbook and host vars
+
+``` yaml
+- hosts: docker_server
+  vars:
+    nft_docker_host_rules:
+      '300 allow http/s':
+        - 'tcp dport { 80, 443 } counter accept'
+
+  roles:
+    - role: ipr-cnrs.nftables
+```
+
 </details>
 
 ## Configuration
