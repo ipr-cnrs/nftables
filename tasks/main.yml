@@ -41,7 +41,7 @@
 - name: Debug nft_combined_rules
   ansible.builtin.debug:
     var: nft_combined_rules
-  when: nft_debug
+  when: (nft_debug and nft_combined_rules is defined)
 
 - name: Debug ansible_os_family
   ansible.builtin.debug:
