@@ -16,14 +16,16 @@ include "{{ nft_define_conf_path }}"
 
 table inet filter {
 	chain global {
-{% for group, rules in globalmerged|dictsort  %}
+{% for group, rules in globalmerged|dictsort %}
 		# {{ group }}
+  {% set rules = rules | reject('eq', '') | reject('eq', none) | reject('eq', omit) %}
   {% if not rules %}
 		# (none)
-  {% endif %}
-  {% for rule in rules %}
+  {% else %}
+    {% for rule in rules %}
 		{{ rule }}
-  {% endfor %}
+    {% endfor %}
+  {% endif %}
 {% endfor %}
 	}
 	include "{{ nft_conntrack_conf_path }}"

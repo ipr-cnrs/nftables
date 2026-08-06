@@ -9,12 +9,13 @@
 {% set _ = mapmerged.update(nft_map_host) %}
 
 {% for map, rules in mapmerged|dictsort  %}
+  {% set rules = rules | reject('eq', '') | reject('eq', none) | reject('eq', omit) %}
   {% if rules %}
 map {{ map }} {
     {% for rule in rules %}
 	{{ rule }}
     {% endfor %}
 }
-  {% endif %}
 
+  {% endif %}
 {% endfor %}
